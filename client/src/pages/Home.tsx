@@ -83,15 +83,15 @@ export default function Home() {
 
       {/* CART DRAWER */}
       <div
-        className={`fixed right-0 top-0 h-full w-full md:w-[450px] bg-[#F9F9D7] z-[70] shadow-2xl flex flex-col transition-transform duration-300 ${
+        className={`fixed right-0 top-0 h-full w-full md:w-[450px] bg-[#F0EFEA] z-[70] shadow-2xl flex flex-col transition-transform duration-300 ${
           cartOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="p-8 flex justify-between items-center border-b border-gray-100">
+        <div className="p-8 flex justify-between items-center border-b border-[#E8E7E2]">
           <h3 className="font-serif text-2xl tracking-tight">Ваша корзина</h3>
           <button
             onClick={() => setCartOpen(false)}
-            className="p-2 hover:bg-stone-100 rounded-full transition-colors"
+            className="p-2 hover:bg-[#E8E7E2] rounded-full transition-colors"
           >
             <X size={20} />
           </button>
@@ -100,12 +100,12 @@ export default function Home() {
         <div className="flex-1 overflow-y-auto p-8 space-y-8">
           {cartItems.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center">
-              <p className="text-gray-400 font-light text-sm">
+              <p className="text-[#5A6262] font-light text-sm">
                 Ваша корзина пока пуста
               </p>
               <button
                 onClick={() => setCartOpen(false)}
-                className="mt-4 text-xs border-b border-black pb-1 uppercase tracking-widest hover:text-gray-600"
+                className="mt-4 text-xs border-b border-black pb-1 uppercase tracking-widest hover:text-[#5A6262]"
               >
                 Вернуться к покупкам
               </button>
@@ -113,7 +113,7 @@ export default function Home() {
           ) : (
             cartItems.map((item, idx) => (
               <div key={idx} className="flex gap-6">
-                <div className="w-24 h-32 bg-stone-100 rounded-2xl flex-shrink-0 flex items-center justify-center text-[10px] text-stone-400 italic p-2 text-center">
+                <div className="w-24 h-32 bg-[#E8E7E2] rounded-2xl flex-shrink-0 flex items-center justify-center text-[10px] text-[#5A6262] italic p-2 text-center">
                   [Фото товара]
                 </div>
                 <div className="flex flex-col justify-between flex-1 py-1">
@@ -122,17 +122,17 @@ export default function Home() {
                       <h4 className="font-medium text-sm">{item.name}</h4>
                       <button
                         onClick={() => handleRemoveFromCart(idx)}
-                        className="text-gray-400 hover:text-black transition-colors"
+                        className="text-[#5A6262] hover:text-black transition-colors"
                       >
                         <X size={16} />
                       </button>
                     </div>
-                    <p className="text-[11px] text-gray-400 uppercase tracking-widest mt-1">
+                    <p className="text-[11px] text-[#5A6262] uppercase tracking-widest mt-1">
                       Размер: {item.size}
                     </p>
                   </div>
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center border border-gray-100 rounded-lg">
+                    <div className="flex items-center border border-[#E8E7E2] rounded-lg">
                       <button
                         onClick={() =>
                           handleUpdateQuantity(idx, item.quantity - 1)
@@ -164,14 +164,14 @@ export default function Home() {
         </div>
 
         {cartItems.length > 0 && (
-          <div className="p-8 border-t border-gray-100 space-y-6">
+          <div className="p-8 border-t border-[#E8E7E2] space-y-6">
             <div className="flex justify-between items-baseline">
-              <span className="text-gray-400 text-sm font-light">Итого</span>
+              <span className="text-[#5A6262] text-sm font-light">Итого</span>
               <span className="text-xl font-medium tracking-tight">
                 {cartTotal.toLocaleString()} ₽
               </span>
             </div>
-            <p className="text-[10px] text-gray-400 leading-relaxed font-light italic">
+            <p className="text-[10px] text-[#5A6262] leading-relaxed font-light italic">
               Налоги и стоимость доставки рассчитываются при оформлении заказа.
             </p>
             <button className="w-full py-5 bg-black text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:shadow-xl transition-all">
@@ -182,7 +182,7 @@ export default function Home() {
       </div>
 
       {/* HEADER */}
-      <header className="sticky top-0 w-full bg-[#F9F9D7] border-b border-gray-100 z-50">
+      <header className="sticky top-0 w-full bg-[#F9F9D7] border-b border-[#E8E7E2] z-50">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <a href="#" className="flex items-center space-x-3 group cursor-pointer" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
             <img
@@ -192,7 +192,7 @@ export default function Home() {
             />
           </a>
 
-          <nav className="hidden md:flex items-center space-x-10 text-[11px] uppercase tracking-[0.2em] font-medium text-gray-500">
+          <nav className="hidden md:flex items-center space-x-10 text-[11px] uppercase tracking-[0.2em] font-medium text-[#5A6262]">
             <a
               href="#catalog"
               className="hover:text-black transition-colors"
@@ -222,16 +222,16 @@ export default function Home() {
           <div className="flex items-center space-x-5">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 hover:bg-stone-100 rounded-full transition-colors"
+              className="md:hidden p-2 hover:bg-[#E8E7E2] rounded-full transition-colors"
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-            <span className="text-xs font-semibold tracking-widest text-gray-400">
+            <span className="text-xs font-semibold tracking-widest text-[#5A6262]">
               RU
             </span>
             <button
               onClick={() => setCartOpen(!cartOpen)}
-              className="relative w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:shadow-sm transition-shadow cursor-pointer"
+              className="relative w-10 h-10 rounded-full border border-[#E8E7E2] flex items-center justify-center hover:shadow-sm transition-shadow cursor-pointer"
             >
               <ShoppingCart size={18} />
               {cartItems.length > 0 && (
@@ -246,31 +246,31 @@ export default function Home() {
 
       {/* MOBILE MENU */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-100 px-6 py-4 space-y-4">
+        <div className="md:hidden bg-[#F9F9D7] border-b border-[#E8E7E2] px-6 py-4 space-y-4">
           <a
             href="#catalog"
-            className="block text-sm uppercase tracking-widest text-gray-500 hover:text-black transition-colors"
+            className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors"
             onClick={() => setMobileMenuOpen(false)}
           >
             Коллекции
           </a>
           <a
             href="#philosophy"
-            className="block text-sm uppercase tracking-widest text-gray-500 hover:text-black transition-colors"
+            className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors"
             onClick={() => setMobileMenuOpen(false)}
           >
             Философия
           </a>
           <a
             href="#founder"
-            className="block text-sm uppercase tracking-widest text-gray-500 hover:text-black transition-colors"
+            className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors"
             onClick={() => setMobileMenuOpen(false)}
           >
             Основательница
           </a>
           <a
             href="#contacts"
-            className="block text-sm uppercase tracking-widest text-gray-500 hover:text-black transition-colors"
+            className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors"
             onClick={() => setMobileMenuOpen(false)}
           >
             Контакты
@@ -293,7 +293,7 @@ export default function Home() {
               </h1>
               <a
                 href="#catalog"
-                className="px-10 py-4 bg-white text-black rounded-full text-xs font-semibold uppercase tracking-widest hover:scale-105 transition-transform shadow-xl"
+                className="px-10 py-4 bg-[#F0EFEA] text-black rounded-full text-xs font-semibold uppercase tracking-widest hover:scale-105 transition-transform shadow-xl"
               >
                 Исследовать
               </a>
@@ -310,7 +310,7 @@ export default function Home() {
                   Философия <br />
                   уважения к деталям
                 </h2>
-                <div className="space-y-6 text-gray-500 leading-relaxed font-light">
+                <div className="space-y-6 text-[#5A6262] leading-relaxed font-light">
                   <p>
                     Каждая вещь Tansylate — это результат долгих поисков
                     идеального кроя и глубокого уважения к деталям. Мы верим,
@@ -324,7 +324,7 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="aspect-[3/4] bg-stone-100 rounded-[2rem] flex items-center justify-center overflow-hidden">
+              <div className="aspect-[3/4] bg-[#E8E7E2] rounded-[2rem] flex items-center justify-center overflow-hidden">
                 <span className="text-stone-300 italic text-sm">
                   [Эстетичное макро-фото ткани]
                 </span>
@@ -342,7 +342,7 @@ export default function Home() {
             {products.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                className="bg-[#F0EFEA] rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => {
                   setSelectedProduct(product);
                   document
@@ -370,7 +370,7 @@ export default function Home() {
         {selectedProduct && (
           <section
             id="product-detail"
-            className="max-w-7xl mx-auto px-6 py-24 bg-white rounded-[3rem] shadow-sm"
+            className="max-w-7xl mx-auto px-6 py-24 bg-[#F0EFEA] rounded-[3rem] shadow-sm"
           >
             <div className="flex flex-col lg:flex-row gap-16">
               <div className="lg:w-3/5 grid grid-cols-2 gap-3">
@@ -400,19 +400,19 @@ export default function Home() {
 
                   <div className="flex items-center space-x-2 mb-8 text-sm">
                     <span className="flex text-black italic">★★★★★</span>
-                    <span className="text-gray-400 font-light underline">
+                    <span className="text-[#5A6262] font-light underline">
                       12 отзывов
                     </span>
                   </div>
 
-                  <p className="text-gray-500 mb-10 leading-relaxed font-light text-sm">
+                  <p className="text-[#5A6262] mb-10 leading-relaxed font-light text-sm">
                     {selectedProduct.description ||
                       "Идеальный баланс плотности и мягкости. Оверсайз силуэт, который сохраняет форму благодаря высокому качеству хлопкового футера (480 г/м²)."}
                   </p>
 
                   <div className="space-y-6 mb-10">
                     <div>
-                      <label className="text-[10px] uppercase tracking-widest text-gray-400 block mb-3">
+                      <label className="text-[10px] uppercase tracking-widest text-[#5A6262] block mb-3">
                         Размер
                       </label>
                       <div className="flex gap-3">
@@ -423,7 +423,7 @@ export default function Home() {
                             className={`px-6 py-3 rounded-xl text-xs transition-all ${
                               selectedSize === size
                                 ? "bg-black text-white shadow-lg shadow-black/10"
-                                : "border border-gray-200 hover:border-black"
+                                : "border border-[#E8E7E2] hover:border-black"
                             }`}
                           >
                             {size}
@@ -440,15 +440,15 @@ export default function Home() {
                     </button>
                   </div>
 
-                  <div className="border-t border-gray-100 pt-6 space-y-4">
+                  <div className="border-t border-[#E8E7E2] pt-6 space-y-4">
                     <details className="group">
                       <summary className="flex justify-between items-center cursor-pointer list-none text-sm font-medium">
                         Состав и уход
-                        <span className="transition-transform group-open:rotate-180 text-gray-400">
+                        <span className="transition-transform group-open:rotate-180 text-[#5A6262]">
                           ▼
                         </span>
                       </summary>
-                      <p className="pt-4 text-xs text-gray-400 leading-relaxed font-light">
+                      <p className="pt-4 text-xs text-[#5A6262] leading-relaxed font-light">
                         {selectedProduct.composition ||
                           "100% Хлопок пенье. Деликатная стирка при 30 градусах. Сушка в расправленном виде. Сделано с любовью в России."}
                       </p>
@@ -456,11 +456,11 @@ export default function Home() {
                     <details className="group">
                       <summary className="flex justify-between items-center cursor-pointer list-none text-sm font-medium">
                         Доставка и возврат
-                        <span className="transition-transform group-open:rotate-180 text-gray-400">
+                        <span className="transition-transform group-open:rotate-180 text-[#5A6262]">
                           ▼
                         </span>
                       </summary>
-                      <p className="pt-4 text-xs text-gray-400 leading-relaxed font-light">
+                      <p className="pt-4 text-xs text-[#5A6262] leading-relaxed font-light">
                         Бесплатная примерка перед покупкой. Возврат в течение
                         14 дней.
                       </p>
@@ -482,7 +482,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="md:w-1/2 p-12 md:p-24 text-stone-800">
-                <span className="font-serif italic text-2xl text-stone-400 mb-6 block leading-tight">
+                <span className="font-serif italic text-2xl text-[#5A6262] mb-6 block leading-tight">
                   "Мы создаем не просто одежду, а ощущение дома, где бы вы ни
                   находились."
                 </span>
@@ -509,37 +509,37 @@ export default function Home() {
         </section>
 
         {/* ADVANTAGES SECTION */}
-        <section className="py-24 max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16 border-t border-gray-100">
+        <section className="py-24 max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16 border-t border-[#E8E7E2]">
           <div className="flex flex-col items-center text-center">
-            <div className="w-12 h-12 mb-6 flex items-center justify-center bg-white rounded-full shadow-sm border border-gray-50 text-stone-600">
+            <div className="w-12 h-12 mb-6 flex items-center justify-center bg-[#F0EFEA] rounded-full shadow-sm border border-gray-50 text-stone-600">
               📱
             </div>
             <h4 className="font-semibold text-sm mb-3 tracking-tight">
               Доставка с примеркой
             </h4>
-            <p className="text-xs text-gray-400 font-light leading-relaxed px-10">
+            <p className="text-xs text-[#5A6262] font-light leading-relaxed px-10">
               Оплачивайте только то, что идеально подошло вам после примерки.
             </p>
           </div>
           <div className="flex flex-col items-center text-center">
-            <div className="w-12 h-12 mb-6 flex items-center justify-center bg-white rounded-full shadow-sm border border-gray-50 text-stone-600">
+            <div className="w-12 h-12 mb-6 flex items-center justify-center bg-[#F0EFEA] rounded-full shadow-sm border border-gray-50 text-stone-600">
               ⏰
             </div>
             <h4 className="font-semibold text-sm mb-3 tracking-tight">
               Этичное производство
             </h4>
-            <p className="text-xs text-gray-400 font-light leading-relaxed px-10">
+            <p className="text-xs text-[#5A6262] font-light leading-relaxed px-10">
               Используем органический хлопок и работаем с локальными мастерами.
             </p>
           </div>
           <div className="flex flex-col items-center text-center">
-            <div className="w-12 h-12 mb-6 flex items-center justify-center bg-white rounded-full shadow-sm border border-gray-50 text-stone-600">
+            <div className="w-12 h-12 mb-6 flex items-center justify-center bg-[#F0EFEA] rounded-full shadow-sm border border-gray-50 text-stone-600">
               💬
             </div>
             <h4 className="font-semibold text-sm mb-3 tracking-tight">
               Личный подход
             </h4>
-            <p className="text-xs text-gray-400 font-light leading-relaxed px-10">
+            <p className="text-xs text-[#5A6262] font-light leading-relaxed px-10">
               Отвечаем на любые вопросы в Telegram и WhatsApp в течение 10
               минут.
             </p>
@@ -547,7 +547,7 @@ export default function Home() {
         </section>
 
         {/* CONTACTS SECTION */}
-        <section id="contacts" className="py-32 px-6 bg-white border-t border-gray-50">
+        <section id="contacts" className="py-32 px-6 bg-[#F0EFEA] border-t border-gray-50">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
             <div>
               <h2 className="font-serif text-4xl mb-10 leading-tight text-stone-800">
@@ -573,19 +573,19 @@ export default function Home() {
                   <div className="flex space-x-6">
                     <a
                       href="#"
-                      className="text-sm border-b border-stone-800 pb-1 hover:text-stone-400 transition-colors underline-offset-8"
+                      className="text-sm border-b border-stone-800 pb-1 hover:text-[#5A6262] transition-colors underline-offset-8"
                     >
                       Telegram
                     </a>
                     <a
                       href="#"
-                      className="text-sm border-b border-stone-800 pb-1 hover:text-stone-400 transition-colors underline-offset-8"
+                      className="text-sm border-b border-stone-800 pb-1 hover:text-[#5A6262] transition-colors underline-offset-8"
                     >
                       WhatsApp
                     </a>
                     <a
                       href="#"
-                      className="text-sm border-b border-stone-800 pb-1 hover:text-stone-400 transition-colors underline-offset-8"
+                      className="text-sm border-b border-stone-800 pb-1 hover:text-[#5A6262] transition-colors underline-offset-8"
                     >
                       Instagram
                     </a>
@@ -604,21 +604,21 @@ export default function Home() {
                   name="name"
                   placeholder="Ваше имя"
                   required
-                  className="w-full p-5 bg-white rounded-2xl border-none text-sm focus:ring-1 focus:ring-stone-200 outline-none transition-shadow"
+                  className="w-full p-5 bg-[#F0EFEA] rounded-2xl border-none text-sm focus:ring-1 focus:ring-stone-200 outline-none transition-shadow"
                 />
                 <input
                   type="email"
                   name="email"
                   placeholder="Email или Телефон"
                   required
-                  className="w-full p-5 bg-white rounded-2xl border-none text-sm focus:ring-1 focus:ring-stone-200 outline-none transition-shadow"
+                  className="w-full p-5 bg-[#F0EFEA] rounded-2xl border-none text-sm focus:ring-1 focus:ring-stone-200 outline-none transition-shadow"
                 />
                 <textarea
                   name="message"
                   placeholder="Ваш вопрос"
                   rows={4}
                   required
-                  className="w-full p-5 bg-white rounded-2xl border-none text-sm focus:ring-1 focus:ring-stone-200 outline-none transition-shadow"
+                  className="w-full p-5 bg-[#F0EFEA] rounded-2xl border-none text-sm focus:ring-1 focus:ring-stone-200 outline-none transition-shadow"
                 />
                 <button
                   type="submit"
@@ -633,7 +633,7 @@ export default function Home() {
       </main>
 
       {/* FOOTER */}
-      <footer className="py-20 px-6 border-t border-gray-100 bg-[#F9F9D7] w-full">
+      <footer className="py-20 px-6 border-t border-[#E8E7E2] bg-[#F9F9D7] w-full">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="flex flex-col items-center md:items-start space-y-4">
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity">
@@ -643,12 +643,12 @@ export default function Home() {
                 className="h-6 w-auto"
               />
             </a>
-            <p className="text-[9px] text-gray-400 uppercase tracking-widest">
+            <p className="text-[9px] text-[#5A6262] uppercase tracking-widest">
               © 2024 Все права защищены
             </p>
           </div>
 
-          <div className="flex flex-col md:flex-row md:space-x-12 space-y-4 md:space-y-0 text-[10px] uppercase tracking-widest text-gray-400">
+          <div className="flex flex-col md:flex-row md:space-x-12 space-y-4 md:space-y-0 text-[10px] uppercase tracking-widest text-[#5A6262]">
             <div className="flex space-x-6 md:space-x-12">
               <a href="#" className="hover:text-black transition-colors">
                 Доставка
