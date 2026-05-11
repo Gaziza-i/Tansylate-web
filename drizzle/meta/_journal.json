@@ -1,5 +1,20 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1778487963062,
+      "tag": "0000_absent_talos",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1778488141354,
+      "tag": "0001_equal_next_avengers",
+      "breakpoints": true
+    }
+  ]
 }

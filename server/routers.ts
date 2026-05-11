@@ -2,9 +2,10 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
+import { getAllProducts, getProductById, createContact } from "./db";
+import { notifyOwner } from "./_core/notification";
 
 export const appRouter = router({
-    // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
@@ -17,12 +18,41 @@ export const appRouter = router({
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  catalog: router({
+    products: publicProcedure.query(async () => {
+      return getAllProducts();
+    }),
+    product: publicProcedure
+      .input((input: any) => input)
+      .query(async ({ input }) => {
+        return getProductById(input.id);
+      }),
+  }),
+
+  contacts: router({
+    submit: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input }) => {
+        try {
+          await createContact({
+            name: input.name,
+            email: input.email,
+            message: input.message,
+          });
+
+          // Notify owner of new contact submission
+          await notifyOwner({
+            title: "New Contact Form Submission",
+            content: `From: ${input.name}\nEmail: ${input.email}\n\nMessage: ${input.message}`,
+          });
+
+          return { success: true };
+        } catch (error) {
+          console.error("Failed to submit contact:", error);
+          throw error;
+        }
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

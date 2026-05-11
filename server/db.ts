@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, products, contacts, InsertContact } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -87,6 +87,54 @@ export async function getUserByOpenId(openId: string) {
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
 
   return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getAllProducts() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get products: database not available");
+    return [];
+  }
+
+  try {
+    const result = await db.select().from(products);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to get products:", error);
+    throw error;
+  }
+}
+
+export async function getProductById(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get product: database not available");
+    return undefined;
+  }
+
+  try {
+    const result = await db.select().from(products).where(eq((products as any).id, id)).limit(1);
+    return result.length > 0 ? result[0] : undefined;
+  } catch (error) {
+    console.error("[Database] Failed to get product:", error);
+    throw error;
+  }
+}
+
+export async function createContact(contact: InsertContact) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create contact: database not available");
+    return undefined;
+  }
+
+  try {
+    const result = await db.insert(contacts as any).values(contact);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to create contact:", error);
+    throw error;
+  }
 }
 
 // TODO: add feature queries here as your schema grows.
