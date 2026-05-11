@@ -182,7 +182,7 @@ export default function Home() {
       </div>
 
       {/* HEADER */}
-      <header className="sticky top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
+      <header className="sticky top-0 w-full bg-[#F9F9D7] border-b border-gray-100 z-50">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <a href="#" className="flex items-center space-x-3 group cursor-pointer" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
             <img
@@ -633,7 +633,7 @@ export default function Home() {
       </main>
 
       {/* FOOTER */}
-      <footer className="py-20 px-6 border-t border-gray-100 bg-white">
+      <footer className="py-20 px-6 border-t border-gray-100 bg-[#F9F9D7] w-full">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="flex flex-col items-center md:items-start space-y-4">
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity">
