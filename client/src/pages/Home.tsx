@@ -3,7 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Menu, X } from "lucide-react";
 
-const LOGO_URL = "/manus-storage/tansylate-logo_6f7f5d13.webp";
+const LOGO_URL = "/manus-storage/tansylate-logo-cropped_660047f4.png";
 
 export default function Home() {
   const [cartOpen, setCartOpen] = useState(false);
@@ -184,7 +184,7 @@ export default function Home() {
       {/* HEADER */}
       <header className="sticky top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <a href="#" className="flex items-center space-x-3 group cursor-pointer">
+          <a href="#" className="flex items-center space-x-3 group cursor-pointer" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
             <img
               src={LOGO_URL}
               alt="Tansylate"
@@ -636,13 +636,13 @@ export default function Home() {
       <footer className="py-20 px-6 border-t border-gray-100 bg-white">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="flex flex-col items-center md:items-start space-y-4">
-            <div className="flex items-center space-x-3">
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity">
               <img
                 src={LOGO_URL}
                 alt="Tansylate"
                 className="h-6 w-auto"
               />
-            </div>
+            </a>
             <p className="text-[9px] text-gray-400 uppercase tracking-widest">
               © 2024 Все права защищены
             </p>

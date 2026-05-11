@@ -72,3 +72,10 @@
 - [x] Test smooth scrolling and navigation
 - [x] Verify all links work correctly
 - [x] Create checkpoint before delivery
+
+## Updates (Round 2)
+- [x] Crop logo to remove yellow background
+- [x] Update background color to F9F9D7
+- [x] Fix logo links to scroll to top smoothly
+- [x] Verify all anchor links work correctly
+- [x] Test all button functionality
