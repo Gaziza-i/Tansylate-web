@@ -83,7 +83,7 @@ export default function Home() {
 
       {/* CART DRAWER */}
       <div
-        className={`fixed right-0 top-0 h-full w-full md:w-[450px] bg-white z-[70] shadow-2xl flex flex-col transition-transform duration-300 ${
+        className={`fixed right-0 top-0 h-full w-full md:w-[450px] bg-[#F9F9D7] z-[70] shadow-2xl flex flex-col transition-transform duration-300 ${
           cartOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
