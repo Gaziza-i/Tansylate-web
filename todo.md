@@ -117,10 +117,10 @@
 
 
 ## Round 5 - Additional Features
-- [ ] Fix hamburger menu to show all items (Каталог, Доставка, Возврат, Контакты)
-- [ ] Add "В корзину" buttons under each product on home page
-- [ ] Make product cards clickable → product detail page with photo, size, composition
-- [ ] Add breadcrumbs navigation (Главная → Каталог → Платье)
-- [ ] Add search functionality above catalog
-- [ ] Add Privacy Policy page (required for data collection)
-- [ ] Make git commits to GitHub after each change
+- [x] Fix hamburger menu to show all items (Каталог, Доставка, Возврат, Контакты)
+- [x] Add "В корзину" buttons under each product on home page
+- [x] Make product cards clickable → product detail page with photo, size, composition
+- [x] Add breadcrumbs navigation (Главная → Каталог → Платье)
+- [x] Add search functionality above catalog
+- [x] Add Privacy Policy page (required for data collection)
+- [x] Make git commits to GitHub after each change - commit 7670614 pushed
