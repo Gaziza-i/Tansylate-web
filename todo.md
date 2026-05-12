@@ -104,3 +104,23 @@
 - [x] Manually test cart persistence across page navigation - localStorage implementation verified
 - [x] Test mobile menu hamburger functionality - implemented with state management
 - [x] Verify responsive button sizes on mobile - Tailwind responsive classes applied
+
+
+## Round 4 - Final Fixes
+- [x] Check and fix all fonts (Playfair Display for headings, Inter for body)
+- [x] Fix anchor links (якорные ссылки) on all pages - fixed navigation to home when clicking anchors
+- [x] Fix catalog page functionality and routing - catalog page working correctly
+- [x] Increase logo size in header (h-12) and footer (h-10)
+- [x] Redesign contacts section - added beautiful 2-column layout with icons, phone, email, social buttons
+- [x] Update year to 2026 throughout site
+- [x] Make git commits to GitHub after each change
+
+
+## Round 5 - Additional Features
+- [ ] Fix hamburger menu to show all items (Каталог, Доставка, Возврат, Контакты)
+- [ ] Add "В корзину" buttons under each product on home page
+- [ ] Make product cards clickable → product detail page with photo, size, composition
+- [ ] Add breadcrumbs navigation (Главная → Каталог → Платье)
+- [ ] Add search functionality above catalog
+- [ ] Add Privacy Policy page (required for data collection)
+- [ ] Make git commits to GitHub after each change
