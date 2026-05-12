@@ -12,26 +12,19 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [checkoutForm, setCheckoutForm] = useState({ name: "", phone: "", address: "" });
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   
   const { cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
   
   const { data: products = [] } = trpc.catalog.products.useQuery();
   const submitContact = trpc.contacts.submit.useMutation();
 
-  // Filter products based on search
-  useEffect(() => {
-    if (searchQuery.trim()) {
-      setFilteredProducts(
-        products.filter(p => 
-          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.description?.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      );
-    } else {
-      setFilteredProducts(products);
-    }
-  }, [searchQuery, products]);
+  // Filter products based on search - compute directly without setState
+  const filteredProducts = searchQuery.trim()
+    ? products.filter(p => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : products;
 
   const handleCheckout = async () => {
     if (!checkoutForm.name || !checkoutForm.phone || !checkoutForm.address) {
