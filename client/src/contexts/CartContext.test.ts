@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 
-// Mock localStorage
+// Mock localStorage for Node environment
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
 
@@ -18,11 +18,10 @@ const localStorageMock = (() => {
   };
 })();
 
-Object.defineProperty(window, "localStorage", {
-  value: localStorageMock,
-});
+// Mock global localStorage
+global.localStorage = localStorageMock as any;
 
-describe("CartContext", () => {
+describe("CartContext - localStorage persistence", () => {
   beforeEach(() => {
     localStorage.clear();
   });
@@ -70,5 +69,48 @@ describe("CartContext", () => {
 
     const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     expect(total).toBe(35000); // (10000 * 2) + (5000 * 3)
+  });
+
+  it("should handle adding items to cart", () => {
+    const initialCart: any[] = [];
+    localStorage.setItem("tansylate-cart", JSON.stringify(initialCart));
+
+    const newItem = { id: 1, name: "Платье", price: 45000, quantity: 1 };
+    const updatedCart = [newItem];
+    localStorage.setItem("tansylate-cart", JSON.stringify(updatedCart));
+
+    const saved = JSON.parse(localStorage.getItem("tansylate-cart")!);
+    expect(saved).toHaveLength(1);
+    expect(saved[0].id).toBe(1);
+  });
+
+  it("should handle removing items from cart", () => {
+    const cartData = [
+      { id: 1, name: "Item 1", price: 10000, quantity: 1 },
+      { id: 2, name: "Item 2", price: 5000, quantity: 1 },
+    ];
+
+    localStorage.setItem("tansylate-cart", JSON.stringify(cartData));
+    const cart = JSON.parse(localStorage.getItem("tansylate-cart")!);
+    const filteredCart = cart.filter((item: any) => item.id !== 1);
+    localStorage.setItem("tansylate-cart", JSON.stringify(filteredCart));
+
+    const updated = JSON.parse(localStorage.getItem("tansylate-cart")!);
+    expect(updated).toHaveLength(1);
+    expect(updated[0].id).toBe(2);
+  });
+
+  it("should handle updating item quantities", () => {
+    const cartData = [
+      { id: 1, name: "Item 1", price: 10000, quantity: 1 },
+    ];
+
+    localStorage.setItem("tansylate-cart", JSON.stringify(cartData));
+    const cart = JSON.parse(localStorage.getItem("tansylate-cart")!);
+    cart[0].quantity = 5;
+    localStorage.setItem("tansylate-cart", JSON.stringify(cart));
+
+    const updated = JSON.parse(localStorage.getItem("tansylate-cart")!);
+    expect(updated[0].quantity).toBe(5);
   });
 });
