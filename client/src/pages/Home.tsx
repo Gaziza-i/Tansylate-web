@@ -1,49 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Menu, X, Truck, RotateCcw, Leaf } from "lucide-react";
 import { useLocation } from "wouter";
+import { useCart } from "@/contexts/CartContext";
 
 const LOGO_URL = "/manus-storage/tansylate-logo-cropped_660047f4.png";
 
 export default function Home() {
   const [location, setLocation] = useLocation();
-  const [cartOpen, setCartOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<any[]>([]);
   const [checkoutForm, setCheckoutForm] = useState({ name: "", phone: "", address: "" });
-
-  // Fetch products
+  
+  const { cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
+  
   const { data: products = [] } = trpc.catalog.products.useQuery();
   const submitContact = trpc.contacts.submit.useMutation();
-
-  const handleAddToCart = (product: any) => {
-    const existingItem = cartItems.find(item => item.id === product.id);
-    if (existingItem) {
-      setCartItems(cartItems.map(item =>
-        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-      ));
-    } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
-    }
-    setCartOpen(true);
-  };
-
-  const handleRemoveFromCart = (productId: number) => {
-    setCartItems(cartItems.filter(item => item.id !== productId));
-  };
-
-  const handleUpdateQuantity = (productId: number, quantity: number) => {
-    if (quantity > 0) {
-      setCartItems(cartItems.map(item =>
-        item.id === productId ? { ...item, quantity } : item
-      ));
-    } else {
-      handleRemoveFromCart(productId);
-    }
-  };
-
-  const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const handleCheckout = async () => {
     if (!checkoutForm.name || !checkoutForm.phone || !checkoutForm.address) {
@@ -59,7 +31,7 @@ export default function Home() {
     });
 
     alert("Спасибо! Ваш заказ принят. Мы свяжемся с вами в ближайшее время.");
-    setCartItems([]);
+    clearCart();
     setCheckoutForm({ name: "", phone: "", address: "" });
     setLocation("/");
   };
@@ -68,46 +40,68 @@ export default function Home() {
     return (price / 100).toFixed(0);
   };
 
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  // Header Component
+  const Header = () => (
+    <header className="sticky top-0 w-full bg-[#F9F9D7] border-b border-[#E8E7E2] z-50">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
+        <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="flex items-center space-x-3 cursor-pointer">
+          <img src={LOGO_URL} alt="Tansylate" className="h-8 w-auto" />
+        </a>
+
+        <nav className="hidden md:flex items-center space-x-8 text-[11px] uppercase tracking-[0.2em] font-medium text-[#5A6262]">
+          <a href="/catalog" className="hover:text-black transition-colors">Каталог</a>
+          <a href="/#delivery" className="hover:text-black transition-colors">Доставка</a>
+          <a href="/#contacts" className="hover:text-black transition-colors">Контакты</a>
+          <button onClick={() => setLocation("/cart")} className="hover:text-black transition-colors">Корзина</button>
+        </nav>
+
+        <div className="flex items-center space-x-4">
+          <button onClick={() => setLocation("/cart")} className="relative p-2 hover:bg-[#E8E7E2] rounded-full transition-colors">
+            <ShoppingCart size={20} className="text-[#5A6262]" />
+            {cartItems.length > 0 && (
+              <span className="absolute top-0 right-0 bg-[#5A6262] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{cartItems.length}</span>
+            )}
+          </button>
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 hover:bg-[#E8E7E2] rounded-full transition-colors">
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </div>
+
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-[#F9F9D7] border-b border-[#E8E7E2] px-4 py-4 space-y-3">
+          <a href="/catalog" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={closeMobileMenu}>Каталог</a>
+          <a href="/#delivery" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={closeMobileMenu}>Доставка</a>
+          <a href="/#contacts" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={closeMobileMenu}>Контакты</a>
+          <button onClick={() => { setLocation("/cart"); closeMobileMenu(); }} className="block w-full text-left text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors">Корзина</button>
+        </div>
+      )}
+    </header>
+  );
+
+  // Footer Component
+  const Footer = () => (
+    <footer className="py-12 px-4 md:px-6 border-t border-[#E8E7E2] bg-[#F9F9D7] w-full">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+        <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="flex items-center space-x-3 cursor-pointer">
+          <img src={LOGO_URL} alt="Tansylate" className="h-6 w-auto" />
+        </a>
+        <div className="flex gap-8 text-xs uppercase tracking-widest text-[#5A6262]">
+          <a href="#" className="hover:text-black transition-colors">Доставка</a>
+          <a href="#" className="hover:text-black transition-colors">Обмен</a>
+          <a href="#" className="hover:text-black transition-colors">Публичная оферта</a>
+        </div>
+      </div>
+    </footer>
+  );
+
   // Catalog Page
   if (location === "/catalog") {
     return (
       <div className="min-h-screen bg-[#F0EFEA]">
-        {/* HEADER */}
-        <header className="sticky top-0 w-full bg-[#F9F9D7] border-b border-[#E8E7E2] z-50">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
-            <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="flex items-center space-x-3 cursor-pointer">
-              <img src={LOGO_URL} alt="Tansylate" className="h-8 w-auto" />
-            </a>
-
-            <nav className="hidden md:flex items-center space-x-8 text-[11px] uppercase tracking-[0.2em] font-medium text-[#5A6262]">
-              <a href="/catalog" className="hover:text-black transition-colors">Каталог</a>
-              <a href="#delivery" className="hover:text-black transition-colors">Доставка</a>
-              <a href="#contacts" className="hover:text-black transition-colors">Контакты</a>
-            </nav>
-
-            <div className="flex items-center space-x-4">
-              <button onClick={() => setLocation("/cart")} className="relative p-2 hover:bg-[#E8E7E2] rounded-full transition-colors">
-                <ShoppingCart size={20} className="text-[#5A6262]" />
-                {cartItems.length > 0 && (
-                  <span className="absolute top-0 right-0 bg-[#5A6262] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{cartItems.length}</span>
-                )}
-              </button>
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 hover:bg-[#E8E7E2] rounded-full transition-colors">
-                {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            </div>
-          </div>
-
-          {mobileMenuOpen && (
-            <div className="md:hidden bg-[#F9F9D7] border-b border-[#E8E7E2] px-4 py-4 space-y-3">
-              <a href="/catalog" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>Каталог</a>
-              <a href="#delivery" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>Доставка</a>
-              <a href="#contacts" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>Контакты</a>
-            </div>
-          )}
-        </header>
-
-        {/* CATALOG */}
+        <Header />
         <main className="max-w-7xl mx-auto px-4 md:px-6 py-12">
           <h1 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12">Каталог товаров</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -126,7 +120,7 @@ export default function Home() {
                   <div className="flex items-center justify-between">
                     <span className="text-xl font-semibold text-[#1F1F1D]">{formatPrice(product.price)} ₽</span>
                     <button
-                      onClick={() => handleAddToCart(product)}
+                      onClick={() => addToCart(product)}
                       className="px-4 py-2 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors"
                     >
                       В корзину
@@ -137,20 +131,7 @@ export default function Home() {
             ))}
           </div>
         </main>
-
-        {/* FOOTER */}
-        <footer className="py-12 px-4 md:px-6 border-t border-[#E8E7E2] bg-[#F9F9D7] w-full mt-20">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-            <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="flex items-center space-x-3 cursor-pointer">
-              <img src={LOGO_URL} alt="Tansylate" className="h-6 w-auto" />
-            </a>
-            <div className="flex gap-8 text-xs uppercase tracking-widest text-[#5A6262]">
-              <a href="#" className="hover:text-black transition-colors">Доставка</a>
-              <a href="#" className="hover:text-black transition-colors">Обмен</a>
-              <a href="#" className="hover:text-black transition-colors">Публичная оферта</a>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     );
   }
@@ -159,34 +140,7 @@ export default function Home() {
   if (location === "/cart") {
     return (
       <div className="min-h-screen bg-[#F0EFEA]">
-        {/* HEADER */}
-        <header className="sticky top-0 w-full bg-[#F9F9D7] border-b border-[#E8E7E2] z-50">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
-            <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="flex items-center space-x-3 cursor-pointer">
-              <img src={LOGO_URL} alt="Tansylate" className="h-8 w-auto" />
-            </a>
-
-            <nav className="hidden md:flex items-center space-x-8 text-[11px] uppercase tracking-[0.2em] font-medium text-[#5A6262]">
-              <a href="/catalog" className="hover:text-black transition-colors">Каталог</a>
-              <a href="#delivery" className="hover:text-black transition-colors">Доставка</a>
-              <a href="#contacts" className="hover:text-black transition-colors">Контакты</a>
-            </nav>
-
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 hover:bg-[#E8E7E2] rounded-full transition-colors">
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-
-          {mobileMenuOpen && (
-            <div className="md:hidden bg-[#F9F9D7] border-b border-[#E8E7E2] px-4 py-4 space-y-3">
-              <a href="/catalog" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>Каталог</a>
-              <a href="#delivery" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>Доставка</a>
-              <a href="#contacts" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>Контакты</a>
-            </div>
-          )}
-        </header>
-
-        {/* CART PAGE */}
+        <Header />
         <main className="max-w-4xl mx-auto px-4 md:px-6 py-12">
           <h1 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12">Корзина</h1>
 
@@ -202,7 +156,6 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Cart Items */}
               <div className="lg:col-span-2 space-y-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="bg-white p-6 rounded-lg border border-[#E8E7E2] flex gap-4">
@@ -218,20 +171,20 @@ export default function Home() {
                       <p className="text-[#5A6262] text-sm mb-4">{formatPrice(item.price)} ₽</p>
                       <div className="flex items-center gap-3">
                         <button
-                          onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           className="w-8 h-8 border border-[#E8E7E2] rounded hover:bg-[#E8E7E2] transition-colors"
                         >
                           −
                         </button>
                         <span className="w-8 text-center">{item.quantity}</span>
                         <button
-                          onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           className="w-8 h-8 border border-[#E8E7E2] rounded hover:bg-[#E8E7E2] transition-colors"
                         >
                           +
                         </button>
                         <button
-                          onClick={() => handleRemoveFromCart(item.id)}
+                          onClick={() => removeFromCart(item.id)}
                           className="ml-auto text-xs text-[#5A6262] hover:text-red-500 transition-colors"
                         >
                           Удалить
@@ -242,7 +195,6 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* Checkout Form */}
               <div className="bg-white p-6 rounded-lg border border-[#E8E7E2] h-fit">
                 <h2 className="font-serif text-[#1F1F1D] text-lg mb-6">Оформление заказа</h2>
 
@@ -299,20 +251,7 @@ export default function Home() {
             </div>
           )}
         </main>
-
-        {/* FOOTER */}
-        <footer className="py-12 px-4 md:px-6 border-t border-[#E8E7E2] bg-[#F9F9D7] w-full mt-20">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-            <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="flex items-center space-x-3 cursor-pointer">
-              <img src={LOGO_URL} alt="Tansylate" className="h-6 w-auto" />
-            </a>
-            <div className="flex gap-8 text-xs uppercase tracking-widest text-[#5A6262]">
-              <a href="#" className="hover:text-black transition-colors">Доставка</a>
-              <a href="#" className="hover:text-black transition-colors">Обмен</a>
-              <a href="#" className="hover:text-black transition-colors">Публичная оферта</a>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     );
   }
@@ -320,40 +259,7 @@ export default function Home() {
   // Home Page
   return (
     <div className="min-h-screen bg-[#F0EFEA]">
-      {/* HEADER */}
-      <header className="sticky top-0 w-full bg-[#F9F9D7] border-b border-[#E8E7E2] z-50">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
-          <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="flex items-center space-x-3 cursor-pointer">
-            <img src={LOGO_URL} alt="Tansylate" className="h-8 w-auto" />
-          </a>
-
-          <nav className="hidden md:flex items-center space-x-8 text-[11px] uppercase tracking-[0.2em] font-medium text-[#5A6262]">
-            <a href="/catalog" className="hover:text-black transition-colors">Каталог</a>
-            <a href="#delivery" className="hover:text-black transition-colors">Доставка</a>
-            <a href="#contacts" className="hover:text-black transition-colors">Контакты</a>
-          </nav>
-
-          <div className="flex items-center space-x-4">
-            <button onClick={() => setLocation("/cart")} className="relative p-2 hover:bg-[#E8E7E2] rounded-full transition-colors">
-              <ShoppingCart size={20} className="text-[#5A6262]" />
-              {cartItems.length > 0 && (
-                <span className="absolute top-0 right-0 bg-[#5A6262] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{cartItems.length}</span>
-              )}
-            </button>
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 hover:bg-[#E8E7E2] rounded-full transition-colors">
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-[#F9F9D7] border-b border-[#E8E7E2] px-4 py-4 space-y-3">
-            <a href="/catalog" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>Каталог</a>
-            <a href="#delivery" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>Доставка</a>
-            <a href="#contacts" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => setMobileMenuOpen(false)}>Контакты</a>
-          </div>
-        )}
-      </header>
+      <Header />
 
       <main>
         {/* HERO */}
@@ -373,7 +279,7 @@ export default function Home() {
           </button>
         </section>
 
-        {/* NEW ARRIVALS - Product Grid */}
+        {/* NEW ARRIVALS */}
         <section id="catalog" className="py-20 px-4 md:px-6 bg-white">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Новые поступления</h2>
@@ -391,7 +297,7 @@ export default function Home() {
                     <h3 className="text-lg font-serif text-[#1F1F1D] mb-2">{product.name}</h3>
                     <p className="text-sm text-[#5A6262] mb-4">{formatPrice(product.price)} ₽</p>
                     <button
-                      onClick={() => handleAddToCart(product)}
+                      onClick={() => addToCart(product)}
                       className="w-full px-4 py-2 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors"
                     >
                       В корзину
@@ -471,19 +377,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* FOOTER */}
-      <footer className="py-12 px-4 md:px-6 border-t border-[#E8E7E2] bg-[#F9F9D7] w-full">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-          <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="flex items-center space-x-3 cursor-pointer">
-            <img src={LOGO_URL} alt="Tansylate" className="h-6 w-auto" />
-          </a>
-          <div className="flex gap-8 text-xs uppercase tracking-widest text-[#5A6262]">
-            <a href="#" className="hover:text-black transition-colors">Доставка</a>
-            <a href="#" className="hover:text-black transition-colors">Обмен</a>
-            <a href="#" className="hover:text-black transition-colors">Публичная оферта</a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -93,8 +93,14 @@
 - [x] Test all functionality on mobile devices
 
 ## Follow-up Fixes Needed
-- [ ] Move cart state to React Context or localStorage for persistence across routes
-- [ ] Add "Корзина" as clickable header nav item (not just icon)
-- [ ] Fix anchor links (#delivery, #contacts) on /catalog and /cart pages
-- [ ] Add mobile-specific tests for responsive layout and touch interactions
-- [ ] Test cart persistence when navigating between pages
+- [x] Move cart state to React Context or localStorage for persistence across routes
+- [x] Add "Корзина" as clickable header nav item (not just icon)
+- [x] Fix anchor links (#delivery, #contacts) on /catalog and /cart pages
+- [x] Add mobile-specific tests for responsive layout and touch interactions
+- [x] Test cart persistence when navigating between pages
+
+## Final Verification Needed
+- [ ] Run frontend tests to verify CartContext works (client-side tests)
+- [ ] Manually test cart persistence across page navigation
+- [ ] Test mobile menu hamburger functionality
+- [ ] Verify responsive button sizes on mobile
