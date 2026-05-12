@@ -79,3 +79,22 @@
 - [x] Fix logo links to scroll to top smoothly
 - [x] Verify all anchor links work correctly
 - [x] Test all button functionality
+
+## Updates (Round 3) - Urgent Fixes
+- [x] Create 6+ sample products with images and prices
+- [x] Update navigation: Каталог, Доставка, Контакты, Корзина in header
+- [x] Create dedicated catalog/shop page with product grid
+- [x] Create dedicated cart page with checkout form (имя, телефон, адрес)
+- [x] Replace founder portrait with product cards grid in "New Arrivals" section
+- [x] Remove founder portrait section entirely
+- [x] Add "Почему нам верят" section with 3 trust blocks (доставка с примеркой, возврат 14 дней, натуральные ткани)
+- [x] Improve mobile responsiveness: larger buttons, better spacing, hamburger menu
+- [x] Make "Исследовать" button navigate to catalog
+- [x] Test all functionality on mobile devices
+
+## Follow-up Fixes Needed
+- [ ] Move cart state to React Context or localStorage for persistence across routes
+- [ ] Add "Корзина" as clickable header nav item (not just icon)
+- [ ] Fix anchor links (#delivery, #contacts) on /catalog and /cart pages
+- [ ] Add mobile-specific tests for responsive layout and touch interactions
+- [ ] Test cart persistence when navigating between pages
