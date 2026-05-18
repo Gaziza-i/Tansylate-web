@@ -557,7 +557,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-serif text-[#1F1F1D] text-lg mb-3">Доставка с примеркой</h3>
                 <p className="text-sm text-[#5A6262] font-light">
-                  Примеряйте товар перед оплатой. Если не подошло — вернём деньги без вопросов.
+                  Оцените вещь перед покупкой. Пожалуйста, примеряйте аккуратно: без следов макияжа и парфюма.
                 </p>
               </div>
 
@@ -567,7 +567,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-serif text-[#1F1F1D] text-lg mb-3">Возврат 14 дней</h3>
                 <p className="text-sm text-[#5A6262] font-light">
-                  Измените решение? Вернуть товар можно в течение 14 дней с момента получения.
+                  Возврат оформляется, если бирки не срезаны и остаются на одежде, а на вещи нет следов носки и посторонних запахов. Стоимость упаковки не возвращается.
                 </p>
               </div>
 
@@ -575,9 +575,9 @@ export default function Home() {
                 <div className="w-16 h-16 mx-auto mb-6 bg-[#5A6262] rounded-full flex items-center justify-center">
                   <Leaf size={32} className="text-white" />
                 </div>
-                <h3 className="font-serif text-[#1F1F1D] text-lg mb-3">Натуральные ткани</h3>
+                <h3 className="font-serif text-[#1F1F1D] text-lg mb-3">Премиальные материалы</h3>
                 <p className="text-sm text-[#5A6262] font-light">
-                  Только натуральные материалы: хлопок, лён, шерсть. Забота о вас и планете.
+                  Только износостойкие ткани высшего качества с заботой о вашем комфорте.
                 </p>
               </div>
             </div>
