@@ -549,36 +549,30 @@ export default function Home() {
         <section id="catalog" className="py-20 px-4 md:px-6 bg-white">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Новые поступления</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.slice(0, 6).map((product: any) => (
-                <div key={product.id} className="rounded-2xl overflow-hidden bg-[#F0EFEA] hover:shadow-lg transition-shadow cursor-pointer">
-                  <div 
-                    onClick={() => setLocation(`/product/${product.id}`)}
-                    className="w-full h-64 bg-[#E8E7E2] overflow-hidden"
-                  >
-                    {product.imageUrl ? (
-                      <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[#5A6262] text-sm">Фото товара</div>
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <h3 
-                      onClick={() => setLocation(`/product/${product.id}`)}
-                      className="text-lg font-serif text-[#1F1F1D] mb-2 hover:text-[#5A6262] transition-colors"
-                    >
-                      {product.name}
-                    </h3>
-                    <p className="text-sm text-[#5A6262] mb-4">{formatPrice(product.price)} ₽</p>
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="w-full px-4 py-2 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors"
-                    >
-                      В корзину
-                    </button>
-                  </div>
+            <div className="max-w-2xl mx-auto">
+              <div className="rounded-2xl overflow-hidden bg-[#F0EFEA] hover:shadow-lg transition-shadow cursor-pointer">
+                <div 
+                  onClick={() => setLocation(`/product/1`)}
+                  className="w-full h-64 bg-[#E8E7E2] overflow-hidden"
+                >
+                  <img src="/manus-storage/premium-costume_6b8c9e2f.jpg" alt="Премиальный спортивный костюм" className="w-full h-full object-cover hover:scale-105 transition-transform" />
                 </div>
-              ))}
+                <div className="p-6">
+                  <h3 
+                    onClick={() => setLocation(`/product/1`)}
+                    className="text-lg font-serif text-[#1F1F1D] mb-2 hover:text-[#5A6262] transition-colors"
+                  >
+                    Премиальный спортивный костюм
+                  </h3>
+                  <p className="text-sm text-[#5A6262] mb-4">12 990 ₽</p>
+                  <button
+                    onClick={() => addToCart({ id: 1, name: "Премиальный спортивный костюм", price: 1299000, description: "Коллекция 2026" })}
+                    className="w-full px-4 py-2 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors"
+                  >
+                    В корзину
+                  </button>
+                </div>
+              </div>
             </div>
             <div className="text-center mt-12">
               <button

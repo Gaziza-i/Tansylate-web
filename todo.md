@@ -130,3 +130,6 @@
 - [x] Display single premium costume card with carousel and full details
 - [x] Verify "В корзину" button works correctly for single product
 - [x] Test cart functionality with single product
+- [x] Simplify "Новые поступления" section to show only premium costume card
+- [x] Verify "В корзину" button works in new arrivals section
+- [x] Test that product is correctly added to cart from new arrivals
