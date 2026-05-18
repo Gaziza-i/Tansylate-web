@@ -124,3 +124,9 @@
 - [x] Add search functionality above catalog
 - [x] Add Privacy Policy page (required for data collection)
 - [x] Make git commits to GitHub after each change - commit 7670614 pushed
+
+## Round 6 - Catalog Simplification
+- [x] Remove all product cards from catalog except premium costume
+- [x] Display single premium costume card with carousel and full details
+- [x] Verify "В корзину" button works correctly for single product
+- [x] Test cart functionality with single product
