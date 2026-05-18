@@ -182,9 +182,9 @@ export default function Home() {
                   ))}
                 </div>
                 
-                {/* Size Table */}
+                {/* Size Table - Pants */}
                 <div className="bg-[#F9F9D7] rounded-lg p-4 overflow-x-auto">
-                  <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">Размерная сетка: Кофта</h4>
+                  <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">Размерная сетка: Штаны</h4>
                   <table className="w-full text-sm text-[#5A6262] border-collapse">
                     <thead>
                       <tr className="border-b-2 border-[#1F1F1D]">
@@ -198,14 +198,14 @@ export default function Home() {
                       <tr className="border-b border-[#E8E7E2]">
                         <td className="py-2 px-2">XS-S</td>
                         <td className="py-2 px-2">42</td>
-                        <td className="py-2 px-2">84 см</td>
                         <td className="py-2 px-2">66 см</td>
+                        <td className="py-2 px-2">90 см</td>
                       </tr>
                       <tr>
                         <td className="py-2 px-2">S-M</td>
                         <td className="py-2 px-2">44</td>
-                        <td className="py-2 px-2">88 см</td>
                         <td className="py-2 px-2">70 см</td>
+                        <td className="py-2 px-2">94 см</td>
                       </tr>
                     </tbody>
                   </table>

@@ -140,3 +140,9 @@
 - [x] Add data for XS-S (42, 84см, 66см) and S-M (44, 88см, 70см)
 - [x] Style table with #F9F9D7 background and proper borders
 - [x] Verify table displays correctly on product detail page
+
+## Round 8 - Pants Size Table Update
+- [x] Update size table title from "Кофта" to "Штаны"
+- [x] Update measurements for pants: XS-S (42, 66см груди, 90см талии), S-M (44, 70см груди, 94см талии)
+- [x] Verify table displays correctly with new data
+- [x] All tests passing
