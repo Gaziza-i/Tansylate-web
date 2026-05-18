@@ -174,12 +174,41 @@ export default function Home() {
 
               <div className="mb-8">
                 <h3 className="font-serif text-[#1F1F1D] text-lg mb-4">Размеры</h3>
-                <div className="flex gap-3">
+                <div className="flex gap-3 mb-6 flex-wrap">
                   {["XS", "S", "M", "L", "XL", "XXL"].map(size => (
                     <button key={size} className="px-4 py-2 border border-[#E8E7E2] rounded-lg hover:bg-[#E8E7E2] transition-colors text-[#1F1F1D]">
                       {size}
                     </button>
                   ))}
+                </div>
+                
+                {/* Size Table */}
+                <div className="bg-[#F9F9D7] rounded-lg p-4 overflow-x-auto">
+                  <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">Размерная сетка: Кофта</h4>
+                  <table className="w-full text-sm text-[#5A6262] border-collapse">
+                    <thead>
+                      <tr className="border-b-2 border-[#1F1F1D]">
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Размер</th>
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Российский размер</th>
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват груди</th>
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват талии</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-[#E8E7E2]">
+                        <td className="py-2 px-2">XS-S</td>
+                        <td className="py-2 px-2">42</td>
+                        <td className="py-2 px-2">84 см</td>
+                        <td className="py-2 px-2">66 см</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-2">S-M</td>
+                        <td className="py-2 px-2">44</td>
+                        <td className="py-2 px-2">88 см</td>
+                        <td className="py-2 px-2">70 см</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
 

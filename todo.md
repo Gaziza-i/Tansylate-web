@@ -133,3 +133,10 @@
 - [x] Simplify "Новые поступления" section to show only premium costume card
 - [x] Verify "В корзину" button works in new arrivals section
 - [x] Test that product is correctly added to cart from new arrivals
+
+## Round 7 - Size Table Integration
+- [x] Add size table to product detail page
+- [x] Display size table with columns: Размер, Российский размер, Обхват груди, Обхват талии
+- [x] Add data for XS-S (42, 84см, 66см) and S-M (44, 88см, 70см)
+- [x] Style table with #F9F9D7 background and proper borders
+- [x] Verify table displays correctly on product detail page
