@@ -337,49 +337,30 @@ export default function Home() {
             />
           </div>
 
-          {/* Premium Costume Card */}
+          {/* Sports Costume Card */}
           <div className="max-w-2xl mx-auto">
             <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              {/* Carousel Section */}
-              <div className="relative w-full h-96 bg-[#E8E7E2] overflow-hidden group">
+              {/* Image Section */}
+              <div className="w-full h-96 bg-[#E8E7E2] overflow-hidden">
                 <img 
-                  src="/manus-storage/premium-costume_6b8c9e2f.jpg" 
-                  alt="Премиальный спортивный костюм" 
-                  className="w-full h-full object-cover"
+                  src="/manus-storage/IMG_0063_e75f1e11.jpeg" 
+                  alt="Спортивный костюм" 
+                  className="w-full h-full object-cover hover:scale-105 transition-transform"
                 />
-                
-                {/* Navigation Buttons */}
-                <button
-                  onClick={() => setCarouselIndex(Math.max(0, carouselIndex - 1))}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <ChevronLeft size={20} className="text-[#5A6262]" />
-                </button>
-                <button
-                  onClick={() => setCarouselIndex(Math.min(2, carouselIndex + 1))}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <ChevronRight size={20} className="text-[#5A6262]" />
-                </button>
-
-                {/* Dot Indicators */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                  {[0, 1, 2].map((idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCarouselIndex(idx)}
-                      className={`w-2 h-2 rounded-full transition-all ${
-                        carouselIndex === idx ? "bg-[#5A6262] w-8" : "bg-white/60 hover:bg-white"
-                      }`}
-                    />
-                  ))}
-                </div>
               </div>
 
               {/* Product Details */}
               <div className="p-8">
-                <h2 className="text-2xl md:text-3xl font-serif text-[#1F1F1D] mb-2">Премиальный спортивный костюм</h2>
+                <h2 className="text-2xl md:text-3xl font-serif text-[#1F1F1D] mb-2">Спортивный костюм</h2>
                 <p className="text-sm text-[#5A6262] mb-6">Коллекция 2026</p>
+
+                {/* Description */}
+                <div className="mb-6">
+                  <h3 className="font-serif text-[#1F1F1D] mb-3">Описание</h3>
+                  <p className="text-[#5A6262] leading-relaxed text-sm">
+                    Премиальный спортивный костюм, созданный для тех, кто ценит качество и комфорт. Каждая деталь тщательно продумана, каждый шов выполнен на профессиональном оборудовании. Натуральные материалы обеспечивают идеальную терморегуляцию и комфорт при любых условиях.
+                  </p>
+                </div>
 
                 {/* Material Specs */}
                 <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6">
@@ -389,6 +370,35 @@ export default function Home() {
                     <p><strong>Тип ткани:</strong> Трёхнитка футер</p>
                     <p><strong>Плотность:</strong> 360 г/м²</p>
                   </div>
+                </div>
+
+                {/* Size Table */}
+                <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6 overflow-x-auto">
+                  <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">Размерная сетка: Штаны</h4>
+                  <table className="w-full text-sm text-[#5A6262] border-collapse">
+                    <thead>
+                      <tr className="border-b-2 border-[#1F1F1D]">
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Размер</th>
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">РУ размер</th>
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват груди</th>
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват талии</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-[#E8E7E2]">
+                        <td className="py-2 px-2">XS-S</td>
+                        <td className="py-2 px-2">42</td>
+                        <td className="py-2 px-2">66 см</td>
+                        <td className="py-2 px-2">90 см</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-2">S-M</td>
+                        <td className="py-2 px-2">44</td>
+                        <td className="py-2 px-2">70 см</td>
+                        <td className="py-2 px-2">94 см</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
 
                 {/* Features */}
@@ -402,16 +412,11 @@ export default function Home() {
                   </ul>
                 </div>
 
-                {/* Description */}
-                <p className="text-[#5A6262] mb-8 leading-relaxed">
-                  Этот премиальный спортивный костюм создан для тех, кто ценит качество и комфорт. Каждая деталь тщательно продумана, каждый шов выполнен на профессиональном оборудовании. Натуральные материалы обеспечивают идеальную терморегуляцию и комфорт при любых условиях.
-                </p>
-
                 {/* Price and Button */}
                 <div className="flex items-center justify-between pt-6 border-t border-[#E8E7E2]">
                   <span className="text-3xl font-semibold text-[#1F1F1D]">12 990 ₽</span>
                   <button
-                    onClick={() => addToCart({ id: 1, name: "Премиальный спортивный костюм", price: 1299000, description: "Коллекция 2026" })}
+                    onClick={() => addToCart({ id: 1, name: "Спортивный костюм", price: 1299000, description: "Коллекция 2026" })}
                     className="px-8 py-3 bg-[#5A6262] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium"
                   >
                     В корзину
@@ -574,28 +579,28 @@ export default function Home() {
           </button>
         </section>
 
-        {/* NEW ARRIVALS */}
+        {/* CATALOG */}
         <section id="catalog" className="py-20 px-4 md:px-6 bg-white">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Новые поступления</h2>
+            <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Каталог</h2>
             <div className="max-w-2xl mx-auto">
               <div className="rounded-2xl overflow-hidden bg-[#F0EFEA] hover:shadow-lg transition-shadow cursor-pointer">
                 <div 
                   onClick={() => setLocation(`/product/1`)}
                   className="w-full h-64 bg-[#E8E7E2] overflow-hidden"
                 >
-                  <img src="/manus-storage/premium-costume_6b8c9e2f.jpg" alt="Премиальный спортивный костюм" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+                  <img src="/manus-storage/IMG_0063_e75f1e11.jpeg" alt="Спортивный костюм" className="w-full h-full object-cover hover:scale-105 transition-transform" />
                 </div>
                 <div className="p-6">
                   <h3 
                     onClick={() => setLocation(`/product/1`)}
                     className="text-lg font-serif text-[#1F1F1D] mb-2 hover:text-[#5A6262] transition-colors"
                   >
-                    Премиальный спортивный костюм
+                    Спортивный костюм
                   </h3>
                   <p className="text-sm text-[#5A6262] mb-4">12 990 ₽</p>
                   <button
-                    onClick={() => addToCart({ id: 1, name: "Премиальный спортивный костюм", price: 1299000, description: "Коллекция 2026" })}
+                    onClick={() => addToCart({ id: 1, name: "Спортивный костюм", price: 1299000, description: "Коллекция 2026" })}
                     className="w-full px-4 py-2 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors"
                   >
                     В корзину

@@ -146,3 +146,12 @@
 - [x] Update measurements for pants: XS-S (42, 66см груди, 90см талии), S-M (44, 70см груди, 94см талии)
 - [x] Verify table displays correctly with new data
 - [x] All tests passing
+
+## Round 9 - Homepage Restructuring
+- [x] Remove premium costume carousel from catalog page
+- [x] Replace catalog page product card with sports costume card using new image
+- [x] Update product card with description, material specs, and size table
+- [x] Rename "Новые поступления" section to "Каталог" on homepage
+- [x] Update homepage catalog card with new sports costume image
+- [x] Verify all functionality works with new image and layout
+- [x] All 11 tests passing
