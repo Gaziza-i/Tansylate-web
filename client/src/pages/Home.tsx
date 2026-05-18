@@ -584,6 +584,35 @@ export default function Home() {
           </div>
         </section>
 
+        {/* FOUNDER STORY */}
+        <section className="py-20 px-4 md:px-6 bg-white">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div className="order-2 md:order-1">
+                <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-8">О себе</h2>
+                <div className="space-y-6 text-[#1F1F1D] font-light leading-relaxed">
+                  <p>
+                    Меня зовут <span className="font-semibold">Тансылу</span>, мне 16 лет. Моя цель — создавать по-настоящему долговечную одежду.
+                  </p>
+                  <p>
+                    Все ключевые этапы контролирую лично: от разработки удобных эскизов и работы с дизайнерами до проверки швейного цеха и финальной упаковки.
+                  </p>
+                  <p>
+                    Это не просто бизнес, а ответственность за внешний вид и качество готового изделия. В процесс вкладывается максимум сил, чтобы гарантировать высокое качество исполнения и внимание к каждому шву.
+                  </p>
+                </div>
+              </div>
+              <div className="order-1 md:order-2">
+                <img 
+                  src="/manus-storage/IMG_0057_729af000.jpeg" 
+                  alt="Тансылу" 
+                  className="w-full h-auto rounded-2xl object-cover shadow-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* CONTACTS */}
         <section id="contacts" className="py-20 px-4 md:px-6 bg-white">
           <div className="max-w-5xl mx-auto">
