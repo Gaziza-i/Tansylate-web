@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Menu, X, Truck, RotateCcw, Leaf, Mail, Phone, Search, ChevronRight } from "lucide-react";
+import { ShoppingCart, Menu, X, Truck, RotateCcw, Leaf, Mail, Phone, Search, ChevronRight, ChevronLeft } from "lucide-react";
 import { useLocation } from "wouter";
 import { useCart } from "@/contexts/CartContext";
 
@@ -12,6 +12,8 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [checkoutForm, setCheckoutForm] = useState({ name: "", phone: "", address: "" });
   const [searchQuery, setSearchQuery] = useState("");
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   
   const { cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
   
@@ -608,6 +610,106 @@ export default function Home() {
                   alt="Тансылу" 
                   className="w-full h-auto rounded-2xl object-cover shadow-lg"
                 />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* COSTUME CAROUSEL & PRODUCT CARD */}
+        <section className="py-20 px-4 md:px-6 bg-[#F0EFEA]">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Премиальный спортивный костюм</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+              {/* Carousel */}
+              <div className="relative">
+                <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg">
+                  <img 
+                    src="/manus-storage/IMG_0058_1f13bfd6.jpg" 
+                    alt="Костюм" 
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+                
+                {/* Carousel Controls */}
+                <div className="flex justify-between items-center mt-6">
+                  <button
+                    onClick={() => setCarouselIndex(Math.max(0, carouselIndex - 1))}
+                    disabled={carouselIndex === 0}
+                    className="p-2 rounded-full bg-[#F9F9D7] hover:bg-[#5A6262] hover:text-white disabled:opacity-50 transition-colors"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                  <div className="flex gap-2">
+                    {[0, 1, 2].map((i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCarouselIndex(i)}
+                        className={`w-3 h-3 rounded-full transition-colors ${
+                          carouselIndex === i ? "bg-[#5A6262]" : "bg-[#F9F9D7]"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => setCarouselIndex(Math.min(2, carouselIndex + 1))}
+                    disabled={carouselIndex === 2}
+                    className="p-2 rounded-full bg-[#F9F9D7] hover:bg-[#5A6262] hover:text-white disabled:opacity-50 transition-colors"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                </div>
+              </div>
+              
+              {/* Product Card */}
+              <div className="bg-white p-8 rounded-2xl shadow-lg">
+                <div className="mb-6">
+                  <h3 className="text-2xl font-serif text-[#1F1F1D] mb-2">Спортивный костюм премиум</h3>
+                  <p className="text-sm text-[#5A6262] uppercase tracking-widest">Авторский бренд • Россия</p>
+                </div>
+                
+                <div className="space-y-6 mb-8">
+                  <div>
+                    <h4 className="font-semibold text-[#1F1F1D] mb-3 text-sm uppercase tracking-widest">Материал</h4>
+                    <p className="text-sm text-[#1F1F1D] font-light">Трёхнитка футер без начеса, премиум-качество «Пенье»</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold text-[#1F1F1D] mb-3 text-sm uppercase tracking-widest">Состав</h4>
+                    <p className="text-sm text-[#1F1F1D] font-light">80% хлопок (длинноволокнистый), 20% полиэстер</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold text-[#1F1F1D] mb-3 text-sm uppercase tracking-widest">Плотность ткани</h4>
+                    <p className="text-sm text-[#1F1F1D] font-light">Высокая — 360 г/м²</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold text-[#1F1F1D] mb-3 text-sm uppercase tracking-widest">Особенности</h4>
+                    <ul className="text-sm text-[#1F1F1D] font-light space-y-2">
+                      <li>• Износостойкий материал с минимизацией катышков</li>
+                      <li>• Швы обработаны на профессиональном оборудовании</li>
+                      <li>• Премиальная фурнитура</li>
+                      <li>• Защита коленей от вытягивания</li>
+                      <li>• Штучный пошив — аккуратность каждого шва</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="pt-4 border-t border-[#F9F9D7]">
+                    <p className="text-sm text-[#1F1F1D] font-light leading-relaxed">
+                      Этот костюм создан под личным контролем Тансылу для тех, кто ценит безупречный вид, долговечность и комфорт. Невероятно мягкая ткань выглядит дорого и отлично держит форму благодаря особому плетению нитей.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-4">
+                  <button className="flex-1 bg-[#5A6262] text-white py-3 rounded-full font-semibold hover:bg-[#1F1F1D] transition-colors uppercase tracking-widest text-sm">
+                    В корзину
+                  </button>
+                  <button className="flex-1 border border-[#5A6262] text-[#5A6262] py-3 rounded-full font-semibold hover:bg-[#5A6262] hover:text-white transition-colors uppercase tracking-widest text-sm">
+                    Подробнее
+                  </button>
+                </div>
               </div>
             </div>
           </div>
