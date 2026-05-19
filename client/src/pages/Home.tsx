@@ -532,7 +532,7 @@ export default function Home() {
                       <tr className="border-b-2 border-[#1F1F1D]">
                         <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Размер</th>
                         <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">РУ размер</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват груди</th>
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват бёдер</th>
                         <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват талии</th>
                       </tr>
                     </thead>
@@ -546,8 +546,8 @@ export default function Home() {
                       <tr>
                         <td className="py-2 px-2">S-M</td>
                         <td className="py-2 px-2">44</td>
-                        <td className="py-2 px-2">70 см</td>
                         <td className="py-2 px-2">94 см</td>
+                        <td className="py-2 px-2">70 см</td>
                       </tr>
                     </tbody>
                   </table>
@@ -587,6 +587,7 @@ export default function Home() {
                       <p className="text-sm text-[#5A6262]">Сушка: только горизонтально в тени</p>
                     </div>
                   </div>
+                  <p className="text-xs text-[#5A6262] mt-4 italic">Первое время с изнанки может осыпаться лишний ворс — это особенность ткани. После 1–2 стирок всё пройдёт.</p>
                 </div>
 
                 <div className="flex items-center justify-between pt-6 border-t border-[#E8E7E2]">

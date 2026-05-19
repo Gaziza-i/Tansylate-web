@@ -193,3 +193,10 @@
 - [x] Update TikTok link to https://www.tiktok.com/@tansylate (already present)
 - [x] Update Telegram link to https://t.me/tansylate (already present)
 - [x] Test all pages and verify contact information displays correctly
+
+## Round 14 - Catalog Page Updates (COMPLETED)
+- [x] Update "Размерная сетка: Кофта" table with correct measurements (XS-S: 42, 84см груди, 66см талии; S-M: 44, 88см груди, 70см талии)
+- [x] Update "Размерная сетка: Штаны" table with "Обхват бёдер" instead of "Обхват груди" (XS-S: 42, 90см бёдер, 66см талии; S-M: 44, 94см бёдер, 70см талии)
+- [x] Add complete "Уход за изделием" block with 5 care instructions
+- [x] Add note about lint shedding after first 1-2 washes
+- [x] Test all pages and verify functionality
