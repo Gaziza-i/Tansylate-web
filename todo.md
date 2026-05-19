@@ -174,3 +174,10 @@
 - [x] Add care instructions block with icons before order button
 - [x] Test all functionality
 - [x] Verify responsive design
+
+## Round 12 - Homepage Refactoring & Catalog Redesign
+- [x] Remove "Премиальный спортивный костюм" block from homepage
+- [x] Update product card to display sports costume details instead of linen dress
+- [x] Create minimalist catalog card with basic info (image, name, price)
+- [x] Add modal/expandable view for full product details when clicking card
+- [x] Test all changes and verify functionality (11 tests passing)
