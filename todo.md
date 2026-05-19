@@ -181,3 +181,15 @@
 - [x] Create minimalist catalog card with basic info (image, name, price)
 - [x] Add modal/expandable view for full product details when clicking card
 - [x] Test all changes and verify functionality (11 tests passing)
+
+## Round 13 - Contact Information Update
+- [x] Update phone number to +7 995 366 8498 in header (already present)
+- [x] Update phone number to +7 995 366 8498 in contacts section on homepage (already present)
+- [x] Update phone number to +7 995 366 8498 in footer (already present)
+- [x] Update phone number to +7 995 366 8498 on privacy page (already present)
+- [x] Remove all email addresses (hide completely - no email shown)
+- [x] Remove all WhatsApp links (hide completely - no WhatsApp shown)
+- [x] Update Instagram link to https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1 (updated in footer and contacts)
+- [x] Update TikTok link to https://www.tiktok.com/@tansylate (already present)
+- [x] Update Telegram link to https://t.me/tansylate (already present)
+- [x] Test all pages and verify contact information displays correctly
