@@ -119,7 +119,7 @@ export default function Home() {
           <div>
             <h4 className="font-semibold text-[#1F1F1D] mb-4 text-sm uppercase tracking-widest">Помощь</h4>
             <a href="/#delivery" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="text-sm text-[#5A6262] hover:text-black transition-colors block mb-2">Доставка</a>
-            <a href="/#delivery" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="text-sm text-[#5A6262] hover:text-black transition-colors block mb-2">Обмен</a>
+            <a href="/#delivery" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="text-sm text-[#5A6262] hover:text-black transition-colors block mb-2">Возврат</a>
             <a href="/privacy" onClick={(e) => { e.preventDefault(); setLocation("/privacy"); }} className="text-sm text-[#5A6262] hover:text-black transition-colors block">Политика конфиденциальности</a>
           </div>
           <div>
@@ -271,6 +271,50 @@ export default function Home() {
                     <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">Instagram</a>
                     <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">TikTok</a>
                   </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Delivery & Returns */}
+          <section id="delivery" className="py-20 px-4 md:px-6 bg-[#F9F9D7]">
+            <div className="max-w-5xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Доставка и возврат</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="bg-white rounded-2xl p-8">
+                  <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Доставка</h3>
+                  <ul className="space-y-3 text-sm text-[#5A6262]">
+                    <li className="flex items-start gap-3">
+                      <span className="text-[#1F1F1D] font-semibold mt-0.5">•</span>
+                      <span>Доставка по всей России (СДЭК / Почта России)</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-[#1F1F1D] font-semibold mt-0.5">•</span>
+                      <span>Сроки: 3–7 рабочих дней</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-[#1F1F1D] font-semibold mt-0.5">•</span>
+                      <span>Стоимость уточняется при оформлении</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-[#1F1F1D] font-semibold mt-0.5">•</span>
+                      <span>Примерка перед оплатой: можно оценить вещь, примерять без макияжа и парфюма</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white rounded-2xl p-8">
+                  <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Возврат</h3>
+                  <ul className="space-y-3 text-sm text-[#5A6262]">
+                    <li className="flex items-start gap-3">
+                      <span className="text-[#1F1F1D] font-semibold mt-0.5">•</span>
+                      <span>Возврат 14 дней: бирки не срезаны, нет следов носки и запахов</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-[#1F1F1D] font-semibold mt-0.5">•</span>
+                      <span>Стоимость упаковки не возвращается</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>

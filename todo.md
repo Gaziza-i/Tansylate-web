@@ -200,3 +200,11 @@
 - [x] Add complete "Уход за изделием" block with 5 care instructions
 - [x] Add note about lint shedding after first 1-2 washes
 - [x] Test all pages and verify functionality
+
+## Round 15 - Delivery ## Round 15 - Delivery & Returns Section Returns Section (COMPLETED)
+- [x] Create #delivery section on homepage with "Доставка и возврат" heading
+- [x] Add delivery information (СДЭК / Почта России, 3-7 days, cost details)
+- [x] Add fitting before payment info
+- [x] Add return policy (14 days, tags intact, no wear/smell, packaging cost not returned)
+- [x] Update footer "Обмен" link to "Возврат" pointing to #delivery
+- [x] Test all functionality and verify anchor links work
