@@ -162,3 +162,15 @@
 - [x] Link Telegram button to https://t.me/tansylate_bot
 - [x] Remove cart functionality from product cards
 - [x] Verify all tests pass (11/11 passing)
+
+## Round 11 - Document Requirements Implementation
+- [x] Update phone number to +7 995 366 8498
+- [x] Remove email from contacts (hide info@tansylate.ru)
+- [x] Remove WhatsApp link from contacts
+- [x] Add TikTok link: https://www.tiktok.com/@tansylate
+- [x] Update footer links: Telegram, Instagram, TikTok
+- [x] Add separate size table for jacket (Кофта) on catalog page
+- [x] Add separate size table for pants (Штаны) on catalog page
+- [x] Add care instructions block with icons before order button
+- [x] Test all functionality
+- [x] Verify responsive design

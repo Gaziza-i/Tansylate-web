@@ -372,7 +372,36 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Size Table */}
+                {/* Size Table - Jacket */}
+                <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6 overflow-x-auto">
+                  <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">Размерная сетка: Кофта</h4>
+                  <table className="w-full text-sm text-[#5A6262] border-collapse">
+                    <thead>
+                      <tr className="border-b-2 border-[#1F1F1D]">
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Размер</th>
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">РУ размер</th>
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват груди</th>
+                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват талии</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-[#E8E7E2]">
+                        <td className="py-2 px-2">XS-S</td>
+                        <td className="py-2 px-2">42</td>
+                        <td className="py-2 px-2">84 см</td>
+                        <td className="py-2 px-2">66 см</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-2">S-M</td>
+                        <td className="py-2 px-2">44</td>
+                        <td className="py-2 px-2">88 см</td>
+                        <td className="py-2 px-2">70 см</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Size Table - Pants */}
                 <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6 overflow-x-auto">
                   <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">Размерная сетка: Штаны</h4>
                   <table className="w-full text-sm text-[#5A6262] border-collapse">
@@ -410,6 +439,33 @@ export default function Home() {
                     <li>✓ Идеальная посадка по фигуре</li>
                     <li>✓ Натуральные материалы высочайшего качества</li>
                   </ul>
+                </div>
+
+                {/* Care Instructions */}
+                <div className="bg-[#F9F9D7] rounded-lg p-6 mb-6">
+                  <h3 className="font-serif text-[#1F1F1D] mb-4 text-sm font-semibold">Уход за изделием</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">❄️</span>
+                      <p className="text-sm text-[#5A6262]">Стирка 30°C, выверну наизнанку</p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">🚫</span>
+                      <p className="text-sm text-[#5A6262]">Отбеливание: запрещено</p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">🌡️</span>
+                      <p className="text-sm text-[#5A6262]">Утюжка: до 110°C</p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">🧺</span>
+                      <p className="text-sm text-[#5A6262]">Машинная сушка: запрещена</p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">☐</span>
+                      <p className="text-sm text-[#5A6262]">Сушка: только горизонтально в тени</p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Price and Button */}
@@ -802,14 +858,7 @@ export default function Home() {
                     <Phone size={24} className="text-[#5A6262] mt-1 flex-shrink-0" />
                     <div>
                       <p className="text-xs uppercase tracking-widest text-[#5A6262] mb-1">Телефон</p>
-                      <a href="tel:+79999999999" className="text-[#1F1F1D] hover:text-[#5A6262] transition-colors font-medium">+7 (999) 999-99-99</a>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <Mail size={24} className="text-[#5A6262] mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs uppercase tracking-widest text-[#5A6262] mb-1">Email</p>
-                      <a href="mailto:hello@tansylate.ru" className="text-[#1F1F1D] hover:text-[#5A6262] transition-colors font-medium">hello@tansylate.ru</a>
+                      <a href="tel:+79953668498" className="text-[#1F1F1D] hover:text-[#5A6262] transition-colors font-medium">+7 995 366 8498</a>
                     </div>
                   </div>
                 </div>
@@ -821,11 +870,11 @@ export default function Home() {
                   <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors text-center font-medium">
                     Telegram
                   </a>
-                  <a href="https://wa.me/79999999999" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors text-center font-medium">
-                    WhatsApp
-                  </a>
                   <a href="https://instagram.com/tansylate" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors text-center font-medium">
                     Instagram
+                  </a>
+                  <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors text-center font-medium">
+                    TikTok
                   </a>
                 </div>
               </div>
