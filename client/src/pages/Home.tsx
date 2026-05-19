@@ -415,12 +415,14 @@ export default function Home() {
                 {/* Price and Button */}
                 <div className="flex items-center justify-between pt-6 border-t border-[#E8E7E2]">
                   <span className="text-3xl font-semibold text-[#1F1F1D]">12 990 ₽</span>
-                  <button
-                    onClick={() => addToCart({ id: 1, name: "Спортивный костюм", price: 1299000, description: "Коллекция 2026" })}
-                    className="px-8 py-3 bg-[#5A6262] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium"
+                  <a
+                    href="https://t.me/tansylate_bot"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-8 py-3 bg-[#5A6262] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium inline-block"
                   >
-                    В корзину
-                  </button>
+                    Заказать в Telegram
+                  </a>
                 </div>
               </div>
             </div>
@@ -599,12 +601,14 @@ export default function Home() {
                     Спортивный костюм
                   </h3>
                   <p className="text-sm text-[#5A6262] mb-4">12 990 ₽</p>
-                  <button
-                    onClick={() => addToCart({ id: 1, name: "Спортивный костюм", price: 1299000, description: "Коллекция 2026" })}
-                    className="w-full px-4 py-2 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors"
+                  <a
+                    href="https://t.me/tansylate_bot"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full px-4 py-2 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors text-center block"
                   >
-                    В корзину
-                  </button>
+                    Заказать в Telegram
+                  </a>
                 </div>
               </div>
             </div>

@@ -155,3 +155,10 @@
 - [x] Update homepage catalog card with new sports costume image
 - [x] Verify all functionality works with new image and layout
 - [x] All 11 tests passing
+
+## Round 10 - Telegram Order Button
+- [x] Replace "В корзину" button with "Заказать в Telegram" on catalog page
+- [x] Replace "В корзину" button with "Заказать в Telegram" on homepage catalog section
+- [x] Link Telegram button to https://t.me/tansylate_bot
+- [x] Remove cart functionality from product cards
+- [x] Verify all tests pass (11/11 passing)
