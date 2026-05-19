@@ -53,6 +53,14 @@ export default function Home() {
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
+  const scrollToSection = (id: string) => {
+    closeMobileMenu();
+    setLocation("/");
+    setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
   // Breadcrumbs Component
   const Breadcrumbs = ({ items }: { items: { label: string; href?: string }[] }) => (
     <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#5A6262] mb-6">
@@ -81,9 +89,9 @@ export default function Home() {
 
         <nav className="hidden md:flex items-center space-x-8 text-[11px] uppercase tracking-[0.2em] font-medium text-[#5A6262]">
           <a href="/catalog" onClick={(e) => { e.preventDefault(); setLocation("/catalog"); }} className="hover:text-black transition-colors">Каталог</a>
-          <a href="/#delivery" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="hover:text-black transition-colors">Доставка</a>
-          <a href="/#delivery" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="hover:text-black transition-colors">Возврат</a>
-          <a href="/#contacts" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="hover:text-black transition-colors">Контакты</a>
+          <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className="hover:text-black transition-colors">Доставка</a>
+          <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className="hover:text-black transition-colors">Возврат</a>
+          <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className="hover:text-black transition-colors">Контакты</a>
         </nav>
 
         <div className="flex items-center space-x-4">
@@ -101,11 +109,11 @@ export default function Home() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-[#E8E7E2]">
-          <a href="/catalog" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => { closeMobileMenu(); setLocation("/catalog"); }}>Каталог</a>
-          <a href="/#delivery" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => { closeMobileMenu(); setLocation("/"); }}>Доставка</a>
-          <a href="/#delivery" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => { closeMobileMenu(); setLocation("/"); }}>Возврат</a>
-          <a href="/#contacts" className="block text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => { closeMobileMenu(); setLocation("/"); }}>Контакты</a>
+        <div className="md:hidden bg-white border-t border-[#E8E7E2] py-4 px-6">
+          <a href="/catalog" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={() => { closeMobileMenu(); setLocation("/catalog"); }}>Каталог</a>
+          <a href="#delivery" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }}>Доставка</a>
+          <a href="#delivery" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }}>Возврат</a>
+          <a href="#contacts" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-black transition-colors" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }}>Контакты</a>
         </div>
       )}
     </header>
@@ -118,8 +126,8 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div>
             <h4 className="font-semibold text-[#1F1F1D] mb-4 text-sm uppercase tracking-widest">Помощь</h4>
-            <a href="/#delivery" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="text-sm text-[#5A6262] hover:text-black transition-colors block mb-2">Доставка</a>
-            <a href="/#delivery" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="text-sm text-[#5A6262] hover:text-black transition-colors block mb-2">Возврат</a>
+            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className="text-sm text-[#5A6262] hover:text-black transition-colors block mb-2">Доставка</a>
+            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className="text-sm text-[#5A6262] hover:text-black transition-colors block mb-2">Возврат</a>
             <a href="/privacy" onClick={(e) => { e.preventDefault(); setLocation("/privacy"); }} className="text-sm text-[#5A6262] hover:text-black transition-colors block">Политика конфиденциальности</a>
           </div>
           <div>
@@ -180,19 +188,32 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="text-center mt-12">
-                <button
-                  onClick={() => setLocation("/catalog")}
-                  className="px-8 py-3 border border-[#5A6262] text-[#5A6262] text-xs uppercase tracking-widest rounded-full hover:bg-[#5A6262] hover:text-white transition-colors"
-                >
-                  Смотреть весь каталог
-                </button>
+            </div>
+          </section>
+
+          {/* About Section */}
+          <section className="py-20 px-4 md:px-6 bg-white">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-6">О себе</h2>
+                <p className="text-[#5A6262] mb-4 leading-relaxed">
+                  Меня зовут Тансылу, мне 16 лет. Моя цель — создавать по-настоящему долговечную одежду.
+                </p>
+                <p className="text-[#5A6262] mb-4 leading-relaxed">
+                  Все ключевые этапы контролирую лично: от разработки удобных эскизов и работы с дизайнерами до проверки швейного цеха и финальной упаковки.
+                </p>
+                <p className="text-[#5A6262] leading-relaxed">
+                  Это не просто бизнес, а ответственность за внешний вид и качество готового изделия. В процесс вкладывается максимум сил, чтобы гарантировать высокое качество исполнения и внимание к каждому шву.
+                </p>
+              </div>
+              <div className="bg-[#E8E7E2] rounded-2xl h-96 overflow-hidden">
+                <img src="/manus-storage/IMG_0064_0e7e8e2e.jpeg" alt="Тансылу" className="w-full h-full object-cover" />
               </div>
             </div>
           </section>
 
           {/* Why Trust Us */}
-          <section id="delivery" className="py-20 px-4 md:px-6 bg-[#F9F9D7]">
+          <section id="trust" className="py-20 px-4 md:px-6 bg-[#F9F9D7]">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Почему нам верят</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -229,59 +250,12 @@ export default function Home() {
             </div>
           </section>
 
-          {/* About Section */}
-          <section className="py-20 px-4 md:px-6 bg-white">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-6">О себе</h2>
-                <p className="text-[#5A6262] mb-4 leading-relaxed">
-                  Меня зовут Тансылу, мне 16 лет. Моя цель — создавать по-настоящему долговечную одежду.
-                </p>
-                <p className="text-[#5A6262] mb-4 leading-relaxed">
-                  Все ключевые этапы контролирую лично: от разработки удобных эскизов и работы с дизайнерами до проверки швейного цеха и финальной упаковки.
-                </p>
-                <p className="text-[#5A6262] leading-relaxed">
-                  Это не просто бизнес, а ответственность за внешний вид и качество готового изделия. В процесс вкладывается максимум сил, чтобы гарантировать высокое качество исполнения и внимание к каждому шву.
-                </p>
-              </div>
-              <div className="bg-[#E8E7E2] rounded-2xl h-96 overflow-hidden">
-                <img src="/manus-storage/IMG_0064_0e7e8e2e.jpeg" alt="Тансылу" className="w-full h-full object-cover" />
-              </div>
-            </div>
-          </section>
-
-          {/* Contacts */}
-          <section id="contacts" className="py-20 px-4 md:px-6 bg-white">
-            <div className="max-w-5xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Свяжитесь с нами</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div className="bg-[#F9F9D7] rounded-2xl p-8">
-                  <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Контактная информация</h3>
-                  <div className="flex items-center gap-3 mb-4">
-                    <Phone size={20} className="text-[#5A6262]" />
-                    <a href="tel:+79953668498" className="text-[#5A6262] hover:text-black transition-colors">+7 995 366 8498</a>
-                  </div>
-                </div>
-
-                <div className="bg-[#F9F9D7] rounded-2xl p-8">
-                  <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Социальные сети</h3>
-                  <p className="text-sm text-[#5A6262] mb-4">Следите за новыми коллекциями и новостями бренда</p>
-                  <div className="space-y-2">
-                    <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">Telegram</a>
-                    <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">Instagram</a>
-                    <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">TikTok</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
           {/* Delivery & Returns */}
-          <section id="delivery" className="py-20 px-4 md:px-6 bg-[#F9F9D7]">
+          <section id="delivery" className="py-20 px-4 md:px-6 bg-white">
             <div className="max-w-5xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Доставка и возврат</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div className="bg-white rounded-2xl p-8">
+                <div className="bg-[#F9F9D7] rounded-2xl p-8">
                   <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Доставка</h3>
                   <ul className="space-y-3 text-sm text-[#5A6262]">
                     <li className="flex items-start gap-3">
@@ -298,23 +272,53 @@ export default function Home() {
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="text-[#1F1F1D] font-semibold mt-0.5">•</span>
-                      <span>Примерка перед оплатой: можно оценить вещь, примерять без макияжа и парфюма</span>
+                      <span>Примерка перед оплатой — можно оценить вещь, примерять без макияжа и парфюма</span>
                     </li>
                   </ul>
                 </div>
 
-                <div className="bg-white rounded-2xl p-8">
+                <div className="bg-[#F9F9D7] rounded-2xl p-8">
                   <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Возврат</h3>
                   <ul className="space-y-3 text-sm text-[#5A6262]">
                     <li className="flex items-start gap-3">
                       <span className="text-[#1F1F1D] font-semibold mt-0.5">•</span>
-                      <span>Возврат 14 дней: бирки не срезаны, нет следов носки и запахов</span>
+                      <span>Возврат в течение 14 дней</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-[#1F1F1D] font-semibold mt-0.5">•</span>
+                      <span>Бирки не срезаны, нет следов носки и посторонних запахов</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="text-[#1F1F1D] font-semibold mt-0.5">•</span>
                       <span>Стоимость упаковки не возвращается</span>
                     </li>
                   </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Contacts */}
+          <section id="contacts" className="py-20 px-4 md:px-6 bg-[#F0EFEA]">
+            <div className="max-w-5xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Свяжитесь с нами</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="bg-white rounded-2xl p-8">
+                  <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Контактная информация</h3>
+                  <div className="flex items-center gap-3 mb-4">
+                    <Phone size={20} className="text-[#5A6262]" />
+                    <a href="tel:+79953668498" className="text-[#5A6262] hover:text-black transition-colors">+7 995 366 8498</a>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl p-8">
+                  <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Социальные сети</h3>
+                  <p className="text-sm text-[#5A6262] mb-4">Следите за новыми коллекциями и новостями бренда</p>
+                  <div className="space-y-2">
+                    <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">Telegram</a>
+                    <a href="https://wa.me/79953668498" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">WhatsApp</a>
+                    <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">TikTok</a>
+                  </div>
                 </div>
               </div>
             </div>
