@@ -1,51 +1,49 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart, Menu, X, Truck, RotateCcw, Leaf, Mail, Phone, Search, ChevronRight, ChevronLeft } from "lucide-react";
+import { Menu, X, Truck, RotateCcw, Leaf, Phone, Search, ChevronRight, ChevronLeft } from "lucide-react";
 import { useLocation } from "wouter";
-import { useCart } from "@/contexts/CartContext";
+
+function parseJSON<T>(val: string | null | undefined, fallback: T): T {
+  if (!val) return fallback;
+  try { return JSON.parse(val) as T; } catch { return fallback; }
+}
+
+const FALLBACK_IMAGES = [
+  "/manus-storage/IMG_4999.jpeg",
+  "/manus-storage/IMG_4998.jpeg",
+  "/manus-storage/IMG_5001.jpeg",
+  "/manus-storage/IMG_5002.jpeg",
+  "/manus-storage/IMG_5003.jpeg",
+];
 
 const LOGO_URL = "/manus-storage/tansylate-logo-cropped_660047f4.png";
 
 export default function Home() {
   const [location, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [checkoutForm, setCheckoutForm] = useState({ name: "", phone: "", address: "" });
   const [searchQuery, setSearchQuery] = useState("");
-  const [carouselIndex, setCarouselIndex] = useState(0);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
-  
-  const { cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
-  
-  const { data: products = [] } = trpc.catalog.products.useQuery();
-  const submitContact = trpc.contacts.submit.useMutation();
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
-  // Filter products based on search - compute directly without setState
+  const { data: products = [] } = trpc.catalog.products.useQuery();
+
+  // Первый товар — главный на витрине
+  const featuredProduct = products[0] ?? null;
+  const productImages = featuredProduct
+    ? parseJSON<string[]>(featuredProduct.images, FALLBACK_IMAGES)
+    : FALLBACK_IMAGES;
+  const productImages_nonempty = productImages.length > 0 ? productImages : FALLBACK_IMAGES;
+
+  const prevSlide = () => setCarouselIndex(i => (i - 1 + productImages_nonempty.length) % productImages_nonempty.length);
+  const nextSlide = () => setCarouselIndex(i => (i + 1) % productImages_nonempty.length);
+
+  // Filter products based on search
   const filteredProducts = searchQuery.trim()
-    ? products.filter(p => 
+    ? products.filter(p =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.description?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : products;
-
-  const handleCheckout = async () => {
-    if (!checkoutForm.name || !checkoutForm.phone || !checkoutForm.address) {
-      alert("Пожалуйста, заполните все поля");
-      return;
-    }
-
-    const orderSummary = cartItems.map(item => `${item.name} x${item.quantity}`).join(", ");
-    await submitContact.mutateAsync({
-      name: checkoutForm.name,
-      email: checkoutForm.phone,
-      message: `Заказ: ${orderSummary}. Адрес доставки: ${checkoutForm.address}. Сумма: ${(cartTotal / 100).toFixed(2)} ₽`
-    });
-
-    alert("Спасибо! Ваш заказ принят. Мы свяжемся с вами в ближайшее время.");
-    clearCart();
-    setCheckoutForm({ name: "", phone: "", address: "" });
-    setLocation("/");
-  };
 
   const formatPrice = (price: number) => {
     return (price / 100).toFixed(0);
@@ -95,12 +93,6 @@ export default function Home() {
         </nav>
 
         <div className="flex items-center space-x-4">
-          <button onClick={() => setLocation("/cart")} className="relative p-2 hover:bg-[#E8E7E2] rounded-full transition-colors">
-            <ShoppingCart size={20} className="text-[#5A6262]" />
-            {cartItems.length > 0 && (
-              <span className="absolute top-0 right-0 bg-[#5A6262] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{cartItems.length}</span>
-            )}
-          </button>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 hover:bg-[#E8E7E2] rounded-full transition-colors">
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -179,12 +171,21 @@ export default function Home() {
                   className="rounded-2xl overflow-hidden bg-white hover:shadow-lg transition-shadow cursor-pointer border border-[#E8E7E2]"
                 >
                   <div className="w-full h-64 bg-[#E8E7E2] overflow-hidden">
-                    <img src="/manus-storage/IMG_0063_e75f1e11.jpeg" alt="Спортивный костюм" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+                    <img src={productImages_nonempty[0]} alt="Спортивный костюм" className="w-full h-full object-cover hover:scale-105 transition-transform" />
                   </div>
                   <div className="p-6">
-                    <h3 className="text-lg font-serif text-[#1F1F1D] mb-2">Спортивный костюм</h3>
-                    <p className="text-sm text-[#5A6262] mb-4">12 990 ₽</p>
+                    <h3 className="text-lg font-serif text-[#1F1F1D] mb-2">{featuredProduct?.name ?? "Спортивный костюм"}</h3>
+                    <p className="text-sm text-[#5A6262] mb-4">{featuredProduct ? (featuredProduct.price ?? 0).toLocaleString("ru-RU") + " ₽" : "12 990 ₽"}</p>
                     <p className="text-xs text-[#5A6262] mb-4">Нажмите для полной информации</p>
+                    <a
+                      href={featuredProduct?.telegramLink ?? "https://t.me/tansylate_bot"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-block px-6 py-2 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium"
+                    >
+                      Заказать в Telegram
+                    </a>
                   </div>
                 </div>
               </div>
@@ -207,7 +208,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="bg-[#E8E7E2] rounded-2xl h-96 overflow-hidden">
-                <img src="/manus-storage/IMG_0064_0e7e8e2e.jpeg" alt="Тансылу" className="w-full h-full object-cover" />
+                <img src="/manus-storage/IMG_5004.jpeg" alt="Тансылу" className="w-full h-full object-cover" />
               </div>
             </div>
           </section>
@@ -316,7 +317,7 @@ export default function Home() {
                   <p className="text-sm text-[#5A6262] mb-4">Следите за новыми коллекциями и новостями бренда</p>
                   <div className="space-y-2">
                     <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">Telegram</a>
-                    <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">Instagram</a>
+                    <a href="https://www.instagram.com/tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">Instagram</a>
                     <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-black transition-colors text-sm">TikTok</a>
                   </div>
                 </div>
@@ -338,8 +339,46 @@ export default function Home() {
                   </button>
                 </div>
 
-                <div className="mb-6">
-                  <img src="/manus-storage/IMG_0063_e75f1e11.jpeg" alt="Спортивный костюм" className="w-full h-64 object-cover rounded-lg mb-6" />
+                <div className="mb-6 relative">
+                  <div className="relative w-full h-80 overflow-hidden rounded-lg bg-[#E8E7E2]">
+                    <img
+                      src={productImages_nonempty[carouselIndex]}
+                      alt="Спортивный костюм"
+                      className="w-full h-full object-cover transition-opacity duration-300"
+                    />
+                    <button
+                      onClick={prevSlide}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 transition-all shadow"
+                    >
+                      <ChevronLeft size={18} className="text-[#1F1F1D]" />
+                    </button>
+                    <button
+                      onClick={nextSlide}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 transition-all shadow"
+                    >
+                      <ChevronRight size={18} className="text-[#1F1F1D]" />
+                    </button>
+                    <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+                      {productImages_nonempty.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCarouselIndex(idx)}
+                          className={`w-1.5 h-1.5 rounded-full transition-all ${idx === carouselIndex ? "bg-white w-4" : "bg-white bg-opacity-50"}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
+                    {productImages_nonempty.map((src, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCarouselIndex(idx)}
+                        className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${idx === carouselIndex ? "border-[#5A6262]" : "border-transparent"}`}
+                      >
+                        <img src={src} alt="" className="w-full h-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="mb-6">
@@ -426,34 +465,53 @@ export default function Home() {
 
                 <div className="bg-[#F9F9D7] rounded-lg p-6 mb-6">
                   <h3 className="font-serif text-[#1F1F1D] mb-4 text-sm font-semibold">Уход за изделием</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">❄️</span>
-                      <p className="text-sm text-[#5A6262]">Стирка 30°C, выверну наизнанку</p>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                        <path d="M2 8h20v2a10 10 0 0 1-20 0V8z"/>
+                        <path d="M2 8l2-5h16l2 5"/>
+                        <path d="M9 13v3m6-3v3"/>
+                      </svg>
+                      <p className="text-sm text-[#5A6262]">Стирка 30°C, вывернув наизнанку</p>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">🚫</span>
+                    <div className="flex items-center gap-3">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                        <path d="M3 6h18v2a9 9 0 0 1-18 0V6z"/>
+                        <path d="M3 6l1-3h16l1 3"/>
+                        <line x1="4" y1="4" x2="20" y2="20"/>
+                      </svg>
                       <p className="text-sm text-[#5A6262]">Отбеливание: запрещено</p>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">🌡️</span>
+                    <div className="flex items-center gap-3">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                        <path d="M4 6h16a1 1 0 0 1 1 1v1H3V7a1 1 0 0 1 1-1z"/>
+                        <path d="M3 8h18v1a9 9 0 0 1-2 5.7V19a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-4.3A9 9 0 0 1 3 9V8z"/>
+                        <circle cx="12" cy="11" r="1" fill="#5A6262" stroke="none"/>
+                      </svg>
                       <p className="text-sm text-[#5A6262]">Утюжка: до 110°C</p>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">🧺</span>
+                    <div className="flex items-center gap-3">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <line x1="3" y1="3" x2="21" y2="21"/>
+                      </svg>
                       <p className="text-sm text-[#5A6262]">Машинная сушка: запрещена</p>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">☐</span>
+                    <div className="flex items-center gap-3">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <line x1="7" y1="12" x2="17" y2="12"/>
+                      </svg>
                       <p className="text-sm text-[#5A6262]">Сушка: только горизонтально в тени</p>
                     </div>
                   </div>
+                  <p className="text-xs text-[#5A6262] mt-4 italic">Первое время с изнанки может осыпаться лишний ворс — это особенность ткани. После 1–2 стирок всё пройдёт.</p>
                 </div>
 
                 <div className="flex items-center justify-between pt-6 border-t border-[#E8E7E2]">
-                  <span className="text-3xl font-semibold text-[#1F1F1D]">12 990 ₽</span>
+                  <span className="text-3xl font-semibold text-[#1F1F1D]">{featuredProduct ? (featuredProduct.price ?? 0).toLocaleString("ru-RU") + " ₽" : "12 990 ₽"}</span>
                   <a
-                    href="https://t.me/tansylate_bot"
+                    href={featuredProduct?.telegramLink ?? "https://t.me/tansylate_bot"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-8 py-3 bg-[#5A6262] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium inline-block"
@@ -501,11 +559,11 @@ export default function Home() {
               className="rounded-2xl overflow-hidden bg-white hover:shadow-lg transition-shadow cursor-pointer border border-[#E8E7E2]"
             >
               <div className="w-full h-64 bg-[#E8E7E2] overflow-hidden">
-                <img src="/manus-storage/IMG_0063_e75f1e11.jpeg" alt="Спортивный костюм" className="w-full h-full object-cover hover:scale-105 transition-transform" />
+                <img src={productImages_nonempty[0]} alt="Спортивный костюм" className="w-full h-full object-cover hover:scale-105 transition-transform" />
               </div>
               <div className="p-6">
-                <h3 className="text-lg font-serif text-[#1F1F1D] mb-2">Спортивный костюм</h3>
-                <p className="text-sm text-[#5A6262] mb-4">12 990 ₽</p>
+                <h3 className="text-lg font-serif text-[#1F1F1D] mb-2">{featuredProduct?.name ?? "Спортивный костюм"}</h3>
+                <p className="text-sm text-[#5A6262] mb-4">{featuredProduct ? (featuredProduct.price ?? 0).toLocaleString("ru-RU") + " ₽" : "12 990 ₽"}</p>
                 <p className="text-xs text-[#5A6262] mb-4">Нажмите для полной информации</p>
               </div>
             </div>
@@ -525,8 +583,46 @@ export default function Home() {
                   </button>
                 </div>
 
-                <div className="mb-6">
-                  <img src="/manus-storage/IMG_0063_e75f1e11.jpeg" alt="Спортивный костюм" className="w-full h-64 object-cover rounded-lg mb-6" />
+                <div className="mb-6 relative">
+                  <div className="relative w-full h-80 overflow-hidden rounded-lg bg-[#E8E7E2]">
+                    <img
+                      src={productImages_nonempty[carouselIndex]}
+                      alt="Спортивный костюм"
+                      className="w-full h-full object-cover transition-opacity duration-300"
+                    />
+                    <button
+                      onClick={prevSlide}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 transition-all shadow"
+                    >
+                      <ChevronLeft size={18} className="text-[#1F1F1D]" />
+                    </button>
+                    <button
+                      onClick={nextSlide}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 transition-all shadow"
+                    >
+                      <ChevronRight size={18} className="text-[#1F1F1D]" />
+                    </button>
+                    <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+                      {productImages_nonempty.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCarouselIndex(idx)}
+                          className={`w-1.5 h-1.5 rounded-full transition-all ${idx === carouselIndex ? "bg-white w-4" : "bg-white bg-opacity-50"}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
+                    {productImages_nonempty.map((src, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCarouselIndex(idx)}
+                        className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${idx === carouselIndex ? "border-[#5A6262]" : "border-transparent"}`}
+                      >
+                        <img src={src} alt="" className="w-full h-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="mb-6">
@@ -613,25 +709,43 @@ export default function Home() {
 
                 <div className="bg-[#F9F9D7] rounded-lg p-6 mb-6">
                   <h3 className="font-serif text-[#1F1F1D] mb-4 text-sm font-semibold">Уход за изделием</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">❄️</span>
-                      <p className="text-sm text-[#5A6262]">Стирка 30°C, выверну наизнанку</p>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                        <path d="M2 8h20v2a10 10 0 0 1-20 0V8z"/>
+                        <path d="M2 8l2-5h16l2 5"/>
+                        <path d="M9 13v3m6-3v3"/>
+                      </svg>
+                      <p className="text-sm text-[#5A6262]">Стирка 30°C, вывернув наизнанку</p>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">🚫</span>
+                    <div className="flex items-center gap-3">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                        <path d="M3 6h18v2a9 9 0 0 1-18 0V6z"/>
+                        <path d="M3 6l1-3h16l1 3"/>
+                        <line x1="4" y1="4" x2="20" y2="20"/>
+                      </svg>
                       <p className="text-sm text-[#5A6262]">Отбеливание: запрещено</p>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">🌡️</span>
+                    <div className="flex items-center gap-3">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                        <path d="M4 6h16a1 1 0 0 1 1 1v1H3V7a1 1 0 0 1 1-1z"/>
+                        <path d="M3 8h18v1a9 9 0 0 1-2 5.7V19a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-4.3A9 9 0 0 1 3 9V8z"/>
+                        <circle cx="12" cy="11" r="1" fill="#5A6262" stroke="none"/>
+                      </svg>
                       <p className="text-sm text-[#5A6262]">Утюжка: до 110°C</p>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">🧺</span>
+                    <div className="flex items-center gap-3">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <line x1="3" y1="3" x2="21" y2="21"/>
+                      </svg>
                       <p className="text-sm text-[#5A6262]">Машинная сушка: запрещена</p>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">☐</span>
+                    <div className="flex items-center gap-3">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <line x1="7" y1="12" x2="17" y2="12"/>
+                      </svg>
                       <p className="text-sm text-[#5A6262]">Сушка: только горизонтально в тени</p>
                     </div>
                   </div>
@@ -639,9 +753,9 @@ export default function Home() {
                 </div>
 
                 <div className="flex items-center justify-between pt-6 border-t border-[#E8E7E2]">
-                  <span className="text-3xl font-semibold text-[#1F1F1D]">12 990 ₽</span>
+                  <span className="text-3xl font-semibold text-[#1F1F1D]">{featuredProduct ? (featuredProduct.price ?? 0).toLocaleString("ru-RU") + " ₽" : "12 990 ₽"}</span>
                   <a
-                    href="https://t.me/tansylate_bot"
+                    href={featuredProduct?.telegramLink ?? "https://t.me/tansylate_bot"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-8 py-3 bg-[#5A6262] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium inline-block"
@@ -673,72 +787,6 @@ export default function Home() {
               Мы уважаем вашу конфиденциальность и обязуемся защищать ваши персональные данные.
             </p>
           </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  // Cart Page
-  if (location === "/cart") {
-    return (
-      <div className="min-h-screen bg-[#F0EFEA]">
-        <Header />
-        <main className="max-w-4xl mx-auto px-4 md:px-6 py-12">
-          <Breadcrumbs items={[
-            { label: "Главная", href: "/" },
-            { label: "Корзина" }
-          ]} />
-          <h1 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-8">Корзина</h1>
-          {cartItems.length === 0 ? (
-            <p className="text-[#5A6262]">Ваша корзина пуста</p>
-          ) : (
-            <div className="bg-white rounded-2xl p-8">
-              {cartItems.map((item) => (
-                <div key={item.id} className="flex justify-between items-center mb-4 pb-4 border-b border-[#E8E7E2]">
-                  <div>
-                    <h3 className="font-serif text-[#1F1F1D]">{item.name}</h3>
-                    <p className="text-sm text-[#5A6262]">{formatPrice(item.price)} ₽ x {item.quantity}</p>
-                  </div>
-                  <button onClick={() => removeFromCart(item.id)} className="text-red-500 hover:text-red-700">
-                    Удалить
-                  </button>
-                </div>
-              ))}
-              <div className="mt-8 pt-8 border-t border-[#E8E7E2]">
-                <p className="text-lg font-semibold text-[#1F1F1D] mb-6">Итого: {(cartTotal / 100).toFixed(2)} ₽</p>
-                <div className="space-y-4">
-                  <input
-                    type="text"
-                    placeholder="Ваше имя"
-                    value={checkoutForm.name}
-                    onChange={(e) => setCheckoutForm({ ...checkoutForm, name: e.target.value })}
-                    className="w-full px-4 py-2 border border-[#E8E7E2] rounded-lg focus:outline-none focus:border-[#5A6262]"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Ваш телефон"
-                    value={checkoutForm.phone}
-                    onChange={(e) => setCheckoutForm({ ...checkoutForm, phone: e.target.value })}
-                    className="w-full px-4 py-2 border border-[#E8E7E2] rounded-lg focus:outline-none focus:border-[#5A6262]"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Адрес доставки"
-                    value={checkoutForm.address}
-                    onChange={(e) => setCheckoutForm({ ...checkoutForm, address: e.target.value })}
-                    className="w-full px-4 py-2 border border-[#E8E7E2] rounded-lg focus:outline-none focus:border-[#5A6262]"
-                  />
-                  <button
-                    onClick={handleCheckout}
-                    className="w-full px-8 py-3 bg-[#5A6262] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium"
-                  >
-                    Оформить заказ
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </main>
         <Footer />
       </div>

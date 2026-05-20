@@ -1,17 +1,7 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, tinyint, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
-/**
- * Core user table backing auth flow.
- * Extend this file with additional tables as your product grows.
- * Columns use camelCase to match both database fields and generated types.
- */
 export const users = mysqlTable("users", {
-  /**
-   * Surrogate primary key. Auto-incremented numeric value managed by the database.
-   * Use this for relations between tables.
-   */
   id: int("id").autoincrement().primaryKey(),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
@@ -26,17 +16,34 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
 /**
- * Products table for e-commerce catalog
+ * Products table — расширенная версия с поддержкой карусели,
+ * размерных сеток, характеристик и инструкций по уходу.
+ * Поля images, features, specs, sizeTables, careInstructions хранятся как JSON-строки.
  */
 export const products = mysqlTable("products", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
-  price: int("price").notNull(), // Price in kopeks (e.g., 12900 ₽ = 1290000 kopeks)
+  price: int("price").notNull(),
   description: text("description"),
-  sizes: varchar("sizes", { length: 255 }).notNull(), // JSON array as string: '["S", "M", "L"]'
+  collection: varchar("collection", { length: 255 }),
+  // JSON: string[]  — массив URL изображений в нужном порядке
+  images: text("images"),
+  // JSON: string[]  — список особенностей (с галочкой ✓)
+  features: text("features"),
+  // JSON: { label: string; value: string }[]  — характеристики
+  specs: text("specs"),
+  // JSON: { title: string; rows: { size: string; ru: string; col3: string; col3label: string; waist: string }[] }[]
+  sizeTables: text("sizeTables"),
+  // JSON: { icon: string; text: string }[]  — иконка (wash/bleach/iron/tumble/dry) + текст
+  careInstructions: text("careInstructions"),
+  careNote: text("careNote"),
+  telegramLink: varchar("telegramLink", { length: 500 }),
+  isVisible: tinyint("isVisible").notNull().default(1),
+  // legacy поля — сохраняем для совместимости
+  sizes: varchar("sizes", { length: 255 }).notNull().default("[]"),
   imageUrl: varchar("imageUrl", { length: 500 }),
-  composition: text("composition"), // Material composition
-  care: text("care"), // Care instructions
+  composition: text("composition"),
+  care: text("care"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -44,9 +51,6 @@ export const products = mysqlTable("products", {
 export type Product = typeof products.$inferSelect;
 export type InsertProduct = typeof products.$inferInsert;
 
-/**
- * Contact form submissions
- */
 export const contacts = mysqlTable("contacts", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),

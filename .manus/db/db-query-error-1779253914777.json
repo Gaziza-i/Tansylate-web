@@ -1,0 +1,8 @@
+{
+  "query": "ALTER TABLE `products`\n  ADD COLUMN `images` text,\n  ADD COLUMN `features` text,\n  ADD COLUMN `specs` text,\n  ADD COLUMN `sizeTables` text,\n  ADD COLUMN `careInstructions` text,\n  ADD COLUMN `careNote` text,\n  ADD COLUMN `collection` varchar(255),\n  ADD COLUMN `telegramLink` varchar(500),\n  ADD COLUMN `isVisible` tinyint(1) NOT NULL DEFAULT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user frjNH7ukzmhzvE3.root --database Ft4ZF6NJgfuAwGrs9QV9rW --execute ALTER TABLE `products`\n  ADD COLUMN `images` text,\n  ADD COLUMN `features` text,\n  ADD COLUMN `specs` text,\n  ADD COLUMN `sizeTables` text,\n  ADD COLUMN `careInstructions` text,\n  ADD COLUMN `careNote` text,\n  ADD COLUMN `collection` varchar(255),\n  ADD COLUMN `telegramLink` varchar(500),\n  ADD COLUMN `isVisible` tinyint(1) NOT NULL DEFAULT 1;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1060 (42S21) at line 1: Duplicate column name 'images'"
+  ]
+}
