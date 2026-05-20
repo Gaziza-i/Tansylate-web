@@ -9,14 +9,14 @@ function parseJSON<T>(val: string | null | undefined, fallback: T): T {
 }
 
 const FALLBACK_IMAGES = [
-  "/manus-storage/IMG_4999.jpeg",
-  "/manus-storage/IMG_4998.jpeg",
-  "/manus-storage/IMG_5001.jpeg",
-  "/manus-storage/IMG_5002.jpeg",
-  "/manus-storage/IMG_5003.jpeg",
+  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/kirptveKGcDaZRyF.jpeg",
+  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/ccDvhQruEybysjHS.jpeg",
+  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/zapsecMLpJMkiiEY.jpeg",
+  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/StimjAPVCzkzGPYg.jpeg",
+  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/WMXUqCBpOZdkohTw.jpeg",
 ];
 
-const LOGO_URL = "/manus-storage/tansylate-logo-cropped_660047f4.png";
+const LOGO_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/aOLIVKokFqpLkQid.png";
 
 export default function Home() {
   const [location, setLocation] = useLocation();
@@ -208,7 +208,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="bg-[#E8E7E2] rounded-2xl h-96 overflow-hidden">
-                <img src="/manus-storage/IMG_5004.jpeg" alt="Тансылу" className="w-full h-full object-cover" />
+                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg" alt="Тансылу" className="w-full h-full object-cover" />
               </div>
             </div>
           </section>

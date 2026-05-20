@@ -15,6 +15,13 @@
       "when": 1778488141354,
       "tag": "0001_equal_next_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1779275315218,
+      "tag": "0002_daffy_prowler",
+      "breakpoints": true
     }
   ]
 }
