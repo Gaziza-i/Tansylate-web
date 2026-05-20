@@ -105,16 +105,16 @@ function ProductForm({
     setOpenSection(o => (o === section ? null : section));
 
   const Section = ({ id, label, children }: { id: string; label: string; children: React.ReactNode }) => (
-    <div className="border border-[#E8E7E2] rounded-xl overflow-hidden mb-4">
+    <div className="border border-[#E8E7E2] rounded-xl overflow-hidden mb-3 md:mb-4">
       <button
         type="button"
         onClick={() => toggle(id)}
-        className="w-full flex justify-between items-center px-5 py-4 bg-[#F9F9F7] hover:bg-[#F0EFEA] transition-colors text-left"
+        className="w-full flex justify-between items-center px-3 md:px-5 py-3 md:py-4 bg-[#F9F9F7] hover:bg-[#F0EFEA] transition-colors text-left"
       >
-        <span className="font-medium text-[#1F1F1D] text-sm">{label}</span>
+        <span className="font-medium text-[#1F1F1D] text-xs md:text-sm">{label}</span>
         {openSection === id ? <ChevronUp size={16} className="text-[#5A6262]" /> : <ChevronDown size={16} className="text-[#5A6262]" />}
       </button>
-      {openSection === id && <div className="p-5 space-y-4 bg-white">{children}</div>}
+      {openSection === id && <div className="p-3 md:p-5 space-y-3 md:space-y-4 bg-white">{children}</div>}
     </div>
   );
 
@@ -464,21 +464,21 @@ export default function Admin() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F0EFEA]">
+    <div className="min-h-screen bg-[#F9F9D7]">
       {/* Header */}
-      <header className="bg-white border-b border-[#E8E7E2] sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <header className="bg-[#F9F9D7] border-b border-[#E8E7E2] sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-3 md:px-6 h-14 md:h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2 md:gap-4 min-w-0">
             {view !== "list" && (
-              <button onClick={() => setView("list")} className="text-[#5A6262] hover:text-black transition-colors">
-                ← Назад
+              <button onClick={() => setView("list")} className="text-[#5A6262] hover:text-black transition-colors flex-shrink-0">
+                ← 
               </button>
             )}
-            <span className="font-serif text-xl text-[#1F1F1D] tracking-wider">TANSYLATE</span>
-            <span className="text-xs text-[#5A6262] uppercase tracking-widest">Админ</span>
+            <span className="font-serif text-lg md:text-xl text-[#1F1F1D] tracking-wider truncate">TANSYLATE</span>
+            <span className="text-xs text-[#5A6262] uppercase tracking-widest hidden sm:inline">Админ</span>
           </div>
-          <a href="/" target="_blank" className="text-xs text-[#5A6262] hover:text-black uppercase tracking-wide transition-colors">
-            Открыть сайт →
+          <a href="/" target="_blank" className="text-xs text-[#5A6262] hover:text-black uppercase tracking-wide transition-colors flex-shrink-0">
+            Сайт →
           </a>
         </div>
       </header>
@@ -490,16 +490,16 @@ export default function Admin() {
         </div>
       )}
 
-      <main className="max-w-4xl mx-auto px-4 md:px-6 py-8">
+      <main className="max-w-6xl mx-auto px-3 md:px-6 py-6 md:py-8">
 
         {/* Список товаров */}
         {view === "list" && (
           <div>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-6">
               <h1 className="text-2xl font-serif text-[#1F1F1D]">Товары</h1>
               <button
                 onClick={() => setView("create")}
-                className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors"
               >
                 <Plus size={14} /> Добавить товар
               </button>
@@ -517,25 +517,25 @@ export default function Admin() {
                 {products.map((p: any) => {
                   const imgs = parseJSON<string[]>(p.images, []);
                   return (
-                    <div key={p.id} className="bg-white rounded-xl border border-[#E8E7E2] overflow-hidden flex items-center gap-4 p-4">
-                      <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-[#F0EFEA]">
+                    <div key={p.id} className="bg-white rounded-xl border border-[#E8E7E2] overflow-hidden flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4">
+                      <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-[#F9F9D7]">
                         {imgs[0]
                           ? <img src={imgs[0]} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
                           : <ImageIcon size={24} className="w-full h-full p-4 text-[#5A6262]" />
                         }
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-serif text-[#1F1F1D]">{p.name}</span>
-                          {!p.isVisible && <span className="text-xs bg-[#F0EFEA] text-[#5A6262] px-2 py-0.5 rounded-full">скрыт</span>}
+                      <div className="flex-1 min-w-0 w-full sm:w-auto">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <span className="font-serif text-[#1F1F1D] truncate">{p.name}</span>
+                          {!p.isVisible && <span className="text-xs bg-[#F9F9D7] text-[#5A6262] px-2 py-0.5 rounded-full flex-shrink-0">скрыт</span>}
                         </div>
                         <div className="text-sm text-[#5A6262]">{(p.price ?? 0).toLocaleString("ru-RU")} ₽ · {imgs.length} фото</div>
                       </div>
-                      <div className="flex gap-2">
-                        <button onClick={() => openEdit(p)} className="px-4 py-2 border border-[#E8E7E2] text-sm text-[#5A6262] rounded-full hover:border-[#5A6262] hover:text-black transition-colors">
+                      <div className="flex gap-2 w-full sm:w-auto">
+                        <button onClick={() => openEdit(p)} className="flex-1 sm:flex-none px-3 sm:px-4 py-2 border border-[#E8E7E2] text-sm text-[#5A6262] rounded-full hover:border-[#5A6262] hover:text-black transition-colors">
                           Редактировать
                         </button>
-                        <button onClick={() => handleDelete(p.id)} className="px-3 py-2 text-red-400 hover:text-red-600 transition-colors">
+                        <button onClick={() => handleDelete(p.id)} className="px-2 sm:px-3 py-2 text-red-400 hover:text-red-600 transition-colors">
                           <Trash2 size={16} />
                         </button>
                       </div>
