@@ -218,7 +218,7 @@ export default function Home() {
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Почему нам верят</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="text-center">
+                <div className="text-center p-6">
                   <div className="w-16 h-16 mx-auto mb-6 bg-[#5A6262] rounded-full flex items-center justify-center">
                     <Truck size={32} className="text-white" />
                   </div>
@@ -228,7 +228,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center p-6">
                   <div className="w-16 h-16 mx-auto mb-6 bg-[#5A6262] rounded-full flex items-center justify-center">
                     <RotateCcw size={32} className="text-white" />
                   </div>
@@ -238,7 +238,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="text-center">
+                <div className="text-center p-6">
                   <div className="w-16 h-16 mx-auto mb-6 bg-[#5A6262] rounded-full flex items-center justify-center">
                     <Leaf size={32} className="text-white" />
                   </div>
@@ -304,7 +304,7 @@ export default function Home() {
             <div className="max-w-5xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Свяжитесь с нами</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div className="bg-white rounded-2xl p-8">
+                <div className="p-6">
                   <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Контактная информация</h3>
                   <div className="flex items-center gap-3 mb-4">
                     <Phone size={20} className="text-[#5A6262]" />
@@ -312,7 +312,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-2xl p-8">
+                <div className="p-6">
                   <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Социальные сети</h3>
                   <p className="text-sm text-[#5A6262] mb-4">Следите за новыми коллекциями и новостями бренда</p>
                   <div className="space-y-2">
