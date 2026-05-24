@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { trpc } from "@/lib/trpc";
-import { Plus, Trash2, GripVertical, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers } from "lucide-react";
 
 // ─── Типы ────────────────────────────────────────────────────────────────────
 
@@ -89,20 +89,40 @@ function ProductForm({
   onSave,
   onCancel,
   isSaving,
+  mediaImages = [],
+  onUploadImage,
 }: {
   initial: Form;
   onSave: (f: Form) => void;
   onCancel: () => void;
   isSaving: boolean;
+  mediaImages?: string[];
+  onUploadImage?: (file: File) => Promise<string>;
 }) {
   const [form, setForm] = useState<Form>(initial);
   const [newImageUrl, setNewImageUrl] = useState("");
   const [openSection, setOpenSection] = useState<string | null>("basic");
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const set = (key: keyof Form, val: any) => setForm(f => ({ ...f, [key]: val }));
 
   const toggle = (section: string) =>
     setOpenSection(o => (o === section ? null : section));
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onUploadImage) return;
+    setUploading(true);
+    try {
+      const url = await onUploadImage(file);
+      set("images", [...form.images, url]);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const Section = ({ id, label, children }: { id: string; label: string; children: React.ReactNode }) => (
     <div className="border border-[#E8E7E2] rounded-xl overflow-hidden mb-3 md:mb-4">
@@ -166,6 +186,7 @@ function ProductForm({
 
       {/* Фото */}
       <Section id="images" label={`Фотографии (${form.images.length})`}>
+        {/* Инструменты добавления */}
         <div className="flex gap-2">
           <input
             type="text"
@@ -187,6 +208,65 @@ function ProductForm({
             <Plus size={16} />
           </button>
         </div>
+
+        {/* Кнопки загрузки и медиатеки */}
+        <div className="flex gap-2">
+          {onUploadImage && (
+            <>
+              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="flex items-center gap-2 px-4 py-2 border border-[#E8E7E2] text-[#5A6262] rounded-lg text-xs hover:border-[#5A6262] hover:text-black transition-colors disabled:opacity-40"
+              >
+                <Upload size={14} />
+                {uploading ? "Загрузка..." : "Загрузить фото"}
+              </button>
+            </>
+          )}
+          {mediaImages.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowMediaPicker(p => !p)}
+              className="flex items-center gap-2 px-4 py-2 border border-[#E8E7E2] text-[#5A6262] rounded-lg text-xs hover:border-[#5A6262] hover:text-black transition-colors"
+            >
+              <Layers size={14} />
+              Из медиатеки
+            </button>
+          )}
+        </div>
+
+        {/* Медиапикер */}
+        {showMediaPicker && mediaImages.length > 0 && (
+          <div className="border border-[#E8E7E2] rounded-lg p-3 bg-[#F9F9F7]">
+            <p className="text-xs text-[#5A6262] mb-2 uppercase tracking-wide">Выберите фото из медиатеки</p>
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-48 overflow-y-auto">
+              {mediaImages.map((url, i) => {
+                const selected = form.images.includes(url);
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      if (selected) {
+                        set("images", form.images.filter(u => u !== url));
+                      } else {
+                        set("images", [...form.images, url]);
+                      }
+                    }}
+                    className={`relative rounded-lg overflow-hidden border-2 transition-colors ${selected ? "border-[#5A6262]" : "border-transparent"}`}
+                  >
+                    <img src={url} alt="" className="w-full h-16 object-cover" onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }} />
+                    {selected && <div className="absolute inset-0 bg-[#5A6262] bg-opacity-30 flex items-center justify-center"><Check size={16} className="text-white" /></div>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Текущие фото товара */}
         <div className="grid grid-cols-3 gap-3 mt-2">
           {form.images.map((url, i) => (
             <div key={i} className="relative group">
@@ -204,7 +284,7 @@ function ProductForm({
           {form.images.length === 0 && (
             <div className="col-span-3 text-center py-8 text-[#5A6262] text-sm border-2 border-dashed border-[#E8E7E2] rounded-lg">
               <ImageIcon size={24} className="mx-auto mb-2 opacity-40" />
-              Добавьте URL фотографий
+              Добавьте URL или загрузите фото
             </div>
           )}
         </div>
@@ -401,10 +481,93 @@ function ProductForm({
   );
 }
 
+// ─── Медиатека ────────────────────────────────────────────────────────────────
+
+function MediaLibrary({
+  images,
+  onUpload,
+}: {
+  images: string[];
+  onUpload: (file: File) => Promise<string>;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [uploaded, setUploaded] = useState<string[]>([]);
+  const [copied, setCopied] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const allImages = [...new Set([...uploaded, ...images])];
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length) return;
+    setUploading(true);
+    try {
+      const urls = await Promise.all(files.map(f => onUpload(f)));
+      setUploaded(prev => [...urls, ...prev]);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const copyUrl = (url: string) => {
+    navigator.clipboard.writeText(url).catch(() => {});
+    setCopied(url);
+    setTimeout(() => setCopied(null), 2000);
+  };
+
+  return (
+    <div>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+        <h1 className="text-2xl font-serif text-[#1F1F1D]">Медиатека</h1>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-[#5A6262]">{allImages.length} фото</span>
+          <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleUpload} />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50"
+          >
+            <Upload size={14} />
+            {uploading ? "Загрузка..." : "Загрузить фото"}
+          </button>
+        </div>
+      </div>
+
+      {allImages.length === 0 ? (
+        <div className="text-center py-20 text-[#5A6262]">
+          <ImageIcon size={40} className="mx-auto mb-4 opacity-30" />
+          <p className="mb-4">Нет загруженных фото</p>
+          <button onClick={() => fileInputRef.current?.click()} className="px-6 py-3 border border-[#5A6262] text-[#5A6262] text-sm uppercase tracking-widest rounded-full hover:bg-[#5A6262] hover:text-white transition-colors">
+            Загрузить первое фото
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          {allImages.map((url, i) => (
+            <div key={i} className="group relative rounded-xl overflow-hidden border border-[#E8E7E2] bg-white aspect-square">
+              <img src={url} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }} />
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
+                <button
+                  onClick={() => copyUrl(url)}
+                  className="hidden group-hover:flex items-center gap-1.5 px-3 py-1.5 bg-white text-[#1F1F1D] text-xs rounded-full shadow hover:bg-[#F0EFEA] transition-colors"
+                >
+                  {copied === url ? <Check size={12} className="text-green-600" /> : <Copy size={12} />}
+                  {copied === url ? "Скопировано" : "Копировать URL"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Главный компонент Admin ──────────────────────────────────────────────────
 
 export default function Admin() {
-  const [view, setView] = useState<"list" | "create" | "edit">("list");
+  const [view, setView] = useState<"list" | "create" | "edit" | "media">("list");
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [savedMsg, setSavedMsg] = useState("");
 
@@ -412,12 +575,28 @@ export default function Admin() {
   const createMut = trpc.admin.createProduct.useMutation();
   const updateMut = trpc.admin.updateProduct.useMutation();
   const deleteMut = trpc.admin.deleteProduct.useMutation();
+  const uploadMut = trpc.admin.uploadImage.useMutation();
 
   const isSaving = createMut.isPending || updateMut.isPending;
+
+  const allMediaImages = [...new Set(
+    products.flatMap((p: any) => parseJSON<string[]>(p.images, []))
+  )];
 
   const notify = (msg: string) => {
     setSavedMsg(msg);
     setTimeout(() => setSavedMsg(""), 3000);
+  };
+
+  const handleUploadImage = async (file: File): Promise<string> => {
+    const arrayBuffer = await file.arrayBuffer();
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+    const result = await uploadMut.mutateAsync({
+      filename: file.name,
+      data: base64,
+      contentType: file.type || "image/jpeg",
+    });
+    return result.url;
   };
 
   const handleSave = async (form: Form) => {
@@ -469,17 +648,26 @@ export default function Admin() {
       <header className="bg-[#F9F9D7] border-b border-[#E8E7E2] sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-3 md:px-6 h-14 md:h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-4 min-w-0">
-            {view !== "list" && (
+            {view !== "list" && view !== "media" && (
               <button onClick={() => setView("list")} className="text-[#5A6262] hover:text-black transition-colors flex-shrink-0">
-                ← 
+                ←
               </button>
             )}
             <span className="font-serif text-lg md:text-xl text-[#1F1F1D] tracking-wider truncate">TANSYLATE</span>
             <span className="text-xs text-[#5A6262] uppercase tracking-widest hidden sm:inline">Админ</span>
           </div>
-          <a href="/" target="_blank" className="text-xs text-[#5A6262] hover:text-black uppercase tracking-wide transition-colors flex-shrink-0">
-            Сайт →
-          </a>
+          <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
+            <button
+              onClick={() => setView(view === "media" ? "list" : "media")}
+              className={`flex items-center gap-1.5 text-xs uppercase tracking-wide transition-colors ${view === "media" ? "text-[#1F1F1D] font-medium" : "text-[#5A6262] hover:text-black"}`}
+            >
+              <Layers size={14} />
+              <span className="hidden sm:inline">Медиатека</span>
+            </button>
+            <a href="/" target="_blank" className="text-xs text-[#5A6262] hover:text-black uppercase tracking-wide transition-colors">
+              Сайт →
+            </a>
+          </div>
         </div>
       </header>
 
@@ -556,6 +744,8 @@ export default function Admin() {
               onSave={handleSave}
               onCancel={() => setView("list")}
               isSaving={isSaving}
+              mediaImages={allMediaImages}
+              onUploadImage={handleUploadImage}
             />
           </div>
         )}
@@ -569,8 +759,18 @@ export default function Admin() {
               onSave={handleSave}
               onCancel={() => setView("list")}
               isSaving={isSaving}
+              mediaImages={allMediaImages}
+              onUploadImage={handleUploadImage}
             />
           </div>
+        )}
+
+        {/* Медиатека */}
+        {view === "media" && (
+          <MediaLibrary
+            images={allMediaImages}
+            onUpload={handleUploadImage}
+          />
         )}
       </main>
     </div>
