@@ -588,12 +588,31 @@ export default function Admin() {
   };
 
   const handleUploadImage = async (file: File): Promise<string> => {
+    console.log("[upload] start", { name: file.name, size: file.size, type: file.type });
+
     const formData = new FormData();
     formData.append("file", file);
-    const res = await fetch("/api/upload", { method: "POST", body: formData });
-    if (!res.ok) throw new Error("Upload failed");
-    const { url } = await res.json();
-    return url;
+    console.log("[upload] FormData entry:", formData.get("file"));
+
+    let res: Response;
+    try {
+      res = await fetch("/api/upload", { method: "POST", body: formData });
+    } catch (err) {
+      console.error("[upload] fetch error:", err);
+      throw err;
+    }
+
+    console.log("[upload] response status:", res.status, res.statusText);
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.error("[upload] server error body:", text);
+      throw new Error(`Upload failed (${res.status}): ${text}`);
+    }
+
+    const json = await res.json();
+    console.log("[upload] success:", json);
+    return json.url;
   };
 
   const handleSave = async (form: Form) => {
