@@ -48,6 +48,7 @@ async function startServer() {
   });
   const upload = multer({ storage, limits: { fileSize: 20 * 1024 * 1024 } });
 
+  // Static file serving and upload endpoint — registered before any auth middleware
   app.use("/uploads", express.static(uploadsDir));
 
   app.post("/api/upload", upload.single("file"), (req, res) => {
@@ -55,7 +56,7 @@ async function startServer() {
     res.json({ url: `/uploads/${req.file.filename}` });
   });
 
-  // Configure body parser with larger size limit for file uploads
+  // Body parser for JSON/form routes below
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
