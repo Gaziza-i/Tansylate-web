@@ -7,7 +7,6 @@ import {
   createProduct, updateProduct, deleteProduct, createContact
 } from "./db";
 import { notifyOwner } from "./_core/notification";
-import { storagePut } from "./storage";
 
 export const appRouter = router({
   system: systemRouter,
@@ -72,20 +71,6 @@ export const appRouter = router({
     deleteProduct: publicProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => deleteProduct(input.id)),
-
-    // Загрузить фото в хранилище
-    uploadImage: publicProcedure
-      .input((input: any) => input)
-      .mutation(async ({ input }) => {
-        const { filename, data, contentType } = input as {
-          filename: string;
-          data: string;
-          contentType: string;
-        };
-        const buffer = Buffer.from(data, "base64");
-        const result = await storagePut(filename, buffer, contentType);
-        return { url: result.url, key: result.key };
-      }),
   }),
 
   contacts: router({

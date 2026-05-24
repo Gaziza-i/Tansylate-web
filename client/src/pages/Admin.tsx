@@ -575,7 +575,6 @@ export default function Admin() {
   const createMut = trpc.admin.createProduct.useMutation();
   const updateMut = trpc.admin.updateProduct.useMutation();
   const deleteMut = trpc.admin.deleteProduct.useMutation();
-  const uploadMut = trpc.admin.uploadImage.useMutation();
 
   const isSaving = createMut.isPending || updateMut.isPending;
 
@@ -589,14 +588,12 @@ export default function Admin() {
   };
 
   const handleUploadImage = async (file: File): Promise<string> => {
-    const arrayBuffer = await file.arrayBuffer();
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-    const result = await uploadMut.mutateAsync({
-      filename: file.name,
-      data: base64,
-      contentType: file.type || "image/jpeg",
-    });
-    return result.url;
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
+    if (!res.ok) throw new Error("Upload failed");
+    const { url } = await res.json();
+    return url;
   };
 
   const handleSave = async (form: Form) => {
