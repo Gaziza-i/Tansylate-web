@@ -82,6 +82,45 @@ const emptyForm = () => ({
 
 type Form = ReturnType<typeof emptyForm>;
 
+// ─── Вспомогательные компоненты (ВНЕ ProductForm — иначе React размонтирует DOM на каждый ре-рендер) ──
+
+function InputField({ label, value, onChange, type = "text", placeholder = "" }: any) {
+  return (
+    <div>
+      <label className="block text-xs text-[#5A6262] mb-1 uppercase tracking-wide">{label}</label>
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#1F1F1D] focus:outline-none focus:border-[#5A6262]"
+      />
+    </div>
+  );
+}
+
+function Section({ id, label, openSection, onToggle, children }: {
+  id: string;
+  label: string;
+  openSection: string | null;
+  onToggle: (id: string) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="border border-[#E8E7E2] rounded-xl overflow-hidden mb-3 md:mb-4">
+      <button
+        type="button"
+        onClick={() => onToggle(id)}
+        className="w-full flex justify-between items-center px-3 md:px-5 py-3 md:py-4 bg-[#F9F9F7] hover:bg-[#F0EFEA] transition-colors text-left"
+      >
+        <span className="font-medium text-[#1F1F1D] text-xs md:text-sm">{label}</span>
+        {openSection === id ? <ChevronUp size={16} className="text-[#5A6262]" /> : <ChevronDown size={16} className="text-[#5A6262]" />}
+      </button>
+      {openSection === id && <div className="p-3 md:p-5 space-y-3 md:space-y-4 bg-white">{children}</div>}
+    </div>
+  );
+}
+
 // ─── Форма редактирования товара ─────────────────────────────────────────────
 
 function ProductForm({
@@ -113,14 +152,21 @@ function ProductForm({
     setOpenSection(o => (o === section ? null : section));
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("[upload] handleFileUpload triggered, files:", e.target.files?.length);
     const file = e.target.files?.[0];
-    if (!file || !onUploadImage) return;
+    console.log("[upload] file:", file ? `${file.name} (${file.size}b)` : "none", "| onUploadImage:", !!onUploadImage);
+    if (!file || !onUploadImage) {
+      console.warn("[upload] early return — file:", !!file, "onUploadImage:", !!onUploadImage);
+      return;
+    }
     setUploading(true);
     setUploadError(null);
     try {
       const url = await onUploadImage(file);
+      console.log("[upload] got url:", url);
       set("images", [...form.images, url]);
     } catch (err: any) {
+      console.error("[upload] error:", err);
       setUploadError(err?.message || "Ошибка загрузки фото");
     } finally {
       setUploading(false);
@@ -128,38 +174,11 @@ function ProductForm({
     }
   };
 
-  const Section = ({ id, label, children }: { id: string; label: string; children: React.ReactNode }) => (
-    <div className="border border-[#E8E7E2] rounded-xl overflow-hidden mb-3 md:mb-4">
-      <button
-        type="button"
-        onClick={() => toggle(id)}
-        className="w-full flex justify-between items-center px-3 md:px-5 py-3 md:py-4 bg-[#F9F9F7] hover:bg-[#F0EFEA] transition-colors text-left"
-      >
-        <span className="font-medium text-[#1F1F1D] text-xs md:text-sm">{label}</span>
-        {openSection === id ? <ChevronUp size={16} className="text-[#5A6262]" /> : <ChevronDown size={16} className="text-[#5A6262]" />}
-      </button>
-      {openSection === id && <div className="p-3 md:p-5 space-y-3 md:space-y-4 bg-white">{children}</div>}
-    </div>
-  );
-
-  const InputField = ({ label, value, onChange, type = "text", placeholder = "" }: any) => (
-    <div>
-      <label className="block text-xs text-[#5A6262] mb-1 uppercase tracking-wide">{label}</label>
-      <input
-        type={type}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#1F1F1D] focus:outline-none focus:border-[#5A6262]"
-      />
-    </div>
-  );
-
   return (
     <div className="space-y-2">
 
       {/* Основное */}
-      <Section id="basic" label="Основная информация">
+      <Section id="basic" label="Основная информация" openSection={openSection} onToggle={toggle}>
         <InputField label="Название" value={form.name} onChange={(v: string) => set("name", v)} placeholder="Спортивный костюм" />
         <div className="grid grid-cols-2 gap-4">
           <InputField label="Цена (₽)" value={form.price} onChange={(v: string) => set("price", Number(v))} type="number" />
@@ -189,7 +208,7 @@ function ProductForm({
       </Section>
 
       {/* Фото */}
-      <Section id="images" label={`Фотографии (${form.images.length})`}>
+      <Section id="images" label={`Фотографии (${form.images.length})`} openSection={openSection} onToggle={toggle}>
         {/* Инструменты добавления */}
         <div className="flex gap-2">
           <input
@@ -221,7 +240,7 @@ function ProductForm({
               <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
               <button
                 type="button"
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => { console.log("[upload] button click, ref:", fileInputRef.current); fileInputRef.current?.click(); }}
                 disabled={uploading}
                 className="flex items-center gap-2 px-4 py-2 border border-[#E8E7E2] text-[#5A6262] rounded-lg text-xs hover:border-[#5A6262] hover:text-black transition-colors disabled:opacity-40"
               >
@@ -300,7 +319,7 @@ function ProductForm({
       </Section>
 
       {/* Характеристики */}
-      <Section id="specs" label="Характеристики">
+      <Section id="specs" label="Характеристики" openSection={openSection} onToggle={toggle}>
         <div className="space-y-2">
           {form.specs.map((spec, i) => (
             <div key={i} className="flex gap-2 items-center">
@@ -328,7 +347,7 @@ function ProductForm({
       </Section>
 
       {/* Особенности */}
-      <Section id="features" label="Особенности (✓ список)">
+      <Section id="features" label="Особенности (✓ список)" openSection={openSection} onToggle={toggle}>
         <div className="space-y-2">
           {form.features.map((feat, i) => (
             <div key={i} className="flex gap-2 items-center">
@@ -350,7 +369,7 @@ function ProductForm({
       </Section>
 
       {/* Размерные сетки */}
-      <Section id="sizes" label={`Размерные сетки (${form.sizeTables.length})`}>
+      <Section id="sizes" label={`Размерные сетки (${form.sizeTables.length})`} openSection={openSection} onToggle={toggle}>
         {form.sizeTables.map((table, ti) => (
           <div key={ti} className="border border-[#E8E7E2] rounded-lg p-4 mb-4">
             <div className="flex items-center gap-2 mb-3">
@@ -432,7 +451,7 @@ function ProductForm({
       </Section>
 
       {/* Уход */}
-      <Section id="care" label="Уход за изделием">
+      <Section id="care" label="Уход за изделием" openSection={openSection} onToggle={toggle}>
         <div className="space-y-2">
           {form.careInstructions.map((item, i) => (
             <div key={i} className="flex gap-2 items-center">
