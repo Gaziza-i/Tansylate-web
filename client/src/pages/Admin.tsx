@@ -302,8 +302,8 @@ function ProductForm({
         {/* Текущие фото товара */}
         <div className="grid grid-cols-3 gap-3 mt-2">
           {form.images.map((url, i) => (
-            <div key={i} className="relative group">
-              <img src={url} alt="" className="w-full h-24 object-cover rounded-lg border border-[#E8E7E2]" onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }} />
+            <div key={i} className="relative group h-24 bg-[#E8E7E2] rounded-lg overflow-hidden border border-[#E8E7E2]">
+              <img src={url} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
               <div className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs rounded px-1">{i + 1}</div>
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
                 <div className="hidden group-hover:flex gap-1">
