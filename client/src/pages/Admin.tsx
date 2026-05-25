@@ -144,7 +144,6 @@ function ProductForm({
   const [showMediaPicker, setShowMediaPicker] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const set = (key: keyof Form, val: any) => setForm(f => ({ ...f, [key]: val }));
 
@@ -170,12 +169,23 @@ function ProductForm({
       setUploadError(err?.message || "Ошибка загрузки фото");
     } finally {
       setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      (e.target as HTMLInputElement).value = "";
     }
   };
 
   return (
     <div className="space-y-2">
+      {/* Скрытый input всегда смонтирован — не внутри Section */}
+      {onUploadImage && (
+        <input
+          id="product-file-upload"
+          type="file"
+          accept="image/*"
+          className="hidden"
+          disabled={uploading}
+          onChange={handleFileUpload}
+        />
+      )}
 
       {/* Основное */}
       <Section id="basic" label="Основная информация" openSection={openSection} onToggle={toggle}>
@@ -236,18 +246,13 @@ function ProductForm({
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
           {onUploadImage && (
-            <>
-              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
-              <button
-                type="button"
-                onClick={() => { console.log("[upload] button click, ref:", fileInputRef.current); fileInputRef.current?.click(); }}
-                disabled={uploading}
-                className="flex items-center gap-2 px-4 py-2 border border-[#E8E7E2] text-[#5A6262] rounded-lg text-xs hover:border-[#5A6262] hover:text-black transition-colors disabled:opacity-40"
-              >
-                <Upload size={14} />
-                {uploading ? "Загрузка..." : "Загрузить фото"}
-              </button>
-            </>
+            <label
+              htmlFor="product-file-upload"
+              className={`flex items-center gap-2 px-4 py-2 border border-[#E8E7E2] text-[#5A6262] rounded-lg text-xs cursor-pointer hover:border-[#5A6262] hover:text-black transition-colors ${uploading ? "opacity-40 pointer-events-none" : ""}`}
+            >
+              <Upload size={14} />
+              {uploading ? "Загрузка..." : "Загрузить фото"}
+            </label>
           )}
           {mediaImages.length > 0 && (
             <button
