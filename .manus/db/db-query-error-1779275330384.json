@@ -1,8 +1,0 @@
-{
-  "query": "ALTER TABLE `products` MODIFY COLUMN `sizes` varchar(255) NOT NULL DEFAULT '[]';\nALTER TABLE `products` ADD `collection` varchar(255);\nALTER TABLE `products` ADD `images` text;\nALTER TABLE `products` ADD `features` text;\nALTER TABLE `products` ADD `specs` text;\nALTER TABLE `products` ADD `sizeTables` text;\nALTER TABLE `products` ADD `careInstructions` text;\nALTER TABLE `products` ADD `careNote` text;\nALTER TABLE `products` ADD `telegramLink` varchar(500);\nALTER TABLE `products` ADD `isVisible` tinyint DEFAULT 1 NOT NULL;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway06.us-east-1.prod.aws.tidbcloud.com --port 4000 --user frjNH7ukzmhzvE3.root --database Ft4ZF6NJgfuAwGrs9QV9rW --execute ALTER TABLE `products` MODIFY COLUMN `sizes` varchar(255) NOT NULL DEFAULT '[]';\nALTER TABLE `products` ADD `collection` varchar(255);\nALTER TABLE `products` ADD `images` text;\nALTER TABLE `products` ADD `features` text;\nALTER TABLE `products` ADD `specs` text;\nALTER TABLE `products` ADD `sizeTables` text;\nALTER TABLE `products` ADD `careInstructions` text;\nALTER TABLE `products` ADD `careNote` text;\nALTER TABLE `products` ADD `telegramLink` varchar(500);\nALTER TABLE `products` ADD `isVisible` tinyint DEFAULT 1 NOT NULL;",
-  "returncode": 1,
-  "logs": [
-    "ERROR 1060 (42S21) at line 2: Duplicate column name 'collection'"
-  ]
-}

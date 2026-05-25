@@ -196,7 +196,7 @@ function ProductForm({
             type="text"
             value={newImageUrl}
             onChange={e => setNewImageUrl(e.target.value)}
-            placeholder="/manus-storage/IMG_4999.jpeg"
+            placeholder="/uploads/photo.jpeg"
             className="flex-1 px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
           />
           <button
