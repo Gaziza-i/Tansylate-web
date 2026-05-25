@@ -51,6 +51,16 @@ async function startServer() {
   // Static file serving and upload endpoint — registered before any auth middleware
   app.use("/uploads", express.static(uploadsDir));
 
+  app.get("/api/upload-status", (_req, res) => {
+    const writable = (() => {
+      try { fs.accessSync(uploadsDir, fs.constants.W_OK); return true; } catch { return false; }
+    })();
+    const files = (() => {
+      try { return fs.readdirSync(uploadsDir).length; } catch { return -1; }
+    })();
+    res.json({ ok: true, uploadsDir, writable, files });
+  });
+
   app.post("/api/upload", upload.single("file"), (req, res) => {
     if (!req.file) { res.status(400).json({ error: "No file" }); return; }
     res.json({ url: `/uploads/${req.file.filename}` });
