@@ -18,6 +18,199 @@ const FALLBACK_IMAGES = [
 
 const LOGO_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/aOLIVKokFqpLkQid.png";
 
+type SizeRow = { size: string; ru: string; col3: string; col3label: string; waist: string };
+type SizeTable = { title: string; rows: SizeRow[] };
+type Spec = { label: string; value: string };
+type CareItem = { icon: string; text: string };
+
+function CareIcon({ icon }: { icon: string }) {
+  const p = {
+    width: 22, height: 22, viewBox: "0 0 24 24", fill: "none",
+    stroke: "#5A6262", strokeWidth: 1.5 as number,
+    strokeLinecap: "round" as const, strokeLinejoin: "round" as const,
+    className: "flex-shrink-0",
+  };
+  if (icon === "wash") return (
+    <svg {...p}>
+      <path d="M2 8h20v2a10 10 0 0 1-20 0V8z"/>
+      <path d="M2 8l2-5h16l2 5"/>
+      <path d="M9 13v3m6-3v3"/>
+    </svg>
+  );
+  if (icon === "bleach") return (
+    <svg {...p}>
+      <path d="M3 6h18v2a9 9 0 0 1-18 0V6z"/>
+      <path d="M3 6l1-3h16l1 3"/>
+      <line x1="4" y1="4" x2="20" y2="20"/>
+    </svg>
+  );
+  if (icon === "iron") return (
+    <svg {...p}>
+      <path d="M4 6h16a1 1 0 0 1 1 1v1H3V7a1 1 0 0 1 1-1z"/>
+      <path d="M3 8h18v1a9 9 0 0 1-2 5.7V19a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-4.3A9 9 0 0 1 3 9V8z"/>
+      <circle cx="12" cy="11" r="1" fill="#5A6262" stroke="none"/>
+    </svg>
+  );
+  if (icon === "dry") return (
+    <svg {...p}>
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <line x1="3" y1="3" x2="21" y2="21"/>
+    </svg>
+  );
+  if (icon === "hang") return (
+    <svg {...p}>
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <line x1="7" y1="12" x2="17" y2="12"/>
+    </svg>
+  );
+  return null;
+}
+
+function ProductModal({
+  product, images, carouselIndex, onClose, onPrev, onNext, onSetIndex,
+}: {
+  product: any; images: string[]; carouselIndex: number;
+  onClose: () => void; onPrev: () => void; onNext: () => void; onSetIndex: (i: number) => void;
+}) {
+  const specs = parseJSON<Spec[]>(product.specs, []);
+  const sizeTables = parseJSON<SizeTable[]>(product.sizeTables, []);
+  const features = parseJSON<string[]>(product.features, []);
+  const careInstructions = parseJSON<CareItem[]>(product.careInstructions, []);
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="p-8">
+          <div className="flex justify-between items-start mb-6">
+            <h2 className="text-2xl font-serif text-[#1F1F1D]">{product.name}</h2>
+            <button onClick={onClose} className="text-[#5A6262] hover:text-black">
+              <X size={24} />
+            </button>
+          </div>
+
+          <div className="mb-6 relative">
+            <div className="relative w-full h-80 overflow-hidden rounded-lg bg-[#E8E7E2]">
+              <img
+                src={images[carouselIndex]}
+                alt={product.name}
+                className="w-full h-full object-cover transition-opacity duration-300"
+              />
+              <button onClick={onPrev} className="absolute left-3 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 transition-all shadow">
+                <ChevronLeft size={18} className="text-[#1F1F1D]" />
+              </button>
+              <button onClick={onNext} className="absolute right-3 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 transition-all shadow">
+                <ChevronRight size={18} className="text-[#1F1F1D]" />
+              </button>
+              <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+                {images.map((_, idx) => (
+                  <button key={idx} onClick={() => onSetIndex(idx)}
+                    className={`w-1.5 h-1.5 rounded-full transition-all ${idx === carouselIndex ? "bg-white w-4" : "bg-white bg-opacity-50"}`}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
+              {images.map((src, idx) => (
+                <button key={idx} onClick={() => onSetIndex(idx)}
+                  className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${idx === carouselIndex ? "border-[#5A6262]" : "border-transparent"}`}
+                >
+                  <img src={src} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {product.description && (
+            <div className="mb-6">
+              <h3 className="font-serif text-[#1F1F1D] mb-3">Описание</h3>
+              <p className="text-[#5A6262] leading-relaxed text-sm">{product.description}</p>
+            </div>
+          )}
+
+          {specs.length > 0 && (
+            <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6">
+              <h3 className="font-serif text-[#1F1F1D] mb-3">Материал</h3>
+              <div className="space-y-2 text-sm text-[#5A6262]">
+                {specs.map((spec, i) => (
+                  <p key={i}><strong>{spec.label}:</strong> {spec.value}</p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sizeTables.map((table, ti) => (
+            <div key={ti} className="bg-[#F9F9D7] rounded-lg p-4 mb-6 overflow-x-auto">
+              <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">{table.title}</h4>
+              <table className="w-full text-sm text-[#5A6262] border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-[#1F1F1D]">
+                    <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Размер</th>
+                    <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">РУ размер</th>
+                    <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">{table.rows[0]?.col3label ?? "Обхват груди"}</th>
+                    <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват талии</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {table.rows.map((row, ri) => (
+                    <tr key={ri} className={ri < table.rows.length - 1 ? "border-b border-[#E8E7E2]" : ""}>
+                      <td className="py-2 px-2">{row.size}</td>
+                      <td className="py-2 px-2">{row.ru}</td>
+                      <td className="py-2 px-2">{row.col3}</td>
+                      <td className="py-2 px-2">{row.waist}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+
+          {features.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-serif text-[#1F1F1D] mb-3">Особенности</h3>
+              <ul className="space-y-2 text-sm text-[#5A6262]">
+                {features.map((feat, i) => (
+                  <li key={i}>✓ {feat}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {(careInstructions.length > 0 || product.careNote) && (
+            <div className="bg-[#F9F9D7] rounded-lg p-6 mb-6">
+              <h3 className="font-serif text-[#1F1F1D] mb-4 text-sm font-semibold">Уход за изделием</h3>
+              {careInstructions.length > 0 && (
+                <div className="space-y-4">
+                  {careInstructions.map((item, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <CareIcon icon={item.icon} />
+                      <p className="text-sm text-[#5A6262]">{item.text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {product.careNote && (
+                <p className="text-xs text-[#5A6262] mt-4 italic">{product.careNote}</p>
+              )}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between pt-6 border-t border-[#E8E7E2]">
+            <span className="text-3xl font-semibold text-[#1F1F1D]">{(product.price ?? 0).toLocaleString("ru-RU")} ₽</span>
+            <a
+              href={product.telegramLink ?? "https://t.me/tansylate_bot"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-3 bg-[#5A6262] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium inline-block"
+            >
+              Заказать в Telegram
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [location, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,27 +220,22 @@ export default function Home() {
 
   const { data: products = [] } = trpc.catalog.products.useQuery();
 
-  // Первый товар — главный на витрине
-  const featuredProduct = products[0] ?? null;
-  const productImages = featuredProduct
-    ? parseJSON<string[]>(featuredProduct.images, FALLBACK_IMAGES)
-    : FALLBACK_IMAGES;
-  const productImages_nonempty = productImages.length > 0 ? productImages : FALLBACK_IMAGES;
-
-  const prevSlide = () => setCarouselIndex(i => (i - 1 + productImages_nonempty.length) % productImages_nonempty.length);
-  const nextSlide = () => setCarouselIndex(i => (i + 1) % productImages_nonempty.length);
-
   // Filter products based on search
   const filteredProducts = searchQuery.trim()
-    ? products.filter(p =>
+    ? (products as any[]).filter((p: any) =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.description?.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : products;
+    : (products as any[]);
 
-  const formatPrice = (price: number) => {
-    return (price / 100).toFixed(0);
-  };
+  const selectedProduct = selectedProductId !== null
+    ? filteredProducts.find((p: any) => p.id === selectedProductId) ?? null
+    : null;
+  const selImages = selectedProduct ? parseJSON<string[]>(selectedProduct.images, FALLBACK_IMAGES) : [];
+  const selImages_ne = selImages.length > 0 ? selImages : FALLBACK_IMAGES;
+
+  const prevSlide = () => setCarouselIndex(i => (i - 1 + selImages_ne.length) % selImages_ne.length);
+  const nextSlide = () => setCarouselIndex(i => (i + 1) % selImages_ne.length);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
@@ -165,30 +353,32 @@ export default function Home() {
           <section id="catalog" className="py-20 px-4 md:px-6 bg-white">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Каталог</h2>
-              <div className="max-w-2xl mx-auto">
-                <div 
-                  onClick={() => setSelectedProductId(1)}
-                  className="rounded-2xl overflow-hidden bg-white hover:shadow-lg transition-shadow cursor-pointer border border-[#E8E7E2]"
-                >
-                  <div className="w-full h-64 bg-[#E8E7E2] overflow-hidden">
-                    <img src={productImages_nonempty[0]} alt="Спортивный костюм" className="w-full h-full object-cover hover:scale-105 transition-transform" />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-serif text-[#1F1F1D] mb-2">{featuredProduct?.name ?? "Спортивный костюм"}</h3>
-                    <p className="text-sm text-[#5A6262] mb-4">{featuredProduct ? (featuredProduct.price ?? 0).toLocaleString("ru-RU") + " ₽" : "12 990 ₽"}</p>
-                    <p className="text-xs text-[#5A6262] mb-4">Нажмите для полной информации</p>
-                    <a
-                      href={featuredProduct?.telegramLink ?? "https://t.me/tansylate_bot"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-block px-6 py-2 bg-[#5A6262] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium"
-                    >
-                      Заказать в Telegram
-                    </a>
-                  </div>
+              {filteredProducts.length === 0 ? (
+                <p className="text-center text-[#5A6262]">Товары не найдены</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredProducts.map((p: any) => {
+                    const imgs = parseJSON<string[]>(p.images, FALLBACK_IMAGES);
+                    const img = imgs[0] ?? FALLBACK_IMAGES[0];
+                    return (
+                      <div
+                        key={p.id}
+                        onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
+                        className="rounded-2xl overflow-hidden bg-white hover:shadow-lg transition-shadow cursor-pointer border border-[#E8E7E2]"
+                      >
+                        <div className="w-full h-64 bg-[#E8E7E2] overflow-hidden">
+                          <img src={img} alt={p.name} className="w-full h-full object-cover hover:scale-105 transition-transform" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                        </div>
+                        <div className="p-6">
+                          <h3 className="text-lg font-serif text-[#1F1F1D] mb-2">{p.name}</h3>
+                          <p className="text-sm text-[#5A6262] mb-2">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
+                          {p.collection && <p className="text-xs text-[#5A6262] uppercase tracking-wide">{p.collection}</p>}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
+              )}
             </div>
           </section>
 
@@ -327,201 +517,16 @@ export default function Home() {
         </main>
         <Footer />
 
-        {/* Modal with Full Product Details */}
-        {selectedProductId === 1 && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedProductId(null)}>
-            <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-              <div className="p-8">
-                <div className="flex justify-between items-start mb-6">
-                  <h2 className="text-2xl font-serif text-[#1F1F1D]">Спортивный костюм</h2>
-                  <button onClick={() => setSelectedProductId(null)} className="text-[#5A6262] hover:text-black">
-                    <X size={24} />
-                  </button>
-                </div>
-
-                <div className="mb-6 relative">
-                  <div className="relative w-full h-80 overflow-hidden rounded-lg bg-[#E8E7E2]">
-                    <img
-                      src={productImages_nonempty[carouselIndex]}
-                      alt="Спортивный костюм"
-                      className="w-full h-full object-cover transition-opacity duration-300"
-                    />
-                    <button
-                      onClick={prevSlide}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 transition-all shadow"
-                    >
-                      <ChevronLeft size={18} className="text-[#1F1F1D]" />
-                    </button>
-                    <button
-                      onClick={nextSlide}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 transition-all shadow"
-                    >
-                      <ChevronRight size={18} className="text-[#1F1F1D]" />
-                    </button>
-                    <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
-                      {productImages_nonempty.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setCarouselIndex(idx)}
-                          className={`w-1.5 h-1.5 rounded-full transition-all ${idx === carouselIndex ? "bg-white w-4" : "bg-white bg-opacity-50"}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
-                    {productImages_nonempty.map((src, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setCarouselIndex(idx)}
-                        className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${idx === carouselIndex ? "border-[#5A6262]" : "border-transparent"}`}
-                      >
-                        <img src={src} alt="" className="w-full h-full object-cover" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-serif text-[#1F1F1D] mb-3">Описание</h3>
-                  <p className="text-[#5A6262] leading-relaxed text-sm">
-                    Премиальный спортивный костюм, созданный для тех, кто ценит качество и комфорт. Каждая деталь тщательно продумана, каждый шов выполнен на профессиональном оборудовании. Натуральные материалы обеспечивают идеальную терморегуляцию и комфорт при любых условиях.
-                  </p>
-                </div>
-
-                <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6">
-                  <h3 className="font-serif text-[#1F1F1D] mb-3">Материал</h3>
-                  <div className="space-y-2 text-sm text-[#5A6262]">
-                    <p><strong>Состав:</strong> 80% хлопок, 20% полиэстер</p>
-                    <p><strong>Тип ткани:</strong> Трёхнитка футер</p>
-                    <p><strong>Плотность:</strong> 360 г/м²</p>
-                  </div>
-                </div>
-
-                <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6 overflow-x-auto">
-                  <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">Размерная сетка: Кофта</h4>
-                  <table className="w-full text-sm text-[#5A6262] border-collapse">
-                    <thead>
-                      <tr className="border-b-2 border-[#1F1F1D]">
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Размер</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">РУ размер</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват груди</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват талии</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[#E8E7E2]">
-                        <td className="py-2 px-2">XS-S</td>
-                        <td className="py-2 px-2">42</td>
-                        <td className="py-2 px-2">84 см</td>
-                        <td className="py-2 px-2">66 см</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 px-2">S-M</td>
-                        <td className="py-2 px-2">44</td>
-                        <td className="py-2 px-2">88 см</td>
-                        <td className="py-2 px-2">70 см</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6 overflow-x-auto">
-                  <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">Размерная сетка: Штаны</h4>
-                  <table className="w-full text-sm text-[#5A6262] border-collapse">
-                    <thead>
-                      <tr className="border-b-2 border-[#1F1F1D]">
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Размер</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">РУ размер</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват груди</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват талии</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[#E8E7E2]">
-                        <td className="py-2 px-2">XS-S</td>
-                        <td className="py-2 px-2">42</td>
-                        <td className="py-2 px-2">66 см</td>
-                        <td className="py-2 px-2">90 см</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 px-2">S-M</td>
-                        <td className="py-2 px-2">44</td>
-                        <td className="py-2 px-2">70 см</td>
-                        <td className="py-2 px-2">94 см</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-serif text-[#1F1F1D] mb-3">Особенности</h3>
-                  <ul className="space-y-2 text-sm text-[#5A6262]">
-                    <li>✓ Швы на профессиональном оборудовании</li>
-                    <li>✓ Премиальная фурнитура</li>
-                    <li>✓ Идеальная посадка по фигуре</li>
-                    <li>✓ Натуральные материалы высочайшего качества</li>
-                  </ul>
-                </div>
-
-                <div className="bg-[#F9F9D7] rounded-lg p-6 mb-6">
-                  <h3 className="font-serif text-[#1F1F1D] mb-4 text-sm font-semibold">Уход за изделием</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                        <path d="M2 8h20v2a10 10 0 0 1-20 0V8z"/>
-                        <path d="M2 8l2-5h16l2 5"/>
-                        <path d="M9 13v3m6-3v3"/>
-                      </svg>
-                      <p className="text-sm text-[#5A6262]">Стирка 30°C, вывернув наизнанку</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                        <path d="M3 6h18v2a9 9 0 0 1-18 0V6z"/>
-                        <path d="M3 6l1-3h16l1 3"/>
-                        <line x1="4" y1="4" x2="20" y2="20"/>
-                      </svg>
-                      <p className="text-sm text-[#5A6262]">Отбеливание: запрещено</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                        <path d="M4 6h16a1 1 0 0 1 1 1v1H3V7a1 1 0 0 1 1-1z"/>
-                        <path d="M3 8h18v1a9 9 0 0 1-2 5.7V19a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-4.3A9 9 0 0 1 3 9V8z"/>
-                        <circle cx="12" cy="11" r="1" fill="#5A6262" stroke="none"/>
-                      </svg>
-                      <p className="text-sm text-[#5A6262]">Утюжка: до 110°C</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        <line x1="3" y1="3" x2="21" y2="21"/>
-                      </svg>
-                      <p className="text-sm text-[#5A6262]">Машинная сушка: запрещена</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        <line x1="7" y1="12" x2="17" y2="12"/>
-                      </svg>
-                      <p className="text-sm text-[#5A6262]">Сушка: только горизонтально в тени</p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-[#5A6262] mt-4 italic">Первое время с изнанки может осыпаться лишний ворс — это особенность ткани. После 1–2 стирок всё пройдёт.</p>
-                </div>
-
-                <div className="flex items-center justify-between pt-6 border-t border-[#E8E7E2]">
-                  <span className="text-3xl font-semibold text-[#1F1F1D]">{featuredProduct ? (featuredProduct.price ?? 0).toLocaleString("ru-RU") + " ₽" : "12 990 ₽"}</span>
-                  <a
-                    href={featuredProduct?.telegramLink ?? "https://t.me/tansylate_bot"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-8 py-3 bg-[#5A6262] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium inline-block"
-                  >
-                    Заказать в Telegram
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+        {selectedProduct && (
+          <ProductModal
+            product={selectedProduct}
+            images={selImages_ne}
+            carouselIndex={carouselIndex}
+            onClose={() => setSelectedProductId(null)}
+            onPrev={prevSlide}
+            onNext={nextSlide}
+            onSetIndex={setCarouselIndex}
+          />
         )}
       </div>
     );
@@ -552,220 +557,49 @@ export default function Home() {
             />
           </div>
 
-          {/* Minimalist Product Card */}
-          <div className="max-w-2xl mx-auto">
-            <div 
-              onClick={() => setSelectedProductId(1)}
-              className="rounded-2xl overflow-hidden bg-white hover:shadow-lg transition-shadow cursor-pointer border border-[#E8E7E2]"
-            >
-              <div className="w-full h-64 bg-[#E8E7E2] overflow-hidden">
-                <img src={productImages_nonempty[0]} alt="Спортивный костюм" className="w-full h-full object-cover hover:scale-105 transition-transform" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-serif text-[#1F1F1D] mb-2">{featuredProduct?.name ?? "Спортивный костюм"}</h3>
-                <p className="text-sm text-[#5A6262] mb-4">{featuredProduct ? (featuredProduct.price ?? 0).toLocaleString("ru-RU") + " ₽" : "12 990 ₽"}</p>
-                <p className="text-xs text-[#5A6262] mb-4">Нажмите для полной информации</p>
-              </div>
+          {/* Product Grid */}
+          {filteredProducts.length === 0 ? (
+            <div className="text-center py-20 text-[#5A6262]">
+              <p className="text-lg mb-2">Товары не найдены</p>
+              {searchQuery && <p className="text-sm">Попробуйте изменить запрос</p>}
             </div>
-          </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((p: any) => {
+                const imgs = parseJSON<string[]>(p.images, FALLBACK_IMAGES);
+                const img = imgs[0] ?? FALLBACK_IMAGES[0];
+                return (
+                  <div
+                    key={p.id}
+                    onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
+                    className="rounded-2xl overflow-hidden bg-white hover:shadow-lg transition-shadow cursor-pointer border border-[#E8E7E2]"
+                  >
+                    <div className="w-full h-64 bg-[#E8E7E2] overflow-hidden">
+                      <img src={img} alt={p.name} className="w-full h-full object-cover hover:scale-105 transition-transform" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-lg font-serif text-[#1F1F1D] mb-2">{p.name}</h3>
+                      <p className="text-sm text-[#5A6262] mb-2">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
+                      {p.collection && <p className="text-xs text-[#5A6262] uppercase tracking-wide">{p.collection}</p>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </main>
         <Footer />
 
-        {/* Modal with Full Product Details */}
-        {selectedProductId === 1 && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedProductId(null)}>
-            <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-              <div className="p-8">
-                <div className="flex justify-between items-start mb-6">
-                  <h2 className="text-2xl font-serif text-[#1F1F1D]">Спортивный костюм</h2>
-                  <button onClick={() => setSelectedProductId(null)} className="text-[#5A6262] hover:text-black">
-                    <X size={24} />
-                  </button>
-                </div>
-
-                <div className="mb-6 relative">
-                  <div className="relative w-full h-80 overflow-hidden rounded-lg bg-[#E8E7E2]">
-                    <img
-                      src={productImages_nonempty[carouselIndex]}
-                      alt="Спортивный костюм"
-                      className="w-full h-full object-cover transition-opacity duration-300"
-                    />
-                    <button
-                      onClick={prevSlide}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 transition-all shadow"
-                    >
-                      <ChevronLeft size={18} className="text-[#1F1F1D]" />
-                    </button>
-                    <button
-                      onClick={nextSlide}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 transition-all shadow"
-                    >
-                      <ChevronRight size={18} className="text-[#1F1F1D]" />
-                    </button>
-                    <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
-                      {productImages_nonempty.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setCarouselIndex(idx)}
-                          className={`w-1.5 h-1.5 rounded-full transition-all ${idx === carouselIndex ? "bg-white w-4" : "bg-white bg-opacity-50"}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
-                    {productImages_nonempty.map((src, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setCarouselIndex(idx)}
-                        className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${idx === carouselIndex ? "border-[#5A6262]" : "border-transparent"}`}
-                      >
-                        <img src={src} alt="" className="w-full h-full object-cover" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-serif text-[#1F1F1D] mb-3">Описание</h3>
-                  <p className="text-[#5A6262] leading-relaxed text-sm">
-                    Премиальный спортивный костюм, созданный для тех, кто ценит качество и комфорт. Каждая деталь тщательно продумана, каждый шов выполнен на профессиональном оборудовании. Натуральные материалы обеспечивают идеальную терморегуляцию и комфорт при любых условиях.
-                  </p>
-                </div>
-
-                <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6">
-                  <h3 className="font-serif text-[#1F1F1D] mb-3">Материал</h3>
-                  <div className="space-y-2 text-sm text-[#5A6262]">
-                    <p><strong>Состав:</strong> 80% хлопок, 20% полиэстер</p>
-                    <p><strong>Тип ткани:</strong> Трёхнитка футер</p>
-                    <p><strong>Плотность:</strong> 360 г/м²</p>
-                  </div>
-                </div>
-
-                <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6 overflow-x-auto">
-                  <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">Размерная сетка: Кофта</h4>
-                  <table className="w-full text-sm text-[#5A6262] border-collapse">
-                    <thead>
-                      <tr className="border-b-2 border-[#1F1F1D]">
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Размер</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">РУ размер</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват груди</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват талии</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[#E8E7E2]">
-                        <td className="py-2 px-2">XS-S</td>
-                        <td className="py-2 px-2">42</td>
-                        <td className="py-2 px-2">84 см</td>
-                        <td className="py-2 px-2">66 см</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 px-2">S-M</td>
-                        <td className="py-2 px-2">44</td>
-                        <td className="py-2 px-2">88 см</td>
-                        <td className="py-2 px-2">70 см</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="bg-[#F9F9D7] rounded-lg p-4 mb-6 overflow-x-auto">
-                  <h4 className="font-serif text-[#1F1F1D] mb-3 text-sm font-semibold">Размерная сетка: Штаны</h4>
-                  <table className="w-full text-sm text-[#5A6262] border-collapse">
-                    <thead>
-                      <tr className="border-b-2 border-[#1F1F1D]">
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Размер</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">РУ размер</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват бёдер</th>
-                        <th className="text-left py-2 px-2 font-semibold text-[#1F1F1D]">Обхват талии</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[#E8E7E2]">
-                        <td className="py-2 px-2">XS-S</td>
-                        <td className="py-2 px-2">42</td>
-                        <td className="py-2 px-2">66 см</td>
-                        <td className="py-2 px-2">90 см</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 px-2">S-M</td>
-                        <td className="py-2 px-2">44</td>
-                        <td className="py-2 px-2">94 см</td>
-                        <td className="py-2 px-2">70 см</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="mb-6">
-                  <h3 className="font-serif text-[#1F1F1D] mb-3">Особенности</h3>
-                  <ul className="space-y-2 text-sm text-[#5A6262]">
-                    <li>✓ Швы на профессиональном оборудовании</li>
-                    <li>✓ Премиальная фурнитура</li>
-                    <li>✓ Идеальная посадка по фигуре</li>
-                    <li>✓ Натуральные материалы высочайшего качества</li>
-                  </ul>
-                </div>
-
-                <div className="bg-[#F9F9D7] rounded-lg p-6 mb-6">
-                  <h3 className="font-serif text-[#1F1F1D] mb-4 text-sm font-semibold">Уход за изделием</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                        <path d="M2 8h20v2a10 10 0 0 1-20 0V8z"/>
-                        <path d="M2 8l2-5h16l2 5"/>
-                        <path d="M9 13v3m6-3v3"/>
-                      </svg>
-                      <p className="text-sm text-[#5A6262]">Стирка 30°C, вывернув наизнанку</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                        <path d="M3 6h18v2a9 9 0 0 1-18 0V6z"/>
-                        <path d="M3 6l1-3h16l1 3"/>
-                        <line x1="4" y1="4" x2="20" y2="20"/>
-                      </svg>
-                      <p className="text-sm text-[#5A6262]">Отбеливание: запрещено</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                        <path d="M4 6h16a1 1 0 0 1 1 1v1H3V7a1 1 0 0 1 1-1z"/>
-                        <path d="M3 8h18v1a9 9 0 0 1-2 5.7V19a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-4.3A9 9 0 0 1 3 9V8z"/>
-                        <circle cx="12" cy="11" r="1" fill="#5A6262" stroke="none"/>
-                      </svg>
-                      <p className="text-sm text-[#5A6262]">Утюжка: до 110°C</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        <line x1="3" y1="3" x2="21" y2="21"/>
-                      </svg>
-                      <p className="text-sm text-[#5A6262]">Машинная сушка: запрещена</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        <line x1="7" y1="12" x2="17" y2="12"/>
-                      </svg>
-                      <p className="text-sm text-[#5A6262]">Сушка: только горизонтально в тени</p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-[#5A6262] mt-4 italic">Первое время с изнанки может осыпаться лишний ворс — это особенность ткани. После 1–2 стирок всё пройдёт.</p>
-                </div>
-
-                <div className="flex items-center justify-between pt-6 border-t border-[#E8E7E2]">
-                  <span className="text-3xl font-semibold text-[#1F1F1D]">{featuredProduct ? (featuredProduct.price ?? 0).toLocaleString("ru-RU") + " ₽" : "12 990 ₽"}</span>
-                  <a
-                    href={featuredProduct?.telegramLink ?? "https://t.me/tansylate_bot"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-8 py-3 bg-[#5A6262] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors font-medium inline-block"
-                  >
-                    Заказать в Telegram
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+        {selectedProduct && (
+          <ProductModal
+            product={selectedProduct}
+            images={selImages_ne}
+            carouselIndex={carouselIndex}
+            onClose={() => setSelectedProductId(null)}
+            onPrev={prevSlide}
+            onNext={nextSlide}
+            onSetIndex={setCarouselIndex}
+          />
         )}
       </div>
     );
