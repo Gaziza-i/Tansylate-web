@@ -104,6 +104,7 @@ function ProductForm({
   const [openSection, setOpenSection] = useState<string | null>("basic");
   const [showMediaPicker, setShowMediaPicker] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const set = (key: keyof Form, val: any) => setForm(f => ({ ...f, [key]: val }));
@@ -115,9 +116,12 @@ function ProductForm({
     const file = e.target.files?.[0];
     if (!file || !onUploadImage) return;
     setUploading(true);
+    setUploadError(null);
     try {
       const url = await onUploadImage(file);
       set("images", [...form.images, url]);
+    } catch (err: any) {
+      setUploadError(err?.message || "Ошибка загрузки фото");
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -210,7 +214,8 @@ function ProductForm({
         </div>
 
         {/* Кнопки загрузки и медиатеки */}
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
           {onUploadImage && (
             <>
               <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
@@ -234,6 +239,10 @@ function ProductForm({
               <Layers size={14} />
               Из медиатеки
             </button>
+          )}
+          </div>
+          {uploadError && (
+            <p className="text-xs text-red-500 mt-1">{uploadError}</p>
           )}
         </div>
 
@@ -493,6 +502,7 @@ function MediaLibrary({
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState<string[]>([]);
   const [copied, setCopied] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const allImages = [...new Set([...uploaded, ...images])];
@@ -501,9 +511,12 @@ function MediaLibrary({
     const files = Array.from(e.target.files ?? []);
     if (!files.length) return;
     setUploading(true);
+    setUploadError(null);
     try {
       const urls = await Promise.all(files.map(f => onUpload(f)));
       setUploaded(prev => [...urls, ...prev]);
+    } catch (err: any) {
+      setUploadError(err?.message || "Ошибка загрузки фото");
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -532,6 +545,9 @@ function MediaLibrary({
             {uploading ? "Загрузка..." : "Загрузить фото"}
           </button>
         </div>
+        {uploadError && (
+          <p className="text-xs text-red-500 mt-2">{uploadError}</p>
+        )}
       </div>
 
       {allImages.length === 0 ? (

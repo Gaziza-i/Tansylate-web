@@ -61,9 +61,17 @@ async function startServer() {
     res.json({ ok: true, uploadsDir, writable, files });
   });
 
-  app.post("/api/upload", upload.single("file"), (req, res) => {
-    if (!req.file) { res.status(400).json({ error: "No file" }); return; }
-    res.json({ url: `/uploads/${req.file.filename}` });
+  app.post("/api/upload", (req, res) => {
+    upload.single("file")(req, res, (err) => {
+      if (err) {
+        console.error("[upload] multer error:", err.message);
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      if (!req.file) { res.status(400).json({ error: "No file received" }); return; }
+      console.log("[upload] saved:", req.file.filename, req.file.size, "bytes");
+      res.json({ url: `/uploads/${req.file.filename}` });
+    });
   });
 
   // Body parser for JSON/form routes below
