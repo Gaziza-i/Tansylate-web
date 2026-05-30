@@ -303,15 +303,14 @@ function ProductForm({
         <div className="grid grid-cols-3 gap-3 mt-2">
           {form.images.map((url, i) => (
             <div key={i} className="relative group h-24 bg-[#E8E7E2] rounded-lg overflow-hidden border border-[#E8E7E2]">
-              <img src={url} alt="" className="w-full h-full object-cover transition-opacity duration-200" style={{ opacity: 0 }}
-                onLoad={e => { const img = e.target as HTMLImageElement; if (img.naturalWidth > 0) img.style.opacity = "1"; }}
+              <img src={url} alt="" className="w-full h-full object-cover"
                 onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
               <div className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs rounded px-1">{i + 1}</div>
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
-                <div className="hidden group-hover:flex gap-1">
-                  <button type="button" onClick={() => { if (i > 0) { const arr = [...form.images]; [arr[i-1], arr[i]] = [arr[i], arr[i-1]]; set("images", arr); }}} className="bg-white rounded p-1 text-[#5A6262] hover:text-black">←</button>
-                  <button type="button" onClick={() => set("images", form.images.filter((_, j) => j !== i))} className="bg-white rounded p-1 text-red-500 hover:text-red-700"><Trash2 size={12} /></button>
-                  <button type="button" onClick={() => { if (i < form.images.length-1) { const arr = [...form.images]; [arr[i], arr[i+1]] = [arr[i+1], arr[i]]; set("images", arr); }}} className="bg-white rounded p-1 text-[#5A6262] hover:text-black">→</button>
+              <div className="absolute inset-0 bg-black bg-opacity-30 rounded-lg flex items-center justify-center">
+                <div className="flex gap-1">
+                  <button type="button" disabled={i === 0} onClick={() => { const arr = [...form.images]; [arr[i-1], arr[i]] = [arr[i], arr[i-1]]; set("images", arr); }} className="bg-white rounded p-1 text-[#5A6262] hover:text-black active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-transform">←</button>
+                  <button type="button" onClick={() => set("images", form.images.filter((_, j) => j !== i))} className="bg-white rounded p-1 text-red-500 hover:text-red-700 active:scale-95 transition-transform"><Trash2 size={12} /></button>
+                  <button type="button" disabled={i === form.images.length - 1} onClick={() => { const arr = [...form.images]; [arr[i], arr[i+1]] = [arr[i+1], arr[i]]; set("images", arr); }} className="bg-white rounded p-1 text-[#5A6262] hover:text-black active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-transform">→</button>
                 </div>
               </div>
             </div>
@@ -531,7 +530,7 @@ function MediaLibrary({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const allImages = [...new Set([...uploaded, ...images])];
+  const allImages = Array.from(new Set([...uploaded, ...images]));
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -620,9 +619,9 @@ export default function Admin() {
 
   const isSaving = createMut.isPending || updateMut.isPending;
 
-  const allMediaImages = [...new Set(
+  const allMediaImages = Array.from(new Set(
     products.flatMap((p: any) => parseJSON<string[]>(p.images, []))
-  )];
+  ));
 
   const notify = (msg: string) => {
     setSavedMsg(msg);
