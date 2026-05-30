@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers } from "lucide-react";
 
@@ -525,12 +525,21 @@ function MediaLibrary({
   onUpload: (file: File) => Promise<string>;
 }) {
   const [uploading, setUploading] = useState(false);
-  const [uploaded, setUploaded] = useState<string[]>([]);
+  const [serverList, setServerList] = useState<string[]>(images);
   const [copied, setCopied] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const allImages = Array.from(new Set([...uploaded, ...images]));
+  useEffect(() => { setServerList(images); }, [images]);
+
+  const refreshList = () => {
+    fetch("/api/uploads")
+      .then(r => r.json())
+      .then((urls: string[]) => setServerList(urls))
+      .catch(() => {});
+  };
+
+  const allImages = serverList;
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -538,8 +547,8 @@ function MediaLibrary({
     setUploading(true);
     setUploadError(null);
     try {
-      const urls = await Promise.all(files.map(f => onUpload(f)));
-      setUploaded(prev => [...urls, ...prev]);
+      await Promise.all(files.map(f => onUpload(f)));
+      refreshList();
     } catch (err: any) {
       setUploadError(err?.message || "Ошибка загрузки фото");
     } finally {
@@ -616,12 +625,20 @@ export default function Admin() {
   const createMut = trpc.admin.createProduct.useMutation();
   const updateMut = trpc.admin.updateProduct.useMutation();
   const deleteMut = trpc.admin.deleteProduct.useMutation();
+  const [serverImages, setServerImages] = useState<string[]>([]);
 
   const isSaving = createMut.isPending || updateMut.isPending;
 
-  const allMediaImages = Array.from(new Set(
-    products.flatMap((p: any) => parseJSON<string[]>(p.images, []))
-  ));
+  useEffect(() => {
+    fetch("/api/uploads")
+      .then(r => r.json())
+      .then((urls: string[]) => setServerImages(urls))
+      .catch(() => {});
+  }, []);
+
+  const allMediaImages = serverImages.length > 0
+    ? serverImages
+    : Array.from(new Set(products.flatMap((p: any) => parseJSON<string[]>(p.images, []))));
 
   const notify = (msg: string) => {
     setSavedMsg(msg);
