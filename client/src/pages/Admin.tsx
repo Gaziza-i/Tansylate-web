@@ -597,7 +597,7 @@ function MediaLibrary({
           {allImages.map((url, i) => (
             <div key={i} className="group relative rounded-xl overflow-hidden border border-[#E8E7E2] bg-white aspect-square">
               <img src={url} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }} />
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
+              <div className="absolute inset-0 bg-transparent group-hover:bg-black/40 transition-all flex items-center justify-center">
                 <button
                   onClick={() => copyUrl(url)}
                   className="hidden group-hover:flex items-center gap-1.5 px-3 py-1.5 bg-white text-[#1F1F1D] text-xs rounded-full shadow hover:bg-[#F0EFEA] transition-colors"
