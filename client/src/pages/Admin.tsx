@@ -82,6 +82,45 @@ const emptyForm = () => ({
 
 type Form = ReturnType<typeof emptyForm>;
 
+// ─── Вспомогательные компоненты (ВНЕ ProductForm — иначе React размонтирует DOM на каждый ре-рендер) ──
+
+function InputField({ label, value, onChange, type = "text", placeholder = "" }: any) {
+  return (
+    <div>
+      <label className="block text-xs text-[#5A6262] mb-1 uppercase tracking-wide">{label}</label>
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#1F1F1D] focus:outline-none focus:border-[#5A6262]"
+      />
+    </div>
+  );
+}
+
+function Section({ id, label, openSection, onToggle, children }: {
+  id: string;
+  label: string;
+  openSection: string | null;
+  onToggle: (id: string) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="border border-[#E8E7E2] rounded-xl overflow-hidden mb-3 md:mb-4">
+      <button
+        type="button"
+        onClick={() => onToggle(id)}
+        className="w-full flex justify-between items-center px-3 md:px-5 py-3 md:py-4 bg-[#F9F9F7] hover:bg-[#F0EFEA] transition-colors text-left"
+      >
+        <span className="font-medium text-[#1F1F1D] text-xs md:text-sm">{label}</span>
+        {openSection === id ? <ChevronUp size={16} className="text-[#5A6262]" /> : <ChevronDown size={16} className="text-[#5A6262]" />}
+      </button>
+      {openSection === id && <div className="p-3 md:p-5 space-y-3 md:space-y-4 bg-white">{children}</div>}
+    </div>
+  );
+}
+
 // ─── Форма редактирования товара ─────────────────────────────────────────────
 
 function ProductForm({
@@ -104,7 +143,7 @@ function ProductForm({
   const [openSection, setOpenSection] = useState<string | null>("basic");
   const [showMediaPicker, setShowMediaPicker] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const set = (key: keyof Form, val: any) => setForm(f => ({ ...f, [key]: val }));
 
@@ -112,50 +151,44 @@ function ProductForm({
     setOpenSection(o => (o === section ? null : section));
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("[upload] handleFileUpload triggered, files:", e.target.files?.length);
     const file = e.target.files?.[0];
-    if (!file || !onUploadImage) return;
+    console.log("[upload] file:", file ? `${file.name} (${file.size}b)` : "none", "| onUploadImage:", !!onUploadImage);
+    if (!file || !onUploadImage) {
+      console.warn("[upload] early return — file:", !!file, "onUploadImage:", !!onUploadImage);
+      return;
+    }
     setUploading(true);
+    setUploadError(null);
     try {
       const url = await onUploadImage(file);
+      console.log("[upload] got url:", url);
       set("images", [...form.images, url]);
+    } catch (err: any) {
+      console.error("[upload] error:", err);
+      setUploadError(err?.message || "Ошибка загрузки фото");
     } finally {
       setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      (e.target as HTMLInputElement).value = "";
     }
   };
 
-  const Section = ({ id, label, children }: { id: string; label: string; children: React.ReactNode }) => (
-    <div className="border border-[#E8E7E2] rounded-xl overflow-hidden mb-3 md:mb-4">
-      <button
-        type="button"
-        onClick={() => toggle(id)}
-        className="w-full flex justify-between items-center px-3 md:px-5 py-3 md:py-4 bg-[#F9F9F7] hover:bg-[#F0EFEA] transition-colors text-left"
-      >
-        <span className="font-medium text-[#1F1F1D] text-xs md:text-sm">{label}</span>
-        {openSection === id ? <ChevronUp size={16} className="text-[#5A6262]" /> : <ChevronDown size={16} className="text-[#5A6262]" />}
-      </button>
-      {openSection === id && <div className="p-3 md:p-5 space-y-3 md:space-y-4 bg-white">{children}</div>}
-    </div>
-  );
-
-  const InputField = ({ label, value, onChange, type = "text", placeholder = "" }: any) => (
-    <div>
-      <label className="block text-xs text-[#5A6262] mb-1 uppercase tracking-wide">{label}</label>
-      <input
-        type={type}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#1F1F1D] focus:outline-none focus:border-[#5A6262]"
-      />
-    </div>
-  );
-
   return (
     <div className="space-y-2">
+      {/* Скрытый input всегда смонтирован — не внутри Section */}
+      {onUploadImage && (
+        <input
+          id="product-file-upload"
+          type="file"
+          accept="image/*"
+          className="hidden"
+          disabled={uploading}
+          onChange={handleFileUpload}
+        />
+      )}
 
       {/* Основное */}
-      <Section id="basic" label="Основная информация">
+      <Section id="basic" label="Основная информация" openSection={openSection} onToggle={toggle}>
         <InputField label="Название" value={form.name} onChange={(v: string) => set("name", v)} placeholder="Спортивный костюм" />
         <div className="grid grid-cols-2 gap-4">
           <InputField label="Цена (₽)" value={form.price} onChange={(v: string) => set("price", Number(v))} type="number" />
@@ -185,14 +218,14 @@ function ProductForm({
       </Section>
 
       {/* Фото */}
-      <Section id="images" label={`Фотографии (${form.images.length})`}>
+      <Section id="images" label={`Фотографии (${form.images.length})`} openSection={openSection} onToggle={toggle}>
         {/* Инструменты добавления */}
         <div className="flex gap-2">
           <input
             type="text"
             value={newImageUrl}
             onChange={e => setNewImageUrl(e.target.value)}
-            placeholder="/manus-storage/IMG_4999.jpeg"
+            placeholder="/uploads/photo.jpeg"
             className="flex-1 px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
           />
           <button
@@ -210,20 +243,16 @@ function ProductForm({
         </div>
 
         {/* Кнопки загрузки и медиатеки */}
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
           {onUploadImage && (
-            <>
-              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                className="flex items-center gap-2 px-4 py-2 border border-[#E8E7E2] text-[#5A6262] rounded-lg text-xs hover:border-[#5A6262] hover:text-black transition-colors disabled:opacity-40"
-              >
-                <Upload size={14} />
-                {uploading ? "Загрузка..." : "Загрузить фото"}
-              </button>
-            </>
+            <label
+              htmlFor="product-file-upload"
+              className={`flex items-center gap-2 px-4 py-2 border border-[#E8E7E2] text-[#5A6262] rounded-lg text-xs cursor-pointer hover:border-[#5A6262] hover:text-black transition-colors ${uploading ? "opacity-40 pointer-events-none" : ""}`}
+            >
+              <Upload size={14} />
+              {uploading ? "Загрузка..." : "Загрузить фото"}
+            </label>
           )}
           {mediaImages.length > 0 && (
             <button
@@ -234,6 +263,10 @@ function ProductForm({
               <Layers size={14} />
               Из медиатеки
             </button>
+          )}
+          </div>
+          {uploadError && (
+            <p className="text-xs text-red-500 mt-1">{uploadError}</p>
           )}
         </div>
 
@@ -269,14 +302,15 @@ function ProductForm({
         {/* Текущие фото товара */}
         <div className="grid grid-cols-3 gap-3 mt-2">
           {form.images.map((url, i) => (
-            <div key={i} className="relative group">
-              <img src={url} alt="" className="w-full h-24 object-cover rounded-lg border border-[#E8E7E2]" onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }} />
+            <div key={i} className="relative group h-24 bg-[#E8E7E2] rounded-lg overflow-hidden border border-[#E8E7E2]">
+              <img src={url} alt="" className="w-full h-full object-cover"
+                onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
               <div className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs rounded px-1">{i + 1}</div>
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
-                <div className="hidden group-hover:flex gap-1">
-                  <button type="button" onClick={() => { if (i > 0) { const arr = [...form.images]; [arr[i-1], arr[i]] = [arr[i], arr[i-1]]; set("images", arr); }}} className="bg-white rounded p-1 text-[#5A6262] hover:text-black">←</button>
-                  <button type="button" onClick={() => set("images", form.images.filter((_, j) => j !== i))} className="bg-white rounded p-1 text-red-500 hover:text-red-700"><Trash2 size={12} /></button>
-                  <button type="button" onClick={() => { if (i < form.images.length-1) { const arr = [...form.images]; [arr[i], arr[i+1]] = [arr[i+1], arr[i]]; set("images", arr); }}} className="bg-white rounded p-1 text-[#5A6262] hover:text-black">→</button>
+              <div className="absolute inset-0 bg-black bg-opacity-30 rounded-lg flex items-center justify-center">
+                <div className="flex gap-1">
+                  <button type="button" disabled={i === 0} onClick={() => { const arr = [...form.images]; [arr[i-1], arr[i]] = [arr[i], arr[i-1]]; set("images", arr); }} className="bg-white rounded p-1 text-[#5A6262] hover:text-black active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-transform">←</button>
+                  <button type="button" onClick={() => set("images", form.images.filter((_, j) => j !== i))} className="bg-white rounded p-1 text-red-500 hover:text-red-700 active:scale-95 transition-transform"><Trash2 size={12} /></button>
+                  <button type="button" disabled={i === form.images.length - 1} onClick={() => { const arr = [...form.images]; [arr[i], arr[i+1]] = [arr[i+1], arr[i]]; set("images", arr); }} className="bg-white rounded p-1 text-[#5A6262] hover:text-black active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-transform">→</button>
                 </div>
               </div>
             </div>
@@ -291,7 +325,7 @@ function ProductForm({
       </Section>
 
       {/* Характеристики */}
-      <Section id="specs" label="Характеристики">
+      <Section id="specs" label="Характеристики" openSection={openSection} onToggle={toggle}>
         <div className="space-y-2">
           {form.specs.map((spec, i) => (
             <div key={i} className="flex gap-2 items-center">
@@ -319,7 +353,7 @@ function ProductForm({
       </Section>
 
       {/* Особенности */}
-      <Section id="features" label="Особенности (✓ список)">
+      <Section id="features" label="Особенности (✓ список)" openSection={openSection} onToggle={toggle}>
         <div className="space-y-2">
           {form.features.map((feat, i) => (
             <div key={i} className="flex gap-2 items-center">
@@ -341,7 +375,7 @@ function ProductForm({
       </Section>
 
       {/* Размерные сетки */}
-      <Section id="sizes" label={`Размерные сетки (${form.sizeTables.length})`}>
+      <Section id="sizes" label={`Размерные сетки (${form.sizeTables.length})`} openSection={openSection} onToggle={toggle}>
         {form.sizeTables.map((table, ti) => (
           <div key={ti} className="border border-[#E8E7E2] rounded-lg p-4 mb-4">
             <div className="flex items-center gap-2 mb-3">
@@ -423,7 +457,7 @@ function ProductForm({
       </Section>
 
       {/* Уход */}
-      <Section id="care" label="Уход за изделием">
+      <Section id="care" label="Уход за изделием" openSection={openSection} onToggle={toggle}>
         <div className="space-y-2">
           {form.careInstructions.map((item, i) => (
             <div key={i} className="flex gap-2 items-center">
@@ -493,6 +527,7 @@ function MediaLibrary({
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState<string[]>([]);
   const [copied, setCopied] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const allImages = [...new Set([...uploaded, ...images])];
@@ -501,9 +536,12 @@ function MediaLibrary({
     const files = Array.from(e.target.files ?? []);
     if (!files.length) return;
     setUploading(true);
+    setUploadError(null);
     try {
       const urls = await Promise.all(files.map(f => onUpload(f)));
       setUploaded(prev => [...urls, ...prev]);
+    } catch (err: any) {
+      setUploadError(err?.message || "Ошибка загрузки фото");
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -532,6 +570,9 @@ function MediaLibrary({
             {uploading ? "Загрузка..." : "Загрузить фото"}
           </button>
         </div>
+        {uploadError && (
+          <p className="text-xs text-red-500 mt-2">{uploadError}</p>
+        )}
       </div>
 
       {allImages.length === 0 ? (
@@ -575,7 +616,6 @@ export default function Admin() {
   const createMut = trpc.admin.createProduct.useMutation();
   const updateMut = trpc.admin.updateProduct.useMutation();
   const deleteMut = trpc.admin.deleteProduct.useMutation();
-  const uploadMut = trpc.admin.uploadImage.useMutation();
 
   const isSaving = createMut.isPending || updateMut.isPending;
 
@@ -589,14 +629,31 @@ export default function Admin() {
   };
 
   const handleUploadImage = async (file: File): Promise<string> => {
-    const arrayBuffer = await file.arrayBuffer();
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-    const result = await uploadMut.mutateAsync({
-      filename: file.name,
-      data: base64,
-      contentType: file.type || "image/jpeg",
-    });
-    return result.url;
+    console.log("[upload] start", { name: file.name, size: file.size, type: file.type });
+
+    const formData = new FormData();
+    formData.append("file", file);
+    console.log("[upload] FormData entry:", formData.get("file"));
+
+    let res: Response;
+    try {
+      res = await fetch("/api/upload", { method: "POST", body: formData });
+    } catch (err) {
+      console.error("[upload] fetch error:", err);
+      throw err;
+    }
+
+    console.log("[upload] response status:", res.status, res.statusText);
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.error("[upload] server error body:", text);
+      throw new Error(`Upload failed (${res.status}): ${text}`);
+    }
+
+    const json = await res.json();
+    console.log("[upload] success:", json);
+    return json.url;
   };
 
   const handleSave = async (form: Form) => {
