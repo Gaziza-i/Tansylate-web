@@ -530,7 +530,7 @@ function MediaLibrary({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const allImages = [...new Set([...uploaded, ...images])];
+  const allImages = Array.from(new Set([...uploaded, ...images]));
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -619,9 +619,9 @@ export default function Admin() {
 
   const isSaving = createMut.isPending || updateMut.isPending;
 
-  const allMediaImages = [...new Set(
+  const allMediaImages = Array.from(new Set(
     products.flatMap((p: any) => parseJSON<string[]>(p.images, []))
-  )];
+  ));
 
   const notify = (msg: string) => {
     setSavedMsg(msg);
