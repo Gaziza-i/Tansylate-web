@@ -219,109 +219,139 @@ function ProductForm({
 
       {/* Фото */}
       <Section id="images" label={`Фотографии (${form.images.length})`} openSection={openSection} onToggle={toggle}>
-        {/* Инструменты добавления */}
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={newImageUrl}
-            onChange={e => setNewImageUrl(e.target.value)}
-            placeholder="/uploads/photo.jpeg"
-            className="flex-1 px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
-          />
-          <button
-            type="button"
-            onClick={() => {
-              if (newImageUrl.trim()) {
-                set("images", [...form.images, newImageUrl.trim()]);
-                setNewImageUrl("");
-              }
-            }}
-            className="px-4 py-2 bg-[#5A6262] text-white rounded-lg text-sm hover:bg-[#3a4242] transition-colors"
-          >
-            <Plus size={16} />
-          </button>
-        </div>
 
-        {/* Кнопки загрузки и медиатеки */}
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-2">
+        {/* Кнопки: загрузить + из медиатеки */}
+        <div className="flex flex-wrap gap-2">
           {onUploadImage && (
             <label
               htmlFor="product-file-upload"
-              className={`flex items-center gap-2 px-4 py-2 border border-[#E8E7E2] text-[#5A6262] rounded-lg text-xs cursor-pointer hover:border-[#5A6262] hover:text-black transition-colors ${uploading ? "opacity-40 pointer-events-none" : ""}`}
+              className={`flex items-center gap-2 px-4 py-2.5 bg-[#1F1F1D] text-white rounded-lg text-xs cursor-pointer hover:bg-[#3a3a3a] transition-colors ${uploading ? "opacity-40 pointer-events-none" : ""}`}
             >
               <Upload size={14} />
               {uploading ? "Загрузка..." : "Загрузить фото"}
             </label>
           )}
-          {mediaImages.length > 0 && (
-            <button
-              type="button"
-              onClick={() => setShowMediaPicker(p => !p)}
-              className="flex items-center gap-2 px-4 py-2 border border-[#E8E7E2] text-[#5A6262] rounded-lg text-xs hover:border-[#5A6262] hover:text-black transition-colors"
-            >
-              <Layers size={14} />
-              Из медиатеки
-            </button>
-          )}
-          </div>
+          <button
+            type="button"
+            onClick={() => setShowMediaPicker(p => !p)}
+            className={`flex items-center gap-2 px-4 py-2.5 border text-xs rounded-lg transition-colors ${showMediaPicker ? "border-[#5A6262] bg-[#5A6262] text-white" : "border-[#E8E7E2] text-[#5A6262] hover:border-[#5A6262]"}`}
+          >
+            <Layers size={14} />
+            Из медиатеки {mediaImages.length > 0 ? `(${mediaImages.length})` : ""}
+          </button>
           {uploadError && (
-            <p className="text-xs text-red-500 mt-1">{uploadError}</p>
+            <p className="w-full text-xs text-red-500">{uploadError}</p>
           )}
         </div>
 
         {/* Медиапикер */}
-        {showMediaPicker && mediaImages.length > 0 && (
-          <div className="border border-[#E8E7E2] rounded-lg p-3 bg-[#F9F9F7]">
-            <p className="text-xs text-[#5A6262] mb-2 uppercase tracking-wide">Выберите фото из медиатеки</p>
-            <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-48 overflow-y-auto">
-              {mediaImages.map((url, i) => {
-                const selected = form.images.includes(url);
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => {
-                      if (selected) {
-                        set("images", form.images.filter(u => u !== url));
-                      } else {
-                        set("images", [...form.images, url]);
-                      }
-                    }}
-                    className={`relative rounded-lg overflow-hidden border-2 transition-colors ${selected ? "border-[#5A6262]" : "border-transparent"}`}
-                  >
-                    <img src={url} alt="" className="w-full h-16 object-cover" onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }} />
-                    {selected && <div className="absolute inset-0 bg-[#5A6262]/30 flex items-center justify-center"><Check size={16} className="text-white" /></div>}
-                  </button>
-                );
-              })}
+        {showMediaPicker && (
+          <div className="border border-[#E8E7E2] rounded-xl overflow-hidden bg-[#F9F9F7]">
+            <div className="px-3 py-2 border-b border-[#E8E7E2] flex items-center justify-between">
+              <p className="text-xs text-[#5A6262] uppercase tracking-wide">
+                Медиатека — нажмите чтобы выбрать
+              </p>
+              {form.images.length > 0 && (
+                <p className="text-xs text-[#5A6262]">выбрано: {form.images.filter(u => mediaImages.includes(u)).length}</p>
+              )}
             </div>
+            {mediaImages.length === 0 ? (
+              <div className="py-10 text-center text-sm text-[#5A6262]">
+                <ImageIcon size={28} className="mx-auto mb-2 opacity-30" />
+                Нет фото — загрузите через кнопку выше
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 p-3 max-h-72 overflow-y-auto">
+                {mediaImages.map((url, i) => {
+                  const selected = form.images.includes(url);
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => {
+                        set("images", selected
+                          ? form.images.filter(u => u !== url)
+                          : [...form.images, url]
+                        );
+                      }}
+                      className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all ${selected ? "border-[#1F1F1D] opacity-100" : "border-transparent opacity-80 hover:opacity-100"}`}
+                    >
+                      <img src={url} alt="" className="w-full h-full object-cover"
+                        onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect fill='%23E8E7E2' width='60' height='60'/%3E%3C/svg%3E"; }}
+                      />
+                      {selected && (
+                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                          <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
+                            <Check size={12} className="text-[#1F1F1D]" />
+                          </div>
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 
         {/* Текущие фото товара */}
-        <div className="grid grid-cols-3 gap-3 mt-2">
-          {form.images.map((url, i) => (
-            <div key={i} className="relative group h-24 bg-[#E8E7E2] rounded-lg overflow-hidden border border-[#E8E7E2]">
-              <img src={url} alt="" className="w-full h-full object-cover"
-                onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-              <div className="absolute top-1 left-1 bg-black/50 text-white text-xs rounded px-1">{i + 1}</div>
-              <div className="absolute inset-0 bg-black/30 rounded-lg flex items-center justify-center">
-                <div className="flex gap-1">
-                  <button type="button" disabled={i === 0} onClick={() => { const arr = [...form.images]; [arr[i-1], arr[i]] = [arr[i], arr[i-1]]; set("images", arr); }} className="bg-white rounded p-1 text-[#5A6262] hover:text-black active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-transform">←</button>
-                  <button type="button" onClick={() => set("images", form.images.filter((_, j) => j !== i))} className="bg-white rounded p-1 text-red-500 hover:text-red-700 active:scale-95 transition-transform"><Trash2 size={12} /></button>
-                  <button type="button" disabled={i === form.images.length - 1} onClick={() => { const arr = [...form.images]; [arr[i], arr[i+1]] = [arr[i+1], arr[i]]; set("images", arr); }} className="bg-white rounded p-1 text-[#5A6262] hover:text-black active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-transform">→</button>
+        {form.images.length > 0 ? (
+          <div className="grid grid-cols-3 gap-3">
+            {form.images.map((url, i) => (
+              <div key={i} className="relative group h-28 bg-[#E8E7E2] rounded-xl overflow-hidden border border-[#E8E7E2]">
+                <img src={url} alt="" className="w-full h-full object-cover"
+                  onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                <div className="absolute top-1.5 left-1.5 bg-black/60 text-white text-[10px] rounded-md px-1.5 py-0.5 font-medium">
+                  {i === 0 ? "Главное" : i + 1}
+                </div>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-end justify-center pb-2 gap-1 opacity-0 group-hover:opacity-100">
+                  <button
+                    type="button"
+                    disabled={i === 0}
+                    onClick={() => { const arr = [...form.images]; [arr[i-1], arr[i]] = [arr[i], arr[i-1]]; set("images", arr); }}
+                    className="bg-white rounded-lg px-2 py-1 text-[#5A6262] text-xs hover:text-black disabled:opacity-30 disabled:cursor-not-allowed"
+                  >←</button>
+                  <button
+                    type="button"
+                    onClick={() => set("images", form.images.filter((_, j) => j !== i))}
+                    className="bg-red-500 rounded-lg px-2 py-1 text-white text-xs hover:bg-red-600"
+                  ><Trash2 size={11} /></button>
+                  <button
+                    type="button"
+                    disabled={i === form.images.length - 1}
+                    onClick={() => { const arr = [...form.images]; [arr[i], arr[i+1]] = [arr[i+1], arr[i]]; set("images", arr); }}
+                    className="bg-white rounded-lg px-2 py-1 text-[#5A6262] text-xs hover:text-black disabled:opacity-30 disabled:cursor-not-allowed"
+                  >→</button>
                 </div>
               </div>
-            </div>
-          ))}
-          {form.images.length === 0 && (
-            <div className="col-span-3 text-center py-8 text-[#5A6262] text-sm border-2 border-dashed border-[#E8E7E2] rounded-lg">
-              <ImageIcon size={24} className="mx-auto mb-2 opacity-40" />
-              Добавьте URL или загрузите фото
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-[#5A6262] text-sm border-2 border-dashed border-[#E8E7E2] rounded-xl">
+            <ImageIcon size={24} className="mx-auto mb-2 opacity-40" />
+            Нет фото — загрузите или выберите из медиатеки
+          </div>
+        )}
+
+        {/* URL вручную */}
+        <details className="text-xs">
+          <summary className="cursor-pointer text-[#5A6262] hover:text-black select-none py-1">Добавить по URL</summary>
+          <div className="flex gap-2 mt-2">
+            <input
+              type="text"
+              value={newImageUrl}
+              onChange={e => setNewImageUrl(e.target.value)}
+              onKeyDown={e => { if (e.key === "Enter" && newImageUrl.trim()) { set("images", [...form.images, newImageUrl.trim()]); setNewImageUrl(""); } }}
+              placeholder="/uploads/photo.jpeg или https://..."
+              className="flex-1 px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
+            />
+            <button
+              type="button"
+              onClick={() => { if (newImageUrl.trim()) { set("images", [...form.images, newImageUrl.trim()]); setNewImageUrl(""); } }}
+              className="px-4 py-2 bg-[#5A6262] text-white rounded-lg text-sm hover:bg-[#3a4242] transition-colors"
+            ><Plus size={16} /></button>
+          </div>
+        </details>
       </Section>
 
       {/* Характеристики */}
@@ -528,6 +558,7 @@ function MediaLibrary({
   const [serverList, setServerList] = useState<string[]>(images);
   const [copied, setCopied] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { setServerList(images); }, [images]);
@@ -546,10 +577,7 @@ function MediaLibrary({
     refreshList();
   };
 
-  const allImages = serverList;
-
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
+  const uploadFiles = async (files: File[]) => {
     if (!files.length) return;
     setUploading(true);
     setUploadError(null);
@@ -557,11 +585,22 @@ function MediaLibrary({
       await Promise.all(files.map(f => onUpload(f)));
       refreshList();
     } catch (err: any) {
-      setUploadError(err?.message || "Ошибка загрузки фото");
+      setUploadError(err?.message || "Ошибка загрузки");
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
+  };
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    uploadFiles(Array.from(e.target.files ?? []));
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("image/"));
+    if (files.length) uploadFiles(files);
   };
 
   const copyUrl = (url: string) => {
@@ -572,11 +611,11 @@ function MediaLibrary({
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
         <h1 className="text-2xl font-serif text-[#1F1F1D]">Медиатека</h1>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-[#5A6262]">{allImages.length} фото</span>
-          <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleUpload} />
+          <span className="text-sm text-[#5A6262]">{serverList.length} фото</span>
+          <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileInput} />
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
@@ -586,41 +625,66 @@ function MediaLibrary({
             {uploading ? "Загрузка..." : "Загрузить фото"}
           </button>
         </div>
-        {uploadError && (
-          <p className="text-xs text-red-500 mt-2">{uploadError}</p>
-        )}
       </div>
 
-      {allImages.length === 0 ? (
-        <div className="text-center py-20 text-[#5A6262]">
-          <ImageIcon size={40} className="mx-auto mb-4 opacity-30" />
-          <p className="mb-4">Нет загруженных фото</p>
-          <button onClick={() => fileInputRef.current?.click()} className="px-6 py-3 border border-[#5A6262] text-[#5A6262] text-sm uppercase tracking-widest rounded-full hover:bg-[#5A6262] hover:text-white transition-colors">
-            Загрузить первое фото
-          </button>
+      {uploadError && <p className="text-xs text-red-500 mb-4">{uploadError}</p>}
+
+      {/* Drag & drop zone */}
+      <div
+        onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={handleDrop}
+        onClick={() => fileInputRef.current?.click()}
+        className={`mb-5 border-2 border-dashed rounded-xl py-8 text-center cursor-pointer transition-all select-none ${
+          dragOver
+            ? "border-[#5A6262] bg-[#5A6262]/5 text-[#1F1F1D]"
+            : "border-[#E8E7E2] text-[#5A6262] hover:border-[#5A6262] hover:text-[#1F1F1D]"
+        }`}
+      >
+        <Upload size={22} className="mx-auto mb-2 opacity-50" />
+        <p className="text-sm">{uploading ? "Загрузка..." : "Перетащите фото сюда или нажмите"}</p>
+        <p className="text-xs mt-1 opacity-60">JPG, PNG, WebP до 20 МБ · можно несколько файлов</p>
+      </div>
+
+      {serverList.length === 0 ? (
+        <div className="text-center py-12 text-[#5A6262]">
+          <ImageIcon size={36} className="mx-auto mb-3 opacity-25" />
+          <p className="text-sm">Нет загруженных фото</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {allImages.map((url, i) => (
-            <div key={i} className="group relative rounded-xl overflow-hidden border border-[#E8E7E2] bg-white aspect-square">
-              <img src={url} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }} />
-              <div className="absolute inset-0 bg-transparent group-hover:bg-black/40 transition-all flex items-center justify-center gap-1.5">
-                <button
-                  onClick={() => copyUrl(url)}
-                  className="hidden group-hover:flex items-center gap-1 px-2 py-1.5 bg-white text-[#1F1F1D] text-xs rounded-full shadow hover:bg-[#F0EFEA] transition-colors"
-                >
-                  {copied === url ? <Check size={12} className="text-green-600" /> : <Copy size={12} />}
-                  {copied === url ? "Скопировано" : "URL"}
-                </button>
-                <button
-                  onClick={() => deleteImage(url)}
-                  className="hidden group-hover:flex items-center gap-1 px-2 py-1.5 bg-red-500 text-white text-xs rounded-full shadow hover:bg-red-600 transition-colors"
-                >
-                  <Trash2 size={12} />
-                </button>
+          {serverList.map((url, i) => {
+            const filename = url.split("/").pop() ?? "";
+            return (
+              <div key={i} className="group relative rounded-xl overflow-hidden border border-[#E8E7E2] bg-white">
+                <div className="aspect-square">
+                  <img
+                    src={url} alt=""
+                    className="w-full h-full object-cover"
+                    onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }}
+                  />
+                  <div className="absolute inset-0 bg-transparent group-hover:bg-black/40 transition-all flex items-center justify-center gap-1.5">
+                    <button
+                      onClick={() => copyUrl(url)}
+                      className="hidden group-hover:flex items-center gap-1 px-2.5 py-1.5 bg-white text-[#1F1F1D] text-xs rounded-full shadow hover:bg-[#F0EFEA] transition-colors"
+                    >
+                      {copied === url ? <Check size={12} className="text-green-600" /> : <Copy size={12} />}
+                      {copied === url ? "Скопировано" : "URL"}
+                    </button>
+                    <button
+                      onClick={() => deleteImage(url)}
+                      className="hidden group-hover:flex items-center gap-1 px-2 py-1.5 bg-red-500 text-white text-xs rounded-full shadow hover:bg-red-600 transition-colors"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                </div>
+                <div className="px-2 py-1.5 border-t border-[#E8E7E2]">
+                  <p className="text-[10px] text-[#5A6262] truncate" title={filename}>{filename}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
@@ -658,31 +722,25 @@ export default function Admin() {
     setTimeout(() => setSavedMsg(""), 3000);
   };
 
-  const handleUploadImage = async (file: File): Promise<string> => {
-    console.log("[upload] start", { name: file.name, size: file.size, type: file.type });
+  const refreshServerImages = () => {
+    fetch("/api/uploads")
+      .then(r => r.json())
+      .then((urls: string[]) => setServerImages(urls))
+      .catch(() => {});
+  };
 
+  const handleUploadImage = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
-    console.log("[upload] FormData entry:", formData.get("file"));
 
-    let res: Response;
-    try {
-      res = await fetch("/api/upload", { method: "POST", body: formData });
-    } catch (err) {
-      console.error("[upload] fetch error:", err);
-      throw err;
-    }
-
-    console.log("[upload] response status:", res.status, res.statusText);
-
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      console.error("[upload] server error body:", text);
       throw new Error(`Upload failed (${res.status}): ${text}`);
     }
 
     const json = await res.json();
-    console.log("[upload] success:", json);
+    refreshServerImages();
     return json.url;
   };
 
