@@ -67,6 +67,17 @@ async function startServer() {
     }
   });
 
+  app.delete("/api/uploads/:filename", (req, res) => {
+    const filename = path.basename(req.params.filename);
+    const filePath = path.join(uploadsDir, filename);
+    try {
+      fs.unlinkSync(filePath);
+      res.json({ ok: true });
+    } catch {
+      res.status(404).json({ error: "File not found" });
+    }
+  });
+
   app.get("/api/upload-status", (_req, res) => {
     const writable = (() => {
       try { fs.accessSync(uploadsDir, fs.constants.W_OK); return true; } catch { return false; }

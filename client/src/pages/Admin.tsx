@@ -291,7 +291,7 @@ function ProductForm({
                     className={`relative rounded-lg overflow-hidden border-2 transition-colors ${selected ? "border-[#5A6262]" : "border-transparent"}`}
                   >
                     <img src={url} alt="" className="w-full h-16 object-cover" onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }} />
-                    {selected && <div className="absolute inset-0 bg-[#5A6262] bg-opacity-30 flex items-center justify-center"><Check size={16} className="text-white" /></div>}
+                    {selected && <div className="absolute inset-0 bg-[#5A6262]/30 flex items-center justify-center"><Check size={16} className="text-white" /></div>}
                   </button>
                 );
               })}
@@ -305,8 +305,8 @@ function ProductForm({
             <div key={i} className="relative group h-24 bg-[#E8E7E2] rounded-lg overflow-hidden border border-[#E8E7E2]">
               <img src={url} alt="" className="w-full h-full object-cover"
                 onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-              <div className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs rounded px-1">{i + 1}</div>
-              <div className="absolute inset-0 bg-black bg-opacity-30 rounded-lg flex items-center justify-center">
+              <div className="absolute top-1 left-1 bg-black/50 text-white text-xs rounded px-1">{i + 1}</div>
+              <div className="absolute inset-0 bg-black/30 rounded-lg flex items-center justify-center">
                 <div className="flex gap-1">
                   <button type="button" disabled={i === 0} onClick={() => { const arr = [...form.images]; [arr[i-1], arr[i]] = [arr[i], arr[i-1]]; set("images", arr); }} className="bg-white rounded p-1 text-[#5A6262] hover:text-black active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-transform">←</button>
                   <button type="button" onClick={() => set("images", form.images.filter((_, j) => j !== i))} className="bg-white rounded p-1 text-red-500 hover:text-red-700 active:scale-95 transition-transform"><Trash2 size={12} /></button>
@@ -539,6 +539,13 @@ function MediaLibrary({
       .catch(() => {});
   };
 
+  const deleteImage = async (url: string) => {
+    const filename = url.split("/").pop();
+    if (!filename || !confirm(`Удалить ${filename}?`)) return;
+    await fetch(`/api/uploads/${filename}`, { method: "DELETE" }).catch(() => {});
+    refreshList();
+  };
+
   const allImages = serverList;
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -597,13 +604,19 @@ function MediaLibrary({
           {allImages.map((url, i) => (
             <div key={i} className="group relative rounded-xl overflow-hidden border border-[#E8E7E2] bg-white aspect-square">
               <img src={url} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }} />
-              <div className="absolute inset-0 bg-transparent group-hover:bg-black/40 transition-all flex items-center justify-center">
+              <div className="absolute inset-0 bg-transparent group-hover:bg-black/40 transition-all flex items-center justify-center gap-1.5">
                 <button
                   onClick={() => copyUrl(url)}
-                  className="hidden group-hover:flex items-center gap-1.5 px-3 py-1.5 bg-white text-[#1F1F1D] text-xs rounded-full shadow hover:bg-[#F0EFEA] transition-colors"
+                  className="hidden group-hover:flex items-center gap-1 px-2 py-1.5 bg-white text-[#1F1F1D] text-xs rounded-full shadow hover:bg-[#F0EFEA] transition-colors"
                 >
                   {copied === url ? <Check size={12} className="text-green-600" /> : <Copy size={12} />}
-                  {copied === url ? "Скопировано" : "Копировать URL"}
+                  {copied === url ? "Скопировано" : "URL"}
+                </button>
+                <button
+                  onClick={() => deleteImage(url)}
+                  className="hidden group-hover:flex items-center gap-1 px-2 py-1.5 bg-red-500 text-white text-xs rounded-full shadow hover:bg-red-600 transition-colors"
+                >
+                  <Trash2 size={12} />
                 </button>
               </div>
             </div>

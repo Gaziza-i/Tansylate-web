@@ -365,70 +365,66 @@ export default function Home() {
     </div>
   );
 
+  const navLink = "text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors whitespace-nowrap";
+
   const Header = () => (
-    <header className="sticky top-0 w-full bg-[#F5F2EB] rounded-b-2xl z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+    <header className="fixed top-3 left-3 right-3 md:top-4 md:left-6 md:right-6 bg-white rounded-2xl z-50 shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
+      <div className="px-4 md:px-8 h-[68px] grid grid-cols-[1fr_auto_1fr] items-center">
         {/* Left nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className="text-[11px] uppercase tracking-[0.2em] text-[#5A6262] hover:text-[#1A1A1A] transition-colors">Каталог</a>
-          <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className="text-[11px] uppercase tracking-[0.2em] text-[#5A6262] hover:text-[#1A1A1A] transition-colors">О бренде</a>
+        <nav className="hidden md:flex items-center gap-10">
+          <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={navLink}>Каталог</a>
+          <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={navLink}>О бренде</a>
         </nav>
 
         {/* Center logo */}
-        <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="font-serif text-xl md:text-2xl text-[#1F1F1D] tracking-[0.3em] hover:opacity-70 transition-opacity cursor-pointer whitespace-nowrap justify-self-center">
+        <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="font-serif text-2xl md:text-3xl text-[#1A1A1A] tracking-[0.25em] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap justify-self-center px-8">
           TANSYLATE
         </a>
 
         {/* Right nav + icons */}
-        <div className="flex items-center justify-end gap-4 md:gap-6">
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className="text-[11px] uppercase tracking-[0.2em] text-[#5A6262] hover:text-[#1A1A1A] transition-colors">Оплата и доставка</a>
-            <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className="text-[11px] uppercase tracking-[0.2em] text-[#5A6262] hover:text-[#1A1A1A] transition-colors">Контакты</a>
+        <div className="flex items-center justify-end gap-8">
+          <nav className="hidden md:flex items-center gap-10">
+            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={navLink}>Оплата и доставка</a>
+            <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className={navLink}>Контакты</a>
           </nav>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
+            {/* Wishlist icon button */}
             <button
               onClick={() => setWishlistOpen(true)}
-              className="relative p-2 hover:bg-[#E8E4DB] rounded-full transition-colors"
+              className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
               aria-label="Избранное"
             >
-              <Heart size={20} className="text-[#5A6262]" />
-              {wishlist.size > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#1A1A1A] text-white text-[9px] rounded-full flex items-center justify-center font-medium leading-none">
-                  {wishlist.size}
-                </span>
-              )}
+              <Heart size={16} strokeWidth={1.5} />
+              <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
             </button>
 
+            {/* Cart icon button */}
             <button
               onClick={() => setCartOpen(true)}
-              className="relative p-2 hover:bg-[#E8E4DB] rounded-full transition-colors"
+              className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
               aria-label="Корзина"
             >
-              <ShoppingBag size={20} className="text-[#5A6262]" />
-              {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#1A1A1A] text-white text-[9px] rounded-full flex items-center justify-center font-medium leading-none">
-                  {cartCount}
-                </span>
-              )}
+              <ShoppingBag size={16} strokeWidth={1.5} />
+              <span className="text-[11px] font-medium leading-none">{cartCount}</span>
             </button>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 hover:bg-[#E8E4DB] rounded-full transition-colors"
+              className="md:hidden w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center hover:border-[#aaa] transition-colors text-[#3a3a3a]"
             >
-              {mobileMenuOpen ? <X size={20} className="text-[#5A6262]" /> : <Menu size={20} className="text-[#5A6262]" />}
+              {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#F5F2EB] border-t border-[#E0DDD6] py-4 px-6 rounded-b-2xl">
-          <a href="#catalog" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-[#1A1A1A] transition-colors border-b border-[#E0DDD6]" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }}>Каталог</a>
-          <a href="#about" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-[#1A1A1A] transition-colors border-b border-[#E0DDD6]" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}>О бренде</a>
-          <a href="#delivery" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-[#1A1A1A] transition-colors border-b border-[#E0DDD6]" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }}>Оплата и доставка</a>
-          <a href="#contacts" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-[#1A1A1A] transition-colors" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }}>Контакты</a>
+        <div className="md:hidden bg-white border-t border-[#f0f0f0] py-4 px-6 rounded-b-2xl">
+          <a href="#catalog" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }}>Каталог</a>
+          <a href="#about" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}>О бренде</a>
+          <a href="#delivery" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }}>Оплата и доставка</a>
+          <a href="#contacts" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }}>Контакты</a>
         </div>
       )}
     </header>
@@ -672,8 +668,8 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-[#F9F9D7]">
         <Header />
-        <main>
-          <section className="py-24 text-center px-4">
+        <main className="pt-24 md:pt-28">
+          <section className="py-16 text-center px-4">
             <p className="text-xs uppercase tracking-widest text-[#8B5A3C] mb-4">Основано в 2026</p>
             <h1 className="text-5xl md:text-6xl font-serif text-[#1F1F1D] mb-6">Искусство быть собой</h1>
             <p className="text-lg text-[#5A6262] mb-12 max-w-2xl mx-auto leading-relaxed">
@@ -814,7 +810,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-[#F9F9D7]">
         <Header />
-        <main className="max-w-7xl mx-auto px-4 md:px-6 py-12">
+        <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Каталог" }]} />
           <h1 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-8">Каталог товаров</h1>
 
@@ -850,7 +846,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-[#F9F9D7]">
         <Header />
-        <main className="max-w-4xl mx-auto px-4 md:px-6 py-12">
+        <main className="max-w-4xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Политика конфиденциальности" }]} />
           <h1 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-8">Политика конфиденциальности</h1>
           <div className="prose prose-sm max-w-none">
@@ -867,7 +863,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#F9F9D7]">
       <Header />
-      <main className="max-w-7xl mx-auto px-4 md:px-6 py-20 text-center">
+      <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-20 text-center">
         <p className="text-[#5A6262]">Страница не найдена</p>
       </main>
       <Footer />
