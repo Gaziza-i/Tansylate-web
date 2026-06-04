@@ -182,17 +182,17 @@ function ProductModal({
 
             {/* Sizes */}
             {availableSizes.length > 0 && (
-              <div className="mb-5">
+              <div className="mb-4">
                 <p className="text-xs text-[#8B5A3C] mb-3 uppercase tracking-wider">Размер</p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   {availableSizes.map(size => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`h-10 px-4 text-sm font-medium border transition-all ${
+                      className={`min-w-[52px] h-11 px-3 text-sm font-medium rounded transition-all ${
                         selectedSize === size
-                          ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
-                          : "border-[#C8C4BC] bg-white text-[#1F1F1D] hover:border-[#1A1A1A]"
+                          ? "border-2 border-[#1A1A1A] bg-white text-[#1A1A1A]"
+                          : "border border-[#C8C4BC] bg-white text-[#5A6262] hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
                       }`}
                     >
                       {size}
@@ -202,17 +202,20 @@ function ProductModal({
               </div>
             )}
 
+            {/* Divider */}
+            <div className="border-t border-[#DEDBD3] mb-4" />
+
             {/* Add to cart + wishlist */}
             <div className="flex items-center gap-3 mb-6">
               <button
                 onClick={() => onAddToCart(selectedSize)}
-                className="flex-1 h-12 bg-[#1A1A1A] text-white text-sm font-medium hover:bg-[#333] transition-colors rounded-sm"
+                className="flex-1 h-12 bg-[#1A1A1A] text-white text-sm font-medium hover:bg-[#333] transition-colors rounded"
               >
                 Добавить в корзину
               </button>
               <button
                 onClick={() => onToggleWishlist(product.id)}
-                className="w-12 h-12 border border-[#C8C4BC] bg-white flex items-center justify-center hover:border-[#1A1A1A] transition-colors flex-shrink-0 rounded-sm"
+                className="w-12 h-12 border border-[#C8C4BC] bg-white flex items-center justify-center hover:border-[#1A1A1A] transition-colors flex-shrink-0 rounded"
                 aria-label="Избранное"
               >
                 <Heart
@@ -227,33 +230,33 @@ function ProductModal({
             <div>
               {sizeTables.map((table, ti) => (
                 <AccordionSection key={ti} title="Размерная сетка">
-                  <div className="overflow-x-auto mb-1">
+                  <div className="rounded-lg overflow-hidden border border-[#DEDBD3] mb-1">
                     <table className="w-full text-sm border-collapse">
                       <thead>
                         <tr className="bg-[#1A1A1A] text-white">
-                          <th className="text-left py-3 px-4 font-normal whitespace-nowrap"></th>
+                          <th className="text-left py-3 px-4 font-normal w-[45%]"></th>
                           {table.rows.map(row => (
-                            <th key={row.size} className="py-3 px-4 font-medium lowercase text-center whitespace-nowrap">{row.size}</th>
+                            <th key={row.size} className="py-3 px-3 font-medium lowercase text-center whitespace-nowrap">{row.size}</th>
                           ))}
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="border-b border-[#DEDBD3] bg-white">
-                          <td className="py-3 px-4 text-[#1F1F1D] whitespace-nowrap">Российский размер</td>
+                          <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Российский размер</td>
                           {table.rows.map(row => (
-                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262] whitespace-nowrap">{row.ru}</td>
+                            <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.ru}</td>
                           ))}
                         </tr>
                         <tr className="border-b border-[#DEDBD3] bg-white">
-                          <td className="py-3 px-4 text-[#1F1F1D] whitespace-nowrap">{table.rows[0]?.col3label ?? "Обхват груди"}</td>
+                          <td className="py-3 px-4 text-[#1F1F1D] leading-snug">{table.rows[0]?.col3label ?? "Обхват груди"}</td>
                           {table.rows.map(row => (
-                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262] whitespace-nowrap">{row.col3}</td>
+                            <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.col3}</td>
                           ))}
                         </tr>
                         <tr className="bg-white">
-                          <td className="py-3 px-4 text-[#1F1F1D] whitespace-nowrap">Обхват талии</td>
+                          <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Обхват талии</td>
                           {table.rows.map(row => (
-                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262] whitespace-nowrap">{row.waist}</td>
+                            <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.waist}</td>
                           ))}
                         </tr>
                       </tbody>
@@ -698,7 +701,7 @@ export default function Home() {
           <p className="text-sm font-medium text-[#1F1F1D] mb-3">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
           <button
             onClick={(e) => { e.stopPropagation(); addToCart(p); setCartOpen(true); }}
-            className="mt-auto w-full py-2.5 bg-[#1A1A1A] text-white text-xs uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors active:scale-95"
+            className="mt-auto w-full py-2.5 bg-[#1A1A1A] text-white text-xs uppercase tracking-widest rounded hover:bg-[#333] transition-colors active:scale-95"
           >
             В корзину
           </button>
