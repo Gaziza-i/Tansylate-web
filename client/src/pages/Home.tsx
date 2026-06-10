@@ -16,7 +16,7 @@ const FALLBACK_IMAGES = [
   "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/WMXUqCBpOZdkohTw.jpeg",
 ];
 
-type SizeRow = { size: string; ru: string; col3: string; col3label: string; waist: string };
+type SizeRow = { size: string; ru: string; col3: string; col3label: string; waist: string; hips?: string; height?: string };
 type SizeTable = { title: string; rows: SizeRow[] };
 type Spec = { label: string; value: string };
 type CareItem = { icon: string; text: string };
@@ -60,6 +60,13 @@ function CareIcon({ icon }: { icon: string }) {
     <svg {...p}>
       <rect x="3" y="3" width="18" height="18" rx="2"/>
       <line x1="7" y1="12" x2="17" y2="12"/>
+    </svg>
+  );
+  if (icon === "tumble-dry") return (
+    <svg {...p}>
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <circle cx="12" cy="12" r="4.5"/>
+      <line x1="5" y1="5" x2="19" y2="19"/>
     </svg>
   );
   return null;
@@ -228,42 +235,62 @@ function ProductModal({
 
             {/* Accordions */}
             <div>
-              {sizeTables.map((table, ti) => (
-                <AccordionSection key={ti} title="Размерная сетка">
-                  <div className="rounded-lg overflow-hidden border border-[#DEDBD3] mb-1">
-                    <table className="w-full text-sm border-collapse">
-                      <thead>
-                        <tr className="bg-[#1A1A1A] text-white">
-                          <th className="text-left py-3 px-4 font-normal w-[45%]"></th>
-                          {table.rows.map(row => (
-                            <th key={row.size} className="py-3 px-3 font-medium lowercase text-center whitespace-nowrap">{row.size}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr className="border-b border-[#DEDBD3] bg-white">
-                          <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Российский размер</td>
-                          {table.rows.map(row => (
-                            <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.ru}</td>
-                          ))}
-                        </tr>
-                        <tr className="border-b border-[#DEDBD3] bg-white">
-                          <td className="py-3 px-4 text-[#1F1F1D] leading-snug">{table.rows[0]?.col3label ?? "Обхват груди"}</td>
-                          {table.rows.map(row => (
-                            <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.col3}</td>
-                          ))}
-                        </tr>
-                        <tr className="bg-white">
-                          <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Обхват талии</td>
-                          {table.rows.map(row => (
-                            <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.waist}</td>
-                          ))}
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </AccordionSection>
-              ))}
+              {sizeTables.map((table, ti) => {
+                const showHips = table.rows.some(r => r.hips);
+                const showHeight = table.rows.some(r => r.height);
+                return (
+                  <AccordionSection key={ti} title="Размерная сетка">
+                    <div className="rounded-lg overflow-hidden border border-[#DEDBD3] mb-1">
+                      <table className="w-full text-sm border-collapse">
+                        <thead>
+                          <tr className="bg-[#1A1A1A] text-white">
+                            <th className="text-left py-3 px-4 font-normal w-[40%]"></th>
+                            {table.rows.map(row => (
+                              <th key={row.size} className="py-3 px-3 font-medium lowercase text-center whitespace-nowrap">{row.size}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-[#DEDBD3] bg-white">
+                            <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Российский размер</td>
+                            {table.rows.map(row => (
+                              <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.ru}</td>
+                            ))}
+                          </tr>
+                          <tr className={`border-b border-[#DEDBD3] bg-white`}>
+                            <td className="py-3 px-4 text-[#1F1F1D] leading-snug">{table.rows[0]?.col3label ?? "Обхват груди"} (см)</td>
+                            {table.rows.map(row => (
+                              <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.col3}</td>
+                            ))}
+                          </tr>
+                          <tr className={`${showHips || showHeight ? "border-b border-[#DEDBD3]" : ""} bg-white`}>
+                            <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Обхват талии (см)</td>
+                            {table.rows.map(row => (
+                              <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.waist}</td>
+                            ))}
+                          </tr>
+                          {showHips && (
+                            <tr className={`${showHeight ? "border-b border-[#DEDBD3]" : ""} bg-white`}>
+                              <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Обхват бёдер (см)</td>
+                              {table.rows.map(row => (
+                                <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.hips ?? "—"}</td>
+                              ))}
+                            </tr>
+                          )}
+                          {showHeight && (
+                            <tr className="bg-white">
+                              <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Рост (см)</td>
+                              {table.rows.map(row => (
+                                <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.height ?? "—"}</td>
+                              ))}
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </AccordionSection>
+                );
+              })}
 
               {specs.length > 0 && (
                 <AccordionSection title="Состав" accent>
@@ -432,14 +459,15 @@ export default function Home() {
           <a
             href="/"
             onClick={(e) => { e.preventDefault(); setLocation("/"); }}
-            className="font-serif text-xl lg:text-3xl text-[#1A1A1A] tracking-[0.12em] lg:tracking-[0.25em] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap justify-self-center lg:px-8"
+            className="text-xl lg:text-2xl font-bold text-[#1A1A1A] tracking-tight hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap justify-self-center lg:px-8"
+            style={{ fontFamily: "'Mona Sans', 'Inter', sans-serif" }}
           >
             TANSYLATE
           </a>
 
           {/* Right: nav + icons */}
           <div className="flex items-center justify-end gap-2">
-            <nav className="hidden lg:flex items-center gap-8 xl:gap-10 mr-4 xl:mr-6">
+            <nav className="hidden lg:flex items-center gap-8 xl:gap-10 mr-2">
               <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={navLink}>Оплата и доставка</a>
               <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className={navLink}>Контакты</a>
             </nav>
