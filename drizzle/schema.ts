@@ -32,6 +32,7 @@ export const products = mysqlTable("products", {
   imageUrl: varchar("imageUrl", { length: 500 }),
   composition: text("composition"),
   care: text("care"),
+  sku: varchar("sku", { length: 100 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

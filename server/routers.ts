@@ -49,6 +49,7 @@ export const appRouter = router({
           isVisible: input.isVisible ?? 1,
           sizes: input.sizes ? JSON.stringify(input.sizes) : "[]",
           imageUrl: input.imageUrl ?? null,
+          sku: input.sku ?? null,
         });
       }),
 
