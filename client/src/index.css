@@ -119,7 +119,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Mona Sans', 'Inter', sans-serif;
+    font-family: 'Evolventa', Arial, sans-serif;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),

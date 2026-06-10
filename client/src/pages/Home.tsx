@@ -439,60 +439,67 @@ export default function Home() {
   const Header = () => (
     <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 lg:px-6">
       <div className="w-full max-w-7xl bg-white rounded-2xl shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
-        <div className="px-4 lg:px-8 h-[60px] lg:h-[68px] grid grid-cols-[auto_1fr_auto] lg:grid-cols-[1fr_auto_1fr] items-center">
 
-          {/* Left nav — only on lg+ */}
-          <nav className="hidden lg:flex items-center gap-8 xl:gap-10">
-            <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={navLink}>Каталог</a>
-            <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={navLink}>О бренде</a>
-          </nav>
+        {/* Desktop: single flex row, justify-between */}
+        <div className="hidden lg:flex items-center justify-between px-8 h-[68px]">
+          <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={navLink}>Каталог</a>
+          <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={navLink}>О бренде</a>
 
-          {/* Hamburger on mobile/tablet — takes space on the left */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center hover:border-[#aaa] transition-colors text-[#3a3a3a]"
-          >
-            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
-
-          {/* Center logo */}
           <a
             href="/"
             onClick={(e) => { e.preventDefault(); setLocation("/"); }}
-            className="text-xl lg:text-2xl font-bold text-[#1A1A1A] tracking-tight hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap justify-self-center lg:px-8"
-            style={{ fontFamily: "'Mona Sans', 'Inter', sans-serif" }}
+            className="text-2xl text-[#1A1A1A] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap"
+            style={{ fontFamily: "'Evolventa', Arial, sans-serif", fontWeight: 800 }}
           >
             TANSYLATE
           </a>
 
-          {/* Right: nav + icons */}
-          <div className="flex items-center justify-end gap-2">
-            <nav className="hidden lg:flex items-center gap-8 xl:gap-10 mr-2">
-              <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={navLink}>Оплата и доставка</a>
-              <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className={navLink}>Контакты</a>
-            </nav>
+          <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={navLink}>Оплата и доставка</a>
+          <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className={navLink}>Контакты</a>
 
-            <button
-              onClick={() => setWishlistOpen(true)}
-              className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
-              aria-label="Избранное"
-            >
+          <div className="flex items-center gap-2">
+            <button onClick={() => setWishlistOpen(true)} className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]" aria-label="Избранное">
               <Heart size={15} strokeWidth={1.5} />
               <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
             </button>
-
-            <button
-              onClick={() => setCartOpen(true)}
-              className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
-              aria-label="Корзина"
-            >
+            <button onClick={() => setCartOpen(true)} className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]" aria-label="Корзина">
               <ShoppingBag size={15} strokeWidth={1.5} />
               <span className="text-[11px] font-medium leading-none">{cartCount}</span>
             </button>
           </div>
         </div>
 
-        {/* Mobile/tablet dropdown menu */}
+        {/* Mobile: hamburger + logo + icons */}
+        <div className="lg:hidden grid grid-cols-[auto_1fr_auto] items-center px-4 h-[60px]">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center hover:border-[#aaa] transition-colors text-[#3a3a3a]"
+          >
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+
+          <a
+            href="/"
+            onClick={(e) => { e.preventDefault(); setLocation("/"); }}
+            className="text-lg text-[#1A1A1A] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap text-center"
+            style={{ fontFamily: "'Evolventa', Arial, sans-serif", fontWeight: 800 }}
+          >
+            TANSYLATE
+          </a>
+
+          <div className="flex items-center gap-2">
+            <button onClick={() => setWishlistOpen(true)} className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]" aria-label="Избранное">
+              <Heart size={15} strokeWidth={1.5} />
+              <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
+            </button>
+            <button onClick={() => setCartOpen(true)} className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]" aria-label="Корзина">
+              <ShoppingBag size={15} strokeWidth={1.5} />
+              <span className="text-[11px] font-medium leading-none">{cartCount}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile dropdown */}
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white border-t border-[#f0f0f0] py-4 px-6 rounded-b-2xl">
             <a href="#catalog" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }}>Каталог</a>
