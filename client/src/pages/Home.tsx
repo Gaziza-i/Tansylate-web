@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import { Menu, X, Plus, Truck, RotateCcw, Leaf, Phone, Search, ChevronRight, ChevronLeft, Heart, ShoppingBag } from "lucide-react";
+import { Menu, X, Plus, Truck, RotateCcw, Leaf, Search, ChevronRight, ChevronLeft, Heart, ShoppingBag } from "lucide-react";
 import { useLocation } from "wouter";
 
 function parseJSON<T>(val: string | null | undefined, fallback: T): T {
@@ -604,33 +604,67 @@ export default function Home() {
     </div>
   );
 
-  const Footer = () => (
-    <footer className="bg-[#EAE7DF] border-t border-[#E0DDD6] py-12 px-4 md:px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <div>
-            <h4 className="font-semibold text-[#1F1F1D] mb-4 text-sm uppercase tracking-widest">Помощь</h4>
-            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className="text-sm text-[#5A6262] hover:text-[#1A1A1A] transition-colors block mb-2">Доставка</a>
-            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className="text-sm text-[#5A6262] hover:text-[#1A1A1A] transition-colors block mb-2">Возврат</a>
-            <a href="/privacy" onClick={(e) => { e.preventDefault(); setLocation("/privacy"); }} className="text-sm text-[#5A6262] hover:text-[#1A1A1A] transition-colors block">Политика конфиденциальности</a>
+  const FooterEditorial = () => {
+    const lnk = "text-[11px] uppercase tracking-[0.18em] text-[#6A6A62] hover:text-[#F9F9D7] transition-colors";
+    return (
+      <footer id="contacts" className="bg-[#1A1A1A]">
+        {/* Desktop: three-column editorial layout */}
+        <div className="hidden md:grid grid-cols-[1fr_2fr_1fr] min-h-[75vh]">
+          {/* Left — navigation */}
+          <div className="flex flex-col justify-center px-12 py-16 gap-7 border-r border-[#272727]">
+            <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
+            <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
+            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Оплата и доставка</a>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Политика конфиденциальности</a>
           </div>
-          <div>
-            <h4 className="font-semibold text-[#1F1F1D] mb-4 text-sm uppercase tracking-widest">Контакты</h4>
-            <a href="tel:+79953668498" className="text-sm text-[#5A6262] hover:text-[#1A1A1A] transition-colors block mb-2">+7 995 366 8498</a>
+
+          {/* Center — editorial photo */}
+          <div className="overflow-hidden">
+            <img
+              src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg"
+              alt="Tansylate"
+              className="w-full h-full object-cover object-top"
+            />
           </div>
-          <div>
-            <h4 className="font-semibold text-[#1F1F1D] mb-4 text-sm uppercase tracking-widest">Следите за нами</h4>
-            <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className="text-sm text-[#5A6262] hover:text-[#1A1A1A] transition-colors block mb-2">Telegram</a>
-            <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className="text-sm text-[#5A6262] hover:text-[#1A1A1A] transition-colors block mb-2">Instagram</a>
-            <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className="text-sm text-[#5A6262] hover:text-[#1A1A1A] transition-colors block">TikTok</a>
+
+          {/* Right — contacts */}
+          <div className="flex flex-col justify-center px-12 py-16 gap-7 border-l border-[#272727]">
+            <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
+            <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
+            <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
+            <a href="tel:+79953668498" className={lnk}>+7 995 366 8498</a>
           </div>
         </div>
-        <div className="border-t border-[#E0DDD6] pt-8 text-center text-sm text-[#5A6262]">
-          <p>&copy; 2026 Tansylate. Все права защищены.</p>
+
+        {/* Mobile: photo + links stacked */}
+        <div className="md:hidden">
+          <div className="aspect-[4/5] overflow-hidden">
+            <img
+              src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg"
+              alt="Tansylate"
+              className="w-full h-full object-cover object-top"
+            />
+          </div>
+          <div className="grid grid-cols-2 px-8 py-10 gap-x-4 gap-y-5">
+            <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
+            <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
+            <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
+            <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
+            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Оплата и доставка</a>
+            <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Конфиденциальность</a>
+            <a href="tel:+79953668498" className={lnk}>+7 995 366 8498</a>
+          </div>
         </div>
-      </div>
-    </footer>
-  );
+
+        {/* Bottom strip */}
+        <div className="border-t border-[#272727] px-8 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-[10px] uppercase tracking-widest text-[#4A4A44]">
+          <span>© 2026 Tansylate. Все права защищены.</span>
+          <span className="font-serif tracking-normal normal-case text-[#3A3A34] text-xs">TANSYLATE</span>
+        </div>
+      </footer>
+    );
+  };
 
   const ProductCard = ({ p }: { p: any }) => {
     const imgs = parseJSON<string[]>(p.images, FALLBACK_IMAGES);
@@ -810,31 +844,8 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="contacts" className="py-20 px-4 md:px-6 bg-[#F9F9D7]">
-            <div className="max-w-5xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Свяжитесь с нами</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div className="p-6 bg-[#F5F2EB] rounded-2xl">
-                  <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Контактная информация</h3>
-                  <div className="flex items-center gap-3 mb-4">
-                    <Phone size={20} className="text-[#8B5A3C]" />
-                    <a href="tel:+79953668498" className="text-[#5A6262] hover:text-[#1A1A1A] transition-colors">+7 995 366 8498</a>
-                  </div>
-                </div>
-                <div className="p-6 bg-[#F5F2EB] rounded-2xl">
-                  <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Социальные сети</h3>
-                  <p className="text-sm text-[#5A6262] mb-4">Следите за новыми коллекциями и новостями бренда</p>
-                  <div className="space-y-2">
-                    <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-[#1A1A1A] transition-colors text-sm">Telegram</a>
-                    <a href="https://www.instagram.com/tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-[#1A1A1A] transition-colors text-sm">Instagram</a>
-                    <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className="block text-[#5A6262] hover:text-[#1A1A1A] transition-colors text-sm">TikTok</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
         </main>
-        <Footer />
+        <FooterEditorial />
         <Modals />
       </div>
     );
@@ -870,7 +881,7 @@ export default function Home() {
             </div>
           )}
         </main>
-        <Footer />
+        <FooterEditorial />
         <Modals />
       </div>
     );
@@ -889,7 +900,7 @@ export default function Home() {
             </p>
           </div>
         </main>
-        <Footer />
+        <FooterEditorial />
       </div>
     );
   }
@@ -900,7 +911,7 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-20 text-center">
         <p className="text-[#5A6262]">Страница не найдена</p>
       </main>
-      <Footer />
+      <FooterEditorial />
     </div>
   );
 }
