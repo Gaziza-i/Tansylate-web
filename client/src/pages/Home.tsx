@@ -608,27 +608,18 @@ export default function Home() {
     const lnk = "text-[11px] uppercase tracking-[0.18em] text-[#6A6A62] hover:text-[#F9F9D7] transition-colors";
     return (
       <footer id="contacts" className="bg-[#1A1A1A]">
-        {/* Desktop: three-column editorial layout */}
-        <div className="hidden md:grid grid-cols-[1fr_2fr_1fr] min-h-[75vh]">
+        {/* Desktop: two-column layout */}
+        <div className="hidden md:grid grid-cols-2 py-20">
           {/* Left — navigation */}
-          <div className="flex flex-col justify-center px-12 py-16 gap-7 border-r border-[#272727]">
+          <div className="flex flex-col justify-center px-16 gap-7 border-r border-[#272727]">
             <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
             <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
             <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Оплата и доставка</a>
             <a href="/privacy" onClick={(e) => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Политика конфиденциальности</a>
           </div>
 
-          {/* Center — editorial photo */}
-          <div className="overflow-hidden">
-            <img
-              src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg"
-              alt="Tansylate"
-              className="w-full h-full object-cover object-top"
-            />
-          </div>
-
           {/* Right — contacts */}
-          <div className="flex flex-col justify-center px-12 py-16 gap-7 border-l border-[#272727]">
+          <div className="flex flex-col justify-center px-16 gap-7">
             <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
             <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
             <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
@@ -636,25 +627,16 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile: photo + links stacked */}
-        <div className="md:hidden">
-          <div className="aspect-[4/5] overflow-hidden">
-            <img
-              src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg"
-              alt="Tansylate"
-              className="w-full h-full object-cover object-top"
-            />
-          </div>
-          <div className="grid grid-cols-2 px-8 py-10 gap-x-4 gap-y-5">
-            <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
-            <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
-            <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
-            <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
-            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Оплата и доставка</a>
-            <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
-            <a href="/privacy" onClick={(e) => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Конфиденциальность</a>
-            <a href="tel:+79953668498" className={lnk}>+7 995 366 8498</a>
-          </div>
+        {/* Mobile: 2-column links grid */}
+        <div className="md:hidden grid grid-cols-2 px-8 py-12 gap-x-4 gap-y-6">
+          <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
+          <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
+          <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
+          <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
+          <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Оплата и доставка</a>
+          <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
+          <a href="/privacy" onClick={(e) => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Конфиденциальность</a>
+          <a href="tel:+79953668498" className={lnk}>+7 995 366 8498</a>
         </div>
 
         {/* Bottom strip */}
