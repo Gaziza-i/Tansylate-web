@@ -403,53 +403,49 @@ export default function Home() {
 
   const Header = () => (
     <header className="fixed top-3 left-3 right-3 md:top-4 md:left-6 md:right-6 bg-white rounded-2xl z-50 shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
-      <div className="px-4 md:px-8 h-[68px] grid grid-cols-[1fr_auto_1fr] items-center">
-        {/* Left nav */}
+      <div className="px-4 md:px-8 h-[60px] md:h-[68px] grid grid-cols-[auto_1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center">
+        {/* Left nav — hidden on mobile, takes 0 space */}
         <nav className="hidden md:flex items-center gap-10">
           <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={navLink}>Каталог</a>
           <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={navLink}>О бренде</a>
         </nav>
 
         {/* Center logo */}
-        <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="font-serif text-2xl md:text-3xl text-[#1A1A1A] tracking-[0.25em] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap justify-self-center px-8">
+        <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="font-serif text-xl md:text-3xl text-[#1A1A1A] tracking-[0.12em] md:tracking-[0.25em] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap justify-self-center md:px-8">
           TANSYLATE
         </a>
 
         {/* Right nav + icons */}
-        <div className="flex items-center justify-end gap-8">
-          <nav className="hidden md:flex items-center gap-10">
+        <div className="flex items-center justify-end gap-2">
+          <nav className="hidden md:flex items-center gap-10 mr-6">
             <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={navLink}>Оплата и доставка</a>
             <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className={navLink}>Контакты</a>
           </nav>
 
-          <div className="flex items-center gap-2">
-            {/* Wishlist icon button */}
-            <button
-              onClick={() => setWishlistOpen(true)}
-              className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
-              aria-label="Избранное"
-            >
-              <Heart size={16} strokeWidth={1.5} />
-              <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
-            </button>
+          <button
+            onClick={() => setWishlistOpen(true)}
+            className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
+            aria-label="Избранное"
+          >
+            <Heart size={15} strokeWidth={1.5} />
+            <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
+          </button>
 
-            {/* Cart icon button */}
-            <button
-              onClick={() => setCartOpen(true)}
-              className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
-              aria-label="Корзина"
-            >
-              <ShoppingBag size={16} strokeWidth={1.5} />
-              <span className="text-[11px] font-medium leading-none">{cartCount}</span>
-            </button>
+          <button
+            onClick={() => setCartOpen(true)}
+            className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
+            aria-label="Корзина"
+          >
+            <ShoppingBag size={15} strokeWidth={1.5} />
+            <span className="text-[11px] font-medium leading-none">{cartCount}</span>
+          </button>
 
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center hover:border-[#aaa] transition-colors text-[#3a3a3a]"
-            >
-              {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-            </button>
-          </div>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center hover:border-[#aaa] transition-colors text-[#3a3a3a]"
+          >
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
         </div>
       </div>
 
@@ -607,11 +603,11 @@ export default function Home() {
   const FooterEditorial = () => {
     const lnk = "text-[11px] uppercase tracking-[0.18em] text-[#6A6A62] hover:text-[#F9F9D7] transition-colors";
     return (
-      <footer id="contacts" className="bg-[#1A1A1A]">
+      <footer id="contacts" className="bg-[#1C1914]">
         {/* Desktop: two-column layout */}
         <div className="hidden md:grid grid-cols-2 py-20">
           {/* Left — navigation */}
-          <div className="flex flex-col justify-center px-16 gap-7 border-r border-[#272727]">
+          <div className="flex flex-col justify-center px-16 gap-7 border-r border-[#2C2820]">
             <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
             <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
             <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Оплата и доставка</a>
@@ -627,22 +623,26 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile: 2-column links grid */}
-        <div className="md:hidden grid grid-cols-2 px-8 py-12 gap-x-4 gap-y-6">
-          <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
-          <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
-          <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
-          <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
-          <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Оплата и доставка</a>
-          <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
-          <a href="/privacy" onClick={(e) => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Конфиденциальность</a>
-          <a href="tel:+79953668498" className={lnk}>+7 995 366 8498</a>
+        {/* Mobile: two independent columns */}
+        <div className="md:hidden flex gap-6 px-8 py-12">
+          <div className="flex flex-col gap-5 flex-1">
+            <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
+            <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
+            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Доставка</a>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Политика</a>
+          </div>
+          <div className="flex flex-col gap-5 flex-1">
+            <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
+            <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
+            <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
+            <a href="tel:+79953668498" className={lnk}>+7 995 366 8498</a>
+          </div>
         </div>
 
         {/* Bottom strip */}
-        <div className="border-t border-[#272727] px-8 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-[10px] uppercase tracking-widest text-[#4A4A44]">
+        <div className="border-t border-[#2C2820] px-8 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-[10px] uppercase tracking-widest text-[#5A5248]">
           <span>© 2026 Tansylate. Все права защищены.</span>
-          <span className="font-serif tracking-normal normal-case text-[#3A3A34] text-xs">TANSYLATE</span>
+          <span className="font-serif tracking-normal normal-case text-[#3E3830] text-xs">TANSYLATE</span>
         </div>
       </footer>
     );
@@ -739,7 +739,7 @@ export default function Home() {
               {filteredProducts.length === 0 ? (
                 <p className="text-center text-[#5A6262]">Товары не найдены</p>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                   {filteredProducts.map((p: any) => <ProductCard key={p.id} p={p} />)}
                 </div>
               )}
@@ -858,7 +858,7 @@ export default function Home() {
               {searchQuery && <p className="text-sm">Попробуйте изменить запрос</p>}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {filteredProducts.map((p: any) => <ProductCard key={p.id} p={p} />)}
             </div>
           )}
