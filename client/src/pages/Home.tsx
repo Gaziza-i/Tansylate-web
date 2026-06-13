@@ -174,9 +174,11 @@ function ProductModal({
             <h2 className="text-xl md:text-2xl font-bold text-[#1F1F1D] leading-tight mb-1">
               {product.name}
             </h2>
-            <p className="text-xs text-[#9A9A9A] mb-4 uppercase tracking-wider">
-              Артикул: {String(product.id).padStart(6, "0")}
-            </p>
+            {(product.sku || product.id) && (
+              <p className="text-xs text-[#9A9A9A] mb-4 uppercase tracking-wider">
+                Артикул: {product.sku || String(product.id).padStart(6, "0")}
+              </p>
+            )}
 
             {/* Price */}
             <p className="text-2xl font-medium text-[#1F1F1D] mb-2">
@@ -449,7 +451,7 @@ export default function Home() {
             href="/"
             onClick={(e) => { e.preventDefault(); setLocation("/"); }}
             className="text-2xl text-[#1A1A1A] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap"
-            style={{ fontFamily: "'Evolventa', Arial, sans-serif", fontWeight: 800 }}
+            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 900, letterSpacing: "-0.01em" }}
           >
             TANSYLATE
           </a>
@@ -482,7 +484,7 @@ export default function Home() {
             href="/"
             onClick={(e) => { e.preventDefault(); setLocation("/"); }}
             className="text-lg text-[#1A1A1A] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap text-center"
-            style={{ fontFamily: "'Evolventa', Arial, sans-serif", fontWeight: 800 }}
+            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 900, letterSpacing: "-0.01em" }}
           >
             TANSYLATE
           </a>
@@ -703,6 +705,8 @@ export default function Home() {
   const ProductCard = ({ p }: { p: any }) => {
     const imgs = parseJSON<string[]>(p.images, FALLBACK_IMAGES);
     const img = imgs[0] ?? FALLBACK_IMAGES[0];
+    const care = parseJSON<CareItem[]>(p.careInstructions, []);
+    const hasWash = care.some(c => c.icon === "wash");
     return (
       <div className="rounded-2xl overflow-hidden bg-[#F5F2EB] hover:shadow-lg transition-shadow flex flex-col">
         <div
@@ -726,6 +730,15 @@ export default function Home() {
               fill={wishlist.has(p.id) ? "currentColor" : "none"}
             />
           </button>
+          {hasWash && (
+            <div className="absolute bottom-3 left-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow-sm" title="Машинная стирка">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 8h20v2a10 10 0 0 1-20 0V8z"/>
+                <path d="M2 8l2-5h16l2 5"/>
+                <path d="M9 13v3m6-3v3"/>
+              </svg>
+            </div>
+          )}
         </div>
         <div className="p-4 flex flex-col flex-1">
           <h3
@@ -768,14 +781,14 @@ export default function Home() {
 
   if (location === "/" || location === "/home") {
     return (
-      <div className="min-h-screen bg-[#F9F9D7]">
+      <div className="min-h-screen bg-[#FFFDF0]">
         <Header />
         <main className="pt-24 lg:pt-28">
           <section className="py-16 text-center px-4">
             <p className="text-xs uppercase tracking-widest text-[#8B5A3C] mb-4">Основано в 2026</p>
-            <h1 className="text-5xl md:text-6xl font-serif text-[#1F1F1D] mb-6">Искусство быть собой</h1>
+            <h1 className="text-5xl md:text-6xl font-serif text-[#2B2521] mb-6">История в двух цветах</h1>
             <p className="text-lg text-[#5A6262] mb-12 max-w-2xl mx-auto leading-relaxed">
-              Премиальная одежда из натуральных материалов. Каждая вещь — это произведение искусства, созданное для тех, кто ценит качество и стиль.
+              Одежда, в которой ты разный
             </p>
             <button
               onClick={() => scrollToSection("catalog")}
@@ -798,7 +811,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="about" className="py-20 px-4 md:px-6 bg-[#F5F2EB]">
+          <section id="about" className="py-20 px-4 md:px-6 bg-[#F2EAE1]">
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-6">О бренде</h2>
@@ -818,7 +831,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="trust" className="py-20 px-4 md:px-6 bg-[#F9F9D7]">
+          <section id="trust" className="py-20 px-4 md:px-6 bg-[#FFFDF0]">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Почему нам верят</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -853,12 +866,12 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="delivery" className="py-20 px-4 md:px-6 bg-[#F5F2EB]">
+          <section id="delivery" className="py-20 px-4 md:px-6 bg-[#F2EAE1]">
             <div className="max-w-5xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Доставка и возврат</h2>
+              <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-12 text-center">Доставка и возврат</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-[#F9F9D7] rounded-2xl p-8">
-                  <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Доставка</h3>
+                <div className="bg-[#FFFFFF] rounded-2xl p-8">
+                  <h3 className="font-serif text-[#2B2521] text-lg mb-6">Доставка</h3>
                   <ul className="space-y-3 text-sm text-[#5A6262]">
                     <li className="flex items-start gap-3"><span className="text-[#8B5A3C] font-semibold mt-0.5">•</span><span>Доставка по всей России (СДЭК / Почта России)</span></li>
                     <li className="flex items-start gap-3"><span className="text-[#8B5A3C] font-semibold mt-0.5">•</span><span>Сроки: 3–7 рабочих дней</span></li>
@@ -866,8 +879,8 @@ export default function Home() {
                     <li className="flex items-start gap-3"><span className="text-[#8B5A3C] font-semibold mt-0.5">•</span><span>Примерка перед оплатой</span></li>
                   </ul>
                 </div>
-                <div className="bg-[#F9F9D7] rounded-2xl p-8">
-                  <h3 className="font-serif text-[#1F1F1D] text-lg mb-6">Возврат</h3>
+                <div className="bg-[#FFFFFF] rounded-2xl p-8">
+                  <h3 className="font-serif text-[#2B2521] text-lg mb-6">Возврат</h3>
                   <ul className="space-y-3 text-sm text-[#5A6262]">
                     <li className="flex items-start gap-3"><span className="text-[#8B5A3C] font-semibold mt-0.5">•</span><span>Возврат в течение 14 дней</span></li>
                     <li className="flex items-start gap-3"><span className="text-[#8B5A3C] font-semibold mt-0.5">•</span><span>Бирки не срезаны, нет следов носки</span></li>
@@ -887,11 +900,11 @@ export default function Home() {
 
   if (location === "/catalog") {
     return (
-      <div className="min-h-screen bg-[#F9F9D7]">
+      <div className="min-h-screen bg-[#FFFDF0]">
         <Header />
         <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 lg:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Каталог" }]} />
-          <h1 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-8">Каталог товаров</h1>
+          <h1 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-8">Каталог товаров</h1>
 
           <div className="mb-12 relative">
             <Search className="absolute left-4 top-3 text-[#5A6262]" size={20} />

@@ -42,6 +42,7 @@ function parseJSON<T>(val: string | null | undefined, fallback: T): T {
 
 const emptyForm = () => ({
   name: "",
+  sku: "",
   price: 12990,
   collection: "",
   description: "",
@@ -194,6 +195,7 @@ function ProductForm({
           <InputField label="Цена (₽)" value={form.price} onChange={(v: string) => set("price", Number(v))} type="number" />
           <InputField label="Коллекция" value={form.collection} onChange={(v: string) => set("collection", v)} placeholder="Коллекция 2026" />
         </div>
+        <InputField label="Артикул (необязательно)" value={form.sku} onChange={(v: string) => set("sku", v)} placeholder="TS-001" />
         <div>
           <label className="block text-xs text-[#5A6262] mb-1 uppercase tracking-wide">Описание</label>
           <textarea
@@ -774,6 +776,7 @@ export default function Admin() {
 
   const formFromProduct = (p: any): Form => ({
     name: p.name ?? "",
+    sku: p.sku ?? "",
     price: p.price ?? 12990,
     collection: p.collection ?? "",
     description: p.description ?? "",
@@ -798,7 +801,7 @@ export default function Admin() {
                 ←
               </button>
             )}
-            <span className="font-serif text-lg md:text-xl text-[#1F1F1D] tracking-wider truncate">TANSYLATE</span>
+            <span className="text-lg md:text-xl text-[#1F1F1D] truncate" style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 900, letterSpacing: "-0.01em" }}>TANSYLATE</span>
             <span className="text-xs text-[#5A6262] uppercase tracking-widest hidden sm:inline">Админ</span>
           </div>
           <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
