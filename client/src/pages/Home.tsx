@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import { Menu, X, Truck, RotateCcw, Leaf, Phone, Search, ChevronRight, ChevronLeft, ChevronDown, Heart, ShoppingBag } from "lucide-react";
+import { Menu, X, Plus, Truck, RotateCcw, Leaf, Phone, Search, ChevronRight, ChevronLeft, Heart, ShoppingBag } from "lucide-react";
 import { useLocation } from "wouter";
 
 function parseJSON<T>(val: string | null | undefined, fallback: T): T {
@@ -65,21 +65,27 @@ function CareIcon({ icon }: { icon: string }) {
   return null;
 }
 
-function AccordionSection({ title, children }: { title: string; children: React.ReactNode }) {
+function AccordionSection({ title, children, accent = false }: {
+  title: string; children: React.ReactNode; accent?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-t border-[#E0DDD6]">
+    <div className="border-t border-[#DEDBD3]">
       <button
-        className="w-full flex items-center justify-between py-4 text-left"
+        className="w-full flex items-center justify-between py-[14px] text-left"
         onClick={() => setOpen(o => !o)}
       >
-        <span className="text-sm font-medium text-[#8B5A3C] uppercase tracking-widest">{title}</span>
-        <ChevronDown
-          size={18}
-          className={`text-[#8B5A3C] transition-transform flex-shrink-0 ${open ? "rotate-180" : ""}`}
-        />
+        <span className="text-[15px] font-medium text-[#1F1F1D]">{title}</span>
+        {open
+          ? <X size={16} className="text-[#1F1F1D] flex-shrink-0" />
+          : <Plus size={16} className="text-[#1F1F1D] flex-shrink-0" />
+        }
       </button>
-      {open && <div className="pb-5 text-sm text-[#5A6262]">{children}</div>}
+      {open && (
+        <div className={`pb-5 text-sm leading-relaxed ${accent ? "text-[#8B5A3C]" : "text-[#5A6262]"}`}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -106,73 +112,87 @@ function ProductModal({
   );
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 md:p-6" onClick={onClose}>
       <div
-        className="bg-[#F5F2EB] rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto"
+        className="bg-[#EFEFED] rounded-2xl max-w-4xl w-full max-h-[94vh] overflow-hidden flex flex-col md:flex-row"
         onClick={e => e.stopPropagation()}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          {/* Left: image carousel */}
-          <div className="relative bg-[#EAE7DF] rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none overflow-hidden">
-            <div className="relative w-full aspect-[3/4]">
-              <img
-                src={images[carouselIndex]}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
-              {images.length > 1 && (
-                <>
-                  <button onClick={onPrev} className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow transition-all">
-                    <ChevronLeft size={18} className="text-[#1F1F1D]" />
-                  </button>
-                  <button onClick={onNext} className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow transition-all">
-                    <ChevronRight size={18} className="text-[#1F1F1D]" />
-                  </button>
-                </>
-              )}
-            </div>
+        {/* Left: image carousel */}
+        <div className="relative bg-[#E5E3DF] md:w-[55%] flex-shrink-0 flex flex-col">
+          <div className="relative w-full aspect-[3/4]">
+            <img
+              src={images[carouselIndex]}
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
             {images.length > 1 && (
-              <div className="flex gap-2 p-3 overflow-x-auto">
-                {images.map((src, idx) => (
-                  <button key={idx} onClick={() => onSetIndex(idx)}
-                    className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${idx === carouselIndex ? "border-[#1A1A1A]" : "border-transparent opacity-60 hover:opacity-100"}`}
-                  >
-                    <img src={src} alt="" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
+              <>
+                <button onClick={onPrev} className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full w-9 h-9 flex items-center justify-center shadow transition-all">
+                  <ChevronLeft size={18} className="text-[#1F1F1D]" />
+                </button>
+                <button onClick={onNext} className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full w-9 h-9 flex items-center justify-center shadow transition-all">
+                  <ChevronRight size={18} className="text-[#1F1F1D]" />
+                </button>
+              </>
             )}
           </div>
-
-          {/* Right: details */}
-          <div className="p-7 md:p-8 flex flex-col overflow-y-auto">
-            <div className="flex items-start justify-between mb-1">
-              <h2 className="text-2xl font-bold text-[#1F1F1D] pr-4 leading-tight">{product.name}</h2>
-              <button onClick={onClose} className="text-[#5A6262] hover:text-[#1F1F1D] flex-shrink-0 mt-0.5">
-                <X size={22} />
-              </button>
+          {images.length > 1 && (
+            <div className="flex gap-2 p-3 overflow-x-auto bg-[#E5E3DF]">
+              {images.map((src, idx) => (
+                <button key={idx} onClick={() => onSetIndex(idx)}
+                  className={`flex-shrink-0 w-[60px] h-[60px] overflow-hidden transition-all ${
+                    idx === carouselIndex
+                      ? "outline outline-2 outline-[#1F1F1D]"
+                      : "opacity-50 hover:opacity-80"
+                  }`}
+                >
+                  <img src={src} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
             </div>
+          )}
+        </div>
 
-            <p className="text-2xl font-semibold text-[#1F1F1D] mb-5">
+        {/* Right: details */}
+        <div className="flex-1 overflow-y-auto flex flex-col">
+          {/* Close */}
+          <div className="flex justify-end p-4 pb-0">
+            <button onClick={onClose} className="text-[#5A6262] hover:text-[#1F1F1D] transition-colors">
+              <X size={22} />
+            </button>
+          </div>
+
+          <div className="px-6 md:px-8 pb-8 flex flex-col flex-1">
+            {/* Name + article */}
+            <h2 className="text-xl md:text-2xl font-bold text-[#1F1F1D] leading-tight mb-1">
+              {product.name}
+            </h2>
+            <p className="text-sm text-[#9A9A9A] mb-4">
+              Артикул: {String(product.id).padStart(6, "0")}
+            </p>
+
+            {/* Price */}
+            <p className="text-2xl font-medium text-[#1F1F1D] mb-2">
               {(product.price ?? 0).toLocaleString("ru-RU")} ₽
             </p>
 
             {product.description && (
-              <p className="text-sm text-[#5A6262] leading-relaxed mb-5">{product.description}</p>
+              <p className="text-sm text-[#5A6262] leading-relaxed mb-4">{product.description}</p>
             )}
 
+            {/* Sizes */}
             {availableSizes.length > 0 && (
               <div className="mb-5">
-                <p className="text-xs uppercase tracking-widest text-[#8B5A3C] font-medium mb-2">Размер</p>
+                <p className="text-sm text-[#8B5A3C] mb-2">Размер</p>
                 <div className="flex flex-wrap gap-2">
                   {availableSizes.map(size => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 text-sm rounded-lg border transition-all ${
+                      className={`min-w-[44px] h-[44px] px-3 text-sm border transition-all ${
                         selectedSize === size
-                          ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
-                          : "border-[#C8C4BC] text-[#1F1F1D] hover:border-[#1A1A1A]"
+                          ? "border-[#1F1F1D] bg-[#1F1F1D] text-white"
+                          : "border-[#C8C4BC] bg-white text-[#1F1F1D] hover:border-[#1F1F1D]"
                       }`}
                     >
                       {size}
@@ -182,16 +202,17 @@ function ProductModal({
               </div>
             )}
 
-            <div className="flex gap-3 mb-6">
+            {/* Add to cart + wishlist */}
+            <div className="flex items-center gap-3 mb-6">
               <button
                 onClick={() => onAddToCart(selectedSize)}
-                className="flex-1 py-3 bg-[#1A1A1A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors font-medium"
+                className="flex-1 h-12 bg-[#1F1F1D] text-white text-sm font-medium hover:bg-[#333] transition-colors"
               >
                 Добавить в корзину
               </button>
               <button
                 onClick={() => onToggleWishlist(product.id)}
-                className="w-12 h-12 rounded-xl border border-[#C8C4BC] flex items-center justify-center hover:border-[#1A1A1A] transition-colors flex-shrink-0"
+                className="w-12 h-12 border border-[#C8C4BC] bg-white flex items-center justify-center hover:border-[#1F1F1D] transition-colors flex-shrink-0"
                 aria-label="Избранное"
               >
                 <Heart
@@ -202,28 +223,39 @@ function ProductModal({
               </button>
             </div>
 
-            <div className="mt-auto space-y-0">
+            {/* Accordions */}
+            <div>
               {sizeTables.map((table, ti) => (
                 <AccordionSection key={ti} title="Размерная сетка">
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto mb-1">
                     <table className="w-full text-sm border-collapse">
                       <thead>
-                        <tr className="border-b border-[#C8C4BC]">
-                          <th className="text-left py-2 pr-3 font-semibold text-[#1F1F1D]">Размер</th>
-                          <th className="text-left py-2 pr-3 font-semibold text-[#1F1F1D]">РУ</th>
-                          <th className="text-left py-2 pr-3 font-semibold text-[#1F1F1D]">{table.rows[0]?.col3label ?? "Грудь"}</th>
-                          <th className="text-left py-2 font-semibold text-[#1F1F1D]">Талия</th>
+                        <tr className="bg-[#1F1F1D] text-white">
+                          <th className="text-left py-3 px-4 font-normal"></th>
+                          {table.rows.map(row => (
+                            <th key={row.size} className="py-3 px-4 font-medium lowercase text-center">{row.size}</th>
+                          ))}
                         </tr>
                       </thead>
                       <tbody>
-                        {table.rows.map((row, ri) => (
-                          <tr key={ri} className={ri < table.rows.length - 1 ? "border-b border-[#E0DDD6]" : ""}>
-                            <td className="py-2 pr-3">{row.size}</td>
-                            <td className="py-2 pr-3">{row.ru}</td>
-                            <td className="py-2 pr-3">{row.col3}</td>
-                            <td className="py-2">{row.waist}</td>
-                          </tr>
-                        ))}
+                        <tr className="border-b border-[#DEDBD3] bg-white">
+                          <td className="py-3 px-4 text-[#1F1F1D]">Российский размер</td>
+                          {table.rows.map(row => (
+                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262]">{row.ru}</td>
+                          ))}
+                        </tr>
+                        <tr className="border-b border-[#DEDBD3] bg-white">
+                          <td className="py-3 px-4 text-[#1F1F1D]">{table.rows[0]?.col3label ?? "Обхват груди"}</td>
+                          {table.rows.map(row => (
+                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262]">{row.col3}</td>
+                          ))}
+                        </tr>
+                        <tr className="bg-white">
+                          <td className="py-3 px-4 text-[#1F1F1D]">Обхват талии</td>
+                          {table.rows.map(row => (
+                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262]">{row.waist}</td>
+                          ))}
+                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -231,10 +263,10 @@ function ProductModal({
               ))}
 
               {specs.length > 0 && (
-                <AccordionSection title="Состав и материалы">
+                <AccordionSection title="Состав" accent>
                   <div className="space-y-1">
                     {specs.map((spec, i) => (
-                      <p key={i}><strong className="text-[#1F1F1D]">{spec.label}:</strong> {spec.value}</p>
+                      <p key={i}>{spec.label}: {spec.value}</p>
                     ))}
                   </div>
                 </AccordionSection>
@@ -259,10 +291,12 @@ function ProductModal({
               {features.length > 0 && (
                 <AccordionSection title="Информация об изделии">
                   <ul className="space-y-1">
-                    {features.map((feat, i) => <li key={i}>✓ {feat}</li>)}
+                    {features.map((feat, i) => <li key={i}>{feat}</li>)}
                   </ul>
                 </AccordionSection>
               )}
+
+              <div className="border-t border-[#DEDBD3]" />
             </div>
           </div>
         </div>
