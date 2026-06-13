@@ -368,8 +368,8 @@ export default function Home() {
   const navLink = "text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors whitespace-nowrap";
 
   const Header = () => (
-    <header className="sticky top-0 w-full bg-white rounded-b-3xl z-50 shadow-[0_2px_16px_0_rgba(0,0,0,0.07)]">
-      <div className="max-w-7xl mx-auto px-6 md:px-10 h-[72px] grid grid-cols-[1fr_auto_1fr] items-center">
+    <header className="fixed top-3 left-3 right-3 md:top-4 md:left-6 md:right-6 bg-white rounded-2xl z-50 shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
+      <div className="px-4 md:px-8 h-[68px] grid grid-cols-[1fr_auto_1fr] items-center">
         {/* Left nav */}
         <nav className="hidden md:flex items-center gap-10">
           <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={navLink}>Каталог</a>
@@ -420,7 +420,7 @@ export default function Home() {
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-[#f0f0f0] py-4 px-6 rounded-b-3xl">
+        <div className="md:hidden bg-white border-t border-[#f0f0f0] py-4 px-6 rounded-b-2xl">
           <a href="#catalog" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }}>Каталог</a>
           <a href="#about" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}>О бренде</a>
           <a href="#delivery" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }}>Оплата и доставка</a>
@@ -668,8 +668,8 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-[#F9F9D7]">
         <Header />
-        <main>
-          <section className="py-24 text-center px-4">
+        <main className="pt-24 md:pt-28">
+          <section className="py-16 text-center px-4">
             <p className="text-xs uppercase tracking-widest text-[#8B5A3C] mb-4">Основано в 2026</p>
             <h1 className="text-5xl md:text-6xl font-serif text-[#1F1F1D] mb-6">Искусство быть собой</h1>
             <p className="text-lg text-[#5A6262] mb-12 max-w-2xl mx-auto leading-relaxed">
@@ -810,7 +810,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-[#F9F9D7]">
         <Header />
-        <main className="max-w-7xl mx-auto px-4 md:px-6 py-12">
+        <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Каталог" }]} />
           <h1 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-8">Каталог товаров</h1>
 
@@ -846,7 +846,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-[#F9F9D7]">
         <Header />
-        <main className="max-w-4xl mx-auto px-4 md:px-6 py-12">
+        <main className="max-w-4xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Политика конфиденциальности" }]} />
           <h1 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-8">Политика конфиденциальности</h1>
           <div className="prose prose-sm max-w-none">
@@ -863,7 +863,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#F9F9D7]">
       <Header />
-      <main className="max-w-7xl mx-auto px-4 md:px-6 py-20 text-center">
+      <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-20 text-center">
         <p className="text-[#5A6262]">Страница не найдена</p>
       </main>
       <Footer />
