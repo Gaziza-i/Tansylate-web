@@ -195,7 +195,7 @@ function ProductModal({
           )}
 
           <div className="flex items-center justify-between pt-6 border-t border-[#E8E7E2]">
-            <span className="text-3xl font-semibold text-[#1F1F1D]">{(product.price ?? 0).toLocaleString("ru-RU")} ₽</span>
+            <span className="text-3xl font-semibold text-[#1F1F1D] whitespace-nowrap">{(product.price ?? 0).toLocaleString("ru-RU")} ₽</span>
             <a
               href={product.telegramLink ?? "https://t.me/tansylate_bot"}
               target="_blank"
@@ -408,7 +408,7 @@ export default function Home() {
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-12 text-center">Почему нам верят</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="text-center p-6">
+                <div className="text-center">
                   <div className="w-16 h-16 mx-auto mb-6 bg-[#5A6262] rounded-full flex items-center justify-center">
                     <Truck size={32} className="text-white" />
                   </div>
@@ -418,7 +418,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="text-center p-6">
+                <div className="text-center">
                   <div className="w-16 h-16 mx-auto mb-6 bg-[#5A6262] rounded-full flex items-center justify-center">
                     <RotateCcw size={32} className="text-white" />
                   </div>
@@ -428,7 +428,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="text-center p-6">
+                <div className="text-center">
                   <div className="w-16 h-16 mx-auto mb-6 bg-[#5A6262] rounded-full flex items-center justify-center">
                     <Leaf size={32} className="text-white" />
                   </div>
