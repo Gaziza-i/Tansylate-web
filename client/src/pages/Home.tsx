@@ -365,70 +365,66 @@ export default function Home() {
     </div>
   );
 
+  const navLink = "text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors whitespace-nowrap";
+
   const Header = () => (
-    <header className="sticky top-0 w-full bg-[#F5F2EB] rounded-b-2xl z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+    <header className="sticky top-0 w-full bg-white rounded-b-3xl z-50 shadow-[0_2px_16px_0_rgba(0,0,0,0.07)]">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 h-[72px] grid grid-cols-[1fr_auto_1fr] items-center">
         {/* Left nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className="text-[11px] uppercase tracking-[0.2em] text-[#5A6262] hover:text-[#1A1A1A] transition-colors">Каталог</a>
-          <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className="text-[11px] uppercase tracking-[0.2em] text-[#5A6262] hover:text-[#1A1A1A] transition-colors">О бренде</a>
+        <nav className="hidden md:flex items-center gap-10">
+          <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={navLink}>Каталог</a>
+          <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={navLink}>О бренде</a>
         </nav>
 
         {/* Center logo */}
-        <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="font-serif text-xl md:text-2xl text-[#1F1F1D] tracking-[0.3em] hover:opacity-70 transition-opacity cursor-pointer whitespace-nowrap justify-self-center">
+        <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="font-serif text-2xl md:text-3xl text-[#1A1A1A] tracking-[0.25em] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap justify-self-center px-8">
           TANSYLATE
         </a>
 
         {/* Right nav + icons */}
-        <div className="flex items-center justify-end gap-4 md:gap-6">
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className="text-[11px] uppercase tracking-[0.2em] text-[#5A6262] hover:text-[#1A1A1A] transition-colors">Оплата и доставка</a>
-            <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className="text-[11px] uppercase tracking-[0.2em] text-[#5A6262] hover:text-[#1A1A1A] transition-colors">Контакты</a>
+        <div className="flex items-center justify-end gap-8">
+          <nav className="hidden md:flex items-center gap-10">
+            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={navLink}>Оплата и доставка</a>
+            <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className={navLink}>Контакты</a>
           </nav>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
+            {/* Wishlist icon button */}
             <button
               onClick={() => setWishlistOpen(true)}
-              className="relative p-2 hover:bg-[#E8E4DB] rounded-full transition-colors"
+              className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
               aria-label="Избранное"
             >
-              <Heart size={20} className="text-[#5A6262]" />
-              {wishlist.size > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#1A1A1A] text-white text-[9px] rounded-full flex items-center justify-center font-medium leading-none">
-                  {wishlist.size}
-                </span>
-              )}
+              <Heart size={16} strokeWidth={1.5} />
+              <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
             </button>
 
+            {/* Cart icon button */}
             <button
               onClick={() => setCartOpen(true)}
-              className="relative p-2 hover:bg-[#E8E4DB] rounded-full transition-colors"
+              className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
               aria-label="Корзина"
             >
-              <ShoppingBag size={20} className="text-[#5A6262]" />
-              {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#1A1A1A] text-white text-[9px] rounded-full flex items-center justify-center font-medium leading-none">
-                  {cartCount}
-                </span>
-              )}
+              <ShoppingBag size={16} strokeWidth={1.5} />
+              <span className="text-[11px] font-medium leading-none">{cartCount}</span>
             </button>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 hover:bg-[#E8E4DB] rounded-full transition-colors"
+              className="md:hidden w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center hover:border-[#aaa] transition-colors text-[#3a3a3a]"
             >
-              {mobileMenuOpen ? <X size={20} className="text-[#5A6262]" /> : <Menu size={20} className="text-[#5A6262]" />}
+              {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#F5F2EB] border-t border-[#E0DDD6] py-4 px-6 rounded-b-2xl">
-          <a href="#catalog" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-[#1A1A1A] transition-colors border-b border-[#E0DDD6]" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }}>Каталог</a>
-          <a href="#about" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-[#1A1A1A] transition-colors border-b border-[#E0DDD6]" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}>О бренде</a>
-          <a href="#delivery" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-[#1A1A1A] transition-colors border-b border-[#E0DDD6]" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }}>Оплата и доставка</a>
-          <a href="#contacts" className="block py-3 text-sm uppercase tracking-widest text-[#5A6262] hover:text-[#1A1A1A] transition-colors" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }}>Контакты</a>
+        <div className="md:hidden bg-white border-t border-[#f0f0f0] py-4 px-6 rounded-b-3xl">
+          <a href="#catalog" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }}>Каталог</a>
+          <a href="#about" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}>О бренде</a>
+          <a href="#delivery" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }}>Оплата и доставка</a>
+          <a href="#contacts" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }}>Контакты</a>
         </div>
       )}
     </header>
