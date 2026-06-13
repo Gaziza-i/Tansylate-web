@@ -437,10 +437,9 @@ export default function Home() {
           <a
             href="/"
             onClick={(e) => { e.preventDefault(); setLocation("/"); }}
-            className="text-2xl text-[#1A1A1A] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap"
-            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 800, letterSpacing: "-0.02em" }}
+            className="hover:opacity-60 transition-opacity cursor-pointer"
           >
-            TANSYLATE
+            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-7" />
           </a>
 
           <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={navLink}>Оплата и доставка</a>
@@ -470,10 +469,9 @@ export default function Home() {
           <a
             href="/"
             onClick={(e) => { e.preventDefault(); setLocation("/"); }}
-            className="text-lg text-[#1A1A1A] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap text-center"
-            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 800, letterSpacing: "-0.02em" }}
+            className="hover:opacity-60 transition-opacity cursor-pointer flex justify-center"
           >
-            TANSYLATE
+            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-6" />
           </a>
 
           <div className="flex items-center gap-2">
@@ -645,13 +643,8 @@ export default function Home() {
     const lnk = "text-[11px] uppercase tracking-[0.18em] text-[#6B6558] hover:text-[#2B2521] transition-colors";
     return (
       <footer id="contacts" className="bg-[#F2EAE1]">
-        {/* Logo wordmark */}
-        <div className="flex justify-center pt-16 pb-10 px-8">
-          <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-10 md:h-14" />
-        </div>
-
         {/* Desktop: two-column layout */}
-        <div className="hidden md:grid grid-cols-2 pb-16">
+        <div className="hidden md:grid grid-cols-2 py-20">
           {/* Left — navigation */}
           <div className="flex flex-col justify-center px-16 gap-7 border-r border-[#D5D0C8]">
             <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
