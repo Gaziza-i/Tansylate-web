@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 90" width="520" height="90">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&amp;display=swap');
+    </style>
+  </defs>
+  <text
+    x="0"
+    y="72"
+    font-family="'Montserrat', 'Arial Black', 'Helvetica Neue', Arial, sans-serif"
+    font-weight="800"
+    font-size="76"
+    fill="#1A1A1A"
+    letter-spacing="-2"
+  >TANSYLATE</text>
+</svg>

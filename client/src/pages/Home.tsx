@@ -438,7 +438,7 @@ export default function Home() {
             href="/"
             onClick={(e) => { e.preventDefault(); setLocation("/"); }}
             className="text-2xl text-[#1A1A1A] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap"
-            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 700, letterSpacing: "-0.01em" }}
+            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 800, letterSpacing: "-0.02em" }}
           >
             TANSYLATE
           </a>
@@ -471,7 +471,7 @@ export default function Home() {
             href="/"
             onClick={(e) => { e.preventDefault(); setLocation("/"); }}
             className="text-lg text-[#1A1A1A] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap text-center"
-            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 700, letterSpacing: "-0.01em" }}
+            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 800, letterSpacing: "-0.02em" }}
           >
             TANSYLATE
           </a>
@@ -642,11 +642,16 @@ export default function Home() {
   );
 
   const FooterEditorial = () => {
-    const lnk = "text-[11px] uppercase tracking-[0.18em] text-[#6B6558] hover:text-[#1F1F1D] transition-colors";
+    const lnk = "text-[11px] uppercase tracking-[0.18em] text-[#6B6558] hover:text-[#2B2521] transition-colors";
     return (
-      <footer id="contacts" className="bg-[#EAE7DF]">
+      <footer id="contacts" className="bg-[#F2EAE1]">
+        {/* Logo wordmark */}
+        <div className="flex justify-center pt-16 pb-10 px-8">
+          <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-10 md:h-14" />
+        </div>
+
         {/* Desktop: two-column layout */}
-        <div className="hidden md:grid grid-cols-2 py-20">
+        <div className="hidden md:grid grid-cols-2 pb-16">
           {/* Left — navigation */}
           <div className="flex flex-col justify-center px-16 gap-7 border-r border-[#D5D0C8]">
             <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
@@ -665,7 +670,7 @@ export default function Home() {
         </div>
 
         {/* Mobile: two independent columns */}
-        <div className="md:hidden flex gap-6 px-8 py-12">
+        <div className="md:hidden flex gap-6 px-8 pb-12">
           <div className="flex flex-col gap-5 flex-1">
             <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
             <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
@@ -681,9 +686,8 @@ export default function Home() {
         </div>
 
         {/* Bottom strip */}
-        <div className="border-t border-[#D5D0C8] px-8 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-[10px] uppercase tracking-widest text-[#9A9590]">
+        <div className="border-t border-[#D5D0C8] px-8 md:px-12 py-5 flex justify-center text-[10px] uppercase tracking-widest text-[#9A9590]">
           <span>© 2026 Tansylate. Все права защищены.</span>
-          <span className="font-serif tracking-normal normal-case text-[#C8C4BC] text-xs">TANSYLATE</span>
         </div>
       </footer>
     );
