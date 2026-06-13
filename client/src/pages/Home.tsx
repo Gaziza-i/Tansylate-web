@@ -240,55 +240,36 @@ function ProductModal({
               {sizeTables.map((table, ti) => {
                 const showHips = table.rows.some(r => r.hips);
                 const showHeight = table.rows.some(r => r.height);
+                const col3label = table.rows[0]?.col3label ?? "Обхват груди";
                 return (
                   <AccordionSection key={ti} title="Размерная сетка">
                     <div className="rounded-lg overflow-hidden border border-[#DEDBD3] mb-1">
-                      <table className="w-full text-sm border-collapse">
-                        <thead>
-                          <tr className="bg-[#1A1A1A] text-white">
-                            <th className="text-left py-3 px-4 font-normal w-[40%]"></th>
-                            {table.rows.map(row => (
-                              <th key={row.size} className="py-3 px-3 font-medium lowercase text-center whitespace-nowrap">{row.size}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-b border-[#DEDBD3] bg-white">
-                            <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Российский размер</td>
-                            {table.rows.map(row => (
-                              <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.ru}</td>
-                            ))}
-                          </tr>
-                          <tr className={`border-b border-[#DEDBD3] bg-white`}>
-                            <td className="py-3 px-4 text-[#1F1F1D] leading-snug">{table.rows[0]?.col3label ?? "Обхват груди"} (см)</td>
-                            {table.rows.map(row => (
-                              <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.col3}</td>
-                            ))}
-                          </tr>
-                          <tr className={`${showHips || showHeight ? "border-b border-[#DEDBD3]" : ""} bg-white`}>
-                            <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Обхват талии (см)</td>
-                            {table.rows.map(row => (
-                              <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.waist}</td>
-                            ))}
-                          </tr>
-                          {showHips && (
-                            <tr className={`${showHeight ? "border-b border-[#DEDBD3]" : ""} bg-white`}>
-                              <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Обхват бёдер (см)</td>
-                              {table.rows.map(row => (
-                                <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.hips ?? "—"}</td>
-                              ))}
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm border-collapse min-w-[320px]">
+                          <thead>
+                            <tr className="bg-[#1A1A1A] text-white">
+                              <th className="text-left py-3 px-4 font-medium text-sm whitespace-nowrap">Размер</th>
+                              <th className="py-3 px-3 font-medium text-sm text-center">Российский размер</th>
+                              <th className="py-3 px-3 font-medium text-sm text-center">{col3label} (см)</th>
+                              <th className="py-3 px-3 font-medium text-sm text-center">Обхват талии (см)</th>
+                              {showHips && <th className="py-3 px-3 font-medium text-sm text-center">Обхват бёдер (см)</th>}
+                              {showHeight && <th className="py-3 px-3 font-medium text-sm text-center">Рост (см)</th>}
                             </tr>
-                          )}
-                          {showHeight && (
-                            <tr className="bg-white">
-                              <td className="py-3 px-4 text-[#1F1F1D] leading-snug">Рост (см)</td>
-                              {table.rows.map(row => (
-                                <td key={row.size} className="py-3 px-3 text-center text-[#5A6262] whitespace-nowrap">{row.height ?? "—"}</td>
-                              ))}
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {table.rows.map((row, ri) => (
+                              <tr key={row.size} className={`${ri < table.rows.length - 1 ? "border-b border-[#DEDBD3]" : ""} bg-white`}>
+                                <td className="py-3 px-4 font-semibold text-[#1F1F1D] whitespace-nowrap">{row.size}</td>
+                                <td className="py-3 px-3 text-center text-[#5A6262]">{row.ru}</td>
+                                <td className="py-3 px-3 text-center text-[#5A6262]">{row.col3}</td>
+                                <td className="py-3 px-3 text-center text-[#5A6262]">{row.waist}</td>
+                                {showHips && <td className="py-3 px-3 text-center text-[#5A6262]">{row.hips ?? "—"}</td>}
+                                {showHeight && <td className="py-3 px-3 text-center text-[#5A6262]">{row.height ?? "—"}</td>}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </AccordionSection>
                 );
