@@ -402,7 +402,8 @@ export default function Home() {
   const navLink = "text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors whitespace-nowrap";
 
   const Header = () => (
-    <header className="fixed top-3 left-3 right-3 md:top-4 md:left-6 md:right-6 bg-white rounded-2xl z-50 shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
+    <header className="fixed top-3 md:top-4 left-0 right-0 z-50 flex justify-center px-3 md:px-6">
+      <div className="w-full max-w-7xl bg-white rounded-2xl shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
       <div className="px-4 md:px-8 h-[60px] md:h-[68px] grid grid-cols-[auto_1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center">
         {/* Left nav — hidden on mobile, takes 0 space */}
         <nav className="hidden md:flex items-center gap-10">
@@ -457,6 +458,7 @@ export default function Home() {
           <a href="#contacts" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }}>Контакты</a>
         </div>
       )}
+      </div>
     </header>
   );
 
