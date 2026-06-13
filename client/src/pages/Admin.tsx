@@ -801,7 +801,7 @@ export default function Admin() {
                 ←
               </button>
             )}
-            <span className="text-lg md:text-xl text-[#1F1F1D] truncate" style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 900, letterSpacing: "-0.01em" }}>TANSYLATE</span>
+            <span className="text-lg md:text-xl text-[#1F1F1D] truncate" style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 700, letterSpacing: "-0.01em" }}>TANSYLATE</span>
             <span className="text-xs text-[#5A6262] uppercase tracking-widest hidden sm:inline">Админ</span>
           </div>
           <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">

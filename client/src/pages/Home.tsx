@@ -24,49 +24,55 @@ type CartItem = { id: number; name: string; price: number; image: string; qty: n
 
 function CareIcon({ icon }: { icon: string }) {
   const p = {
-    width: 22, height: 22, viewBox: "0 0 24 24", fill: "none",
+    width: 24, height: 24, viewBox: "0 0 24 24", fill: "none",
     stroke: "#5A6262", strokeWidth: 1.5 as number,
     strokeLinecap: "round" as const, strokeLinejoin: "round" as const,
     className: "flex-shrink-0",
   };
+  // Стирка — таз с волной и температурой
   if (icon === "wash") return (
     <svg {...p}>
-      <path d="M2 8h20v2a10 10 0 0 1-20 0V8z"/>
-      <path d="M2 8l2-5h16l2 5"/>
-      <path d="M9 13v3m6-3v3"/>
+      <path d="M3.5 8h17l-2 12H5.5L3.5 8z"/>
+      <text x="12" y="15.5" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#5A6262" stroke="none" fontFamily="system-ui, Arial, sans-serif">30</text>
+      <path d="M7 18.5c.5-.6 1-.6 1.5 0 .5.6 1 .6 1.5 0 .5-.6 1-.6 1.5 0 .5.6 1 .6 1.5 0"/>
     </svg>
   );
+  // Не отбеливать — треугольник с крестом
   if (icon === "bleach") return (
     <svg {...p}>
-      <path d="M3 6h18v2a9 9 0 0 1-18 0V6z"/>
-      <path d="M3 6l1-3h16l1 3"/>
-      <line x1="4" y1="4" x2="20" y2="20"/>
+      <path d="M12 3L22 21H2L12 3z"/>
+      <line x1="8" y1="10" x2="16" y2="20"/>
+      <line x1="16" y1="10" x2="8" y2="20"/>
     </svg>
   );
+  // Утюг с одной точкой (110°С)
   if (icon === "iron") return (
     <svg {...p}>
-      <path d="M4 6h16a1 1 0 0 1 1 1v1H3V7a1 1 0 0 1 1-1z"/>
-      <path d="M3 8h18v1a9 9 0 0 1-2 5.7V19a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-4.3A9 9 0 0 1 3 9V8z"/>
-      <circle cx="12" cy="11" r="1" fill="#5A6262" stroke="none"/>
+      <path d="M3 19h18"/>
+      <path d="M3 19V15l3-8h9l6 8v4"/>
+      <path d="M9 7V5h6v2"/>
+      <circle cx="12" cy="14" r="1.2" fill="#5A6262" stroke="none"/>
     </svg>
   );
+  // Не сушить в машине — квадрат, круг, диагональ
+  if (icon === "tumble" || icon === "tumble-dry") return (
+    <svg {...p}>
+      <rect x="3" y="3" width="18" height="18" rx="1.5"/>
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="5" y1="5" x2="19" y2="19"/>
+    </svg>
+  );
+  // Сушить горизонтально — квадрат с горизонтальной линией
   if (icon === "dry") return (
     <svg {...p}>
-      <rect x="3" y="3" width="18" height="18" rx="2"/>
-      <line x1="3" y1="3" x2="21" y2="21"/>
+      <rect x="3" y="3" width="18" height="18" rx="1"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
     </svg>
   );
   if (icon === "hang") return (
     <svg {...p}>
       <rect x="3" y="3" width="18" height="18" rx="2"/>
       <line x1="7" y1="12" x2="17" y2="12"/>
-    </svg>
-  );
-  if (icon === "tumble-dry") return (
-    <svg {...p}>
-      <rect x="3" y="3" width="18" height="18" rx="2"/>
-      <circle cx="12" cy="12" r="4.5"/>
-      <line x1="5" y1="5" x2="19" y2="19"/>
     </svg>
   );
   return null;
@@ -432,7 +438,7 @@ export default function Home() {
             href="/"
             onClick={(e) => { e.preventDefault(); setLocation("/"); }}
             className="text-2xl text-[#1A1A1A] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap"
-            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 900, letterSpacing: "-0.01em" }}
+            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 700, letterSpacing: "-0.01em" }}
           >
             TANSYLATE
           </a>
@@ -465,7 +471,7 @@ export default function Home() {
             href="/"
             onClick={(e) => { e.preventDefault(); setLocation("/"); }}
             className="text-lg text-[#1A1A1A] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap text-center"
-            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 900, letterSpacing: "-0.01em" }}
+            style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 700, letterSpacing: "-0.01em" }}
           >
             TANSYLATE
           </a>
@@ -714,9 +720,8 @@ export default function Home() {
           {hasWash && (
             <div className="absolute bottom-3 left-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow-sm" title="Машинная стирка">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5A6262" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M2 8h20v2a10 10 0 0 1-20 0V8z"/>
-                <path d="M2 8l2-5h16l2 5"/>
-                <path d="M9 13v3m6-3v3"/>
+                <path d="M3.5 8h17l-2 12H5.5L3.5 8z"/>
+                <path d="M7.5 17c.5-.6 1-.6 1.5 0 .5.6 1 .6 1.5 0 .5-.6 1-.6 1.5 0"/>
               </svg>
             </div>
           )}
@@ -775,7 +780,7 @@ export default function Home() {
               onClick={() => scrollToSection("catalog")}
               className="px-8 py-3 bg-[#1A1A1A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors font-medium"
             >
-              Смотреть каталог
+              Каталог
             </button>
           </section>
 
@@ -792,10 +797,11 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="about" className="py-20 px-4 md:px-6 bg-[#F2EAE1]">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-6">О бренде</h2>
+          <section id="about" className="bg-[#F2EAE1] overflow-hidden">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2">
+              {/* Text */}
+              <div className="py-20 px-8 md:px-16 flex flex-col justify-center">
+                <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-6">О бренде</h2>
                 <p className="text-[#5A6262] mb-4 leading-relaxed">
                   Меня зовут Тансылу, мне 16 лет. Моя цель — создавать по-настоящему долговечную одежду.
                 </p>
@@ -806,8 +812,9 @@ export default function Home() {
                   Это не просто бизнес, а ответственность за внешний вид и качество готового изделия. В процесс вкладывается максимум сил, чтобы гарантировать высокое качество исполнения и внимание к каждому шву.
                 </p>
               </div>
-              <div className="bg-[#EAE7DF] rounded-2xl h-96 overflow-hidden">
-                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg" alt="Тансылу" className="w-full h-full object-cover" />
+              {/* Photo — fills full column height, no rounded corners */}
+              <div className="h-72 md:h-auto overflow-hidden">
+                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg" alt="Тансылу" className="w-full h-full object-cover object-center" />
               </div>
             </div>
           </section>
