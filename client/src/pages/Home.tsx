@@ -250,7 +250,7 @@ function ProductModal({
                 return (
                   <AccordionSection key={ti} title="Размерная сетка">
                     <div className="rounded-lg overflow-hidden border border-[#DEDBD3] mb-1">
-                      <div className="overflow-x-auto">
+                      <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
                         <table className="w-full text-sm border-collapse min-w-[320px]">
                           <thead>
                             <tr className="bg-[#1A1A1A] text-white">
