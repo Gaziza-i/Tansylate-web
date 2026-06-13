@@ -114,11 +114,11 @@ function ProductModal({
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 md:p-6" onClick={onClose}>
       <div
-        className="bg-[#EFEFED] rounded-2xl max-w-4xl w-full max-h-[94vh] overflow-hidden flex flex-col md:flex-row"
+        className="bg-[#F5F2EB] rounded-2xl max-w-4xl w-full max-h-[94vh] overflow-hidden flex flex-col md:flex-row"
         onClick={e => e.stopPropagation()}
       >
         {/* Left: image carousel */}
-        <div className="relative bg-[#E5E3DF] md:w-[55%] flex-shrink-0 flex flex-col">
+        <div className="relative bg-[#EAE7DF] md:w-[55%] flex-shrink-0 flex flex-col">
           <div className="relative w-full aspect-[3/4]">
             <img
               src={images[carouselIndex]}
@@ -137,7 +137,7 @@ function ProductModal({
             )}
           </div>
           {images.length > 1 && (
-            <div className="flex gap-2 p-3 overflow-x-auto bg-[#E5E3DF]">
+            <div className="flex gap-2 p-3 overflow-x-auto bg-[#EAE7DF]">
               {images.map((src, idx) => (
                 <button key={idx} onClick={() => onSetIndex(idx)}
                   className={`flex-shrink-0 w-[60px] h-[60px] overflow-hidden transition-all ${
@@ -167,7 +167,7 @@ function ProductModal({
             <h2 className="text-xl md:text-2xl font-bold text-[#1F1F1D] leading-tight mb-1">
               {product.name}
             </h2>
-            <p className="text-sm text-[#9A9A9A] mb-4">
+            <p className="text-xs text-[#9A9A9A] mb-4 uppercase tracking-wider">
               Артикул: {String(product.id).padStart(6, "0")}
             </p>
 
@@ -177,22 +177,22 @@ function ProductModal({
             </p>
 
             {product.description && (
-              <p className="text-sm text-[#5A6262] leading-relaxed mb-4">{product.description}</p>
+              <p className="text-sm text-[#5A6262] leading-relaxed mb-5">{product.description}</p>
             )}
 
             {/* Sizes */}
             {availableSizes.length > 0 && (
               <div className="mb-5">
-                <p className="text-sm text-[#8B5A3C] mb-2">Размер</p>
+                <p className="text-xs text-[#8B5A3C] mb-3 uppercase tracking-wider">Размер</p>
                 <div className="flex flex-wrap gap-2">
                   {availableSizes.map(size => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`min-w-[44px] h-[44px] px-3 text-sm border transition-all ${
+                      className={`h-10 px-4 text-sm font-medium border transition-all ${
                         selectedSize === size
-                          ? "border-[#1F1F1D] bg-[#1F1F1D] text-white"
-                          : "border-[#C8C4BC] bg-white text-[#1F1F1D] hover:border-[#1F1F1D]"
+                          ? "border-[#1A1A1A] bg-[#1A1A1A] text-white"
+                          : "border-[#C8C4BC] bg-white text-[#1F1F1D] hover:border-[#1A1A1A]"
                       }`}
                     >
                       {size}
@@ -206,13 +206,13 @@ function ProductModal({
             <div className="flex items-center gap-3 mb-6">
               <button
                 onClick={() => onAddToCart(selectedSize)}
-                className="flex-1 h-12 bg-[#1F1F1D] text-white text-sm font-medium hover:bg-[#333] transition-colors"
+                className="flex-1 h-12 bg-[#1A1A1A] text-white text-sm font-medium hover:bg-[#333] transition-colors rounded-sm"
               >
                 Добавить в корзину
               </button>
               <button
                 onClick={() => onToggleWishlist(product.id)}
-                className="w-12 h-12 border border-[#C8C4BC] bg-white flex items-center justify-center hover:border-[#1F1F1D] transition-colors flex-shrink-0"
+                className="w-12 h-12 border border-[#C8C4BC] bg-white flex items-center justify-center hover:border-[#1A1A1A] transition-colors flex-shrink-0 rounded-sm"
                 aria-label="Избранное"
               >
                 <Heart
@@ -230,30 +230,30 @@ function ProductModal({
                   <div className="overflow-x-auto mb-1">
                     <table className="w-full text-sm border-collapse">
                       <thead>
-                        <tr className="bg-[#1F1F1D] text-white">
-                          <th className="text-left py-3 px-4 font-normal"></th>
+                        <tr className="bg-[#1A1A1A] text-white">
+                          <th className="text-left py-3 px-4 font-normal whitespace-nowrap"></th>
                           {table.rows.map(row => (
-                            <th key={row.size} className="py-3 px-4 font-medium lowercase text-center">{row.size}</th>
+                            <th key={row.size} className="py-3 px-4 font-medium lowercase text-center whitespace-nowrap">{row.size}</th>
                           ))}
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="border-b border-[#DEDBD3] bg-white">
-                          <td className="py-3 px-4 text-[#1F1F1D]">Российский размер</td>
+                          <td className="py-3 px-4 text-[#1F1F1D] whitespace-nowrap">Российский размер</td>
                           {table.rows.map(row => (
-                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262]">{row.ru}</td>
+                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262] whitespace-nowrap">{row.ru}</td>
                           ))}
                         </tr>
                         <tr className="border-b border-[#DEDBD3] bg-white">
-                          <td className="py-3 px-4 text-[#1F1F1D]">{table.rows[0]?.col3label ?? "Обхват груди"}</td>
+                          <td className="py-3 px-4 text-[#1F1F1D] whitespace-nowrap">{table.rows[0]?.col3label ?? "Обхват груди"}</td>
                           {table.rows.map(row => (
-                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262]">{row.col3}</td>
+                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262] whitespace-nowrap">{row.col3}</td>
                           ))}
                         </tr>
                         <tr className="bg-white">
-                          <td className="py-3 px-4 text-[#1F1F1D]">Обхват талии</td>
+                          <td className="py-3 px-4 text-[#1F1F1D] whitespace-nowrap">Обхват талии</td>
                           {table.rows.map(row => (
-                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262]">{row.waist}</td>
+                            <td key={row.size} className="py-3 px-4 text-center text-[#5A6262] whitespace-nowrap">{row.waist}</td>
                           ))}
                         </tr>
                       </tbody>
@@ -290,8 +290,13 @@ function ProductModal({
 
               {features.length > 0 && (
                 <AccordionSection title="Информация об изделии">
-                  <ul className="space-y-1">
-                    {features.map((feat, i) => <li key={i}>{feat}</li>)}
+                  <ul className="space-y-2">
+                    {features.map((feat, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <span className="text-[#8B5A3C] flex-shrink-0 select-none">—</span>
+                        <span>{feat}</span>
+                      </li>
+                    ))}
                   </ul>
                 </AccordionSection>
               )}
@@ -402,62 +407,69 @@ export default function Home() {
   const navLink = "text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors whitespace-nowrap";
 
   const Header = () => (
-    <header className="fixed top-3 md:top-4 left-0 right-0 z-50 flex justify-center px-3 md:px-6">
+    <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 lg:px-6">
       <div className="w-full max-w-7xl bg-white rounded-2xl shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
-      <div className="px-4 md:px-8 h-[60px] md:h-[68px] grid grid-cols-[auto_1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center">
-        {/* Left nav — hidden on mobile, takes 0 space */}
-        <nav className="hidden md:flex items-center gap-10">
-          <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={navLink}>Каталог</a>
-          <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={navLink}>О бренде</a>
-        </nav>
+        <div className="px-4 lg:px-8 h-[60px] lg:h-[68px] grid grid-cols-[auto_1fr_auto] lg:grid-cols-[1fr_auto_1fr] items-center">
 
-        {/* Center logo */}
-        <a href="/" onClick={(e) => { e.preventDefault(); setLocation("/"); }} className="font-serif text-xl md:text-3xl text-[#1A1A1A] tracking-[0.12em] md:tracking-[0.25em] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap justify-self-center md:px-8">
-          TANSYLATE
-        </a>
-
-        {/* Right nav + icons */}
-        <div className="flex items-center justify-end gap-2">
-          <nav className="hidden md:flex items-center gap-10 mr-6">
-            <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={navLink}>Оплата и доставка</a>
-            <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className={navLink}>Контакты</a>
+          {/* Left nav — only on lg+ */}
+          <nav className="hidden lg:flex items-center gap-8 xl:gap-10">
+            <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={navLink}>Каталог</a>
+            <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={navLink}>О бренде</a>
           </nav>
 
-          <button
-            onClick={() => setWishlistOpen(true)}
-            className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
-            aria-label="Избранное"
-          >
-            <Heart size={15} strokeWidth={1.5} />
-            <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
-          </button>
-
-          <button
-            onClick={() => setCartOpen(true)}
-            className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
-            aria-label="Корзина"
-          >
-            <ShoppingBag size={15} strokeWidth={1.5} />
-            <span className="text-[11px] font-medium leading-none">{cartCount}</span>
-          </button>
-
+          {/* Hamburger on mobile/tablet — takes space on the left */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center hover:border-[#aaa] transition-colors text-[#3a3a3a]"
+            className="lg:hidden w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center hover:border-[#aaa] transition-colors text-[#3a3a3a]"
           >
             {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
-        </div>
-      </div>
 
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-[#f0f0f0] py-4 px-6 rounded-b-2xl">
-          <a href="#catalog" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }}>Каталог</a>
-          <a href="#about" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}>О бренде</a>
-          <a href="#delivery" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }}>Оплата и доставка</a>
-          <a href="#contacts" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }}>Контакты</a>
+          {/* Center logo */}
+          <a
+            href="/"
+            onClick={(e) => { e.preventDefault(); setLocation("/"); }}
+            className="font-serif text-xl lg:text-3xl text-[#1A1A1A] tracking-[0.12em] lg:tracking-[0.25em] hover:opacity-60 transition-opacity cursor-pointer whitespace-nowrap justify-self-center lg:px-8"
+          >
+            TANSYLATE
+          </a>
+
+          {/* Right: nav + icons */}
+          <div className="flex items-center justify-end gap-2">
+            <nav className="hidden lg:flex items-center gap-8 xl:gap-10 mr-4 xl:mr-6">
+              <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={navLink}>Оплата и доставка</a>
+              <a href="#contacts" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }} className={navLink}>Контакты</a>
+            </nav>
+
+            <button
+              onClick={() => setWishlistOpen(true)}
+              className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
+              aria-label="Избранное"
+            >
+              <Heart size={15} strokeWidth={1.5} />
+              <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
+            </button>
+
+            <button
+              onClick={() => setCartOpen(true)}
+              className="w-9 h-9 rounded-full border border-[#e0e0e0] flex items-center justify-center gap-1 hover:border-[#aaa] transition-colors text-[#3a3a3a]"
+              aria-label="Корзина"
+            >
+              <ShoppingBag size={15} strokeWidth={1.5} />
+              <span className="text-[11px] font-medium leading-none">{cartCount}</span>
+            </button>
+          </div>
         </div>
-      )}
+
+        {/* Mobile/tablet dropdown menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-white border-t border-[#f0f0f0] py-4 px-6 rounded-b-2xl">
+            <a href="#catalog" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }}>Каталог</a>
+            <a href="#about" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }}>О бренде</a>
+            <a href="#delivery" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors border-b border-[#f0f0f0]" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }}>Оплата и доставка</a>
+            <a href="#contacts" className="block py-3 text-sm text-[#3a3a3a] hover:text-[#1A1A1A] transition-colors" onClick={(e) => { e.preventDefault(); scrollToSection("contacts"); }}>Контакты</a>
+          </div>
+        )}
       </div>
     </header>
   );
@@ -603,13 +615,13 @@ export default function Home() {
   );
 
   const FooterEditorial = () => {
-    const lnk = "text-[11px] uppercase tracking-[0.18em] text-[#6A6A62] hover:text-[#F9F9D7] transition-colors";
+    const lnk = "text-[11px] uppercase tracking-[0.18em] text-[#6B6558] hover:text-[#1F1F1D] transition-colors";
     return (
-      <footer id="contacts" className="bg-[#1C1914]">
+      <footer id="contacts" className="bg-[#EAE7DF]">
         {/* Desktop: two-column layout */}
         <div className="hidden md:grid grid-cols-2 py-20">
           {/* Left — navigation */}
-          <div className="flex flex-col justify-center px-16 gap-7 border-r border-[#2C2820]">
+          <div className="flex flex-col justify-center px-16 gap-7 border-r border-[#D5D0C8]">
             <a href="#catalog" onClick={(e) => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
             <a href="#about" onClick={(e) => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
             <a href="#delivery" onClick={(e) => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Оплата и доставка</a>
@@ -642,9 +654,9 @@ export default function Home() {
         </div>
 
         {/* Bottom strip */}
-        <div className="border-t border-[#2C2820] px-8 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-[10px] uppercase tracking-widest text-[#5A5248]">
+        <div className="border-t border-[#D5D0C8] px-8 md:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-2 text-[10px] uppercase tracking-widest text-[#9A9590]">
           <span>© 2026 Tansylate. Все права защищены.</span>
-          <span className="font-serif tracking-normal normal-case text-[#3E3830] text-xs">TANSYLATE</span>
+          <span className="font-serif tracking-normal normal-case text-[#C8C4BC] text-xs">TANSYLATE</span>
         </div>
       </footer>
     );
@@ -685,7 +697,7 @@ export default function Home() {
           {p.collection && <p className="text-xs text-[#8B5A3C] uppercase tracking-wide mb-1">{p.collection}</p>}
           <p className="text-sm font-medium text-[#1F1F1D] mb-3">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
           <button
-            onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
+            onClick={(e) => { e.stopPropagation(); addToCart(p); setCartOpen(true); }}
             className="mt-auto w-full py-2.5 bg-[#1A1A1A] text-white text-xs uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors active:scale-95"
           >
             В корзину
@@ -720,7 +732,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-[#F9F9D7]">
         <Header />
-        <main className="pt-24 md:pt-28">
+        <main className="pt-24 lg:pt-28">
           <section className="py-16 text-center px-4">
             <p className="text-xs uppercase tracking-widest text-[#8B5A3C] mb-4">Основано в 2026</p>
             <h1 className="text-5xl md:text-6xl font-serif text-[#1F1F1D] mb-6">Искусство быть собой</h1>
@@ -839,7 +851,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-[#F9F9D7]">
         <Header />
-        <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-12">
+        <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 lg:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Каталог" }]} />
           <h1 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-8">Каталог товаров</h1>
 
@@ -875,7 +887,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-[#F9F9D7]">
         <Header />
-        <main className="max-w-4xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-12">
+        <main className="max-w-4xl mx-auto px-4 md:px-6 pt-28 lg:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Политика конфиденциальности" }]} />
           <h1 className="text-3xl md:text-4xl font-serif text-[#1F1F1D] mb-8">Политика конфиденциальности</h1>
           <div className="prose prose-sm max-w-none">
@@ -892,7 +904,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#F9F9D7]">
       <Header />
-      <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 md:pt-32 pb-20 text-center">
+      <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 lg:pt-32 pb-20 text-center">
         <p className="text-[#5A6262]">Страница не найдена</p>
       </main>
       <FooterEditorial />
