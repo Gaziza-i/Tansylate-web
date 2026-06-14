@@ -631,7 +631,6 @@ export default function Home() {
             <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
             <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
             <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
-            <a href="tel:+79953668498" className={lnk}>+7 995 366 8498</a>
           </div>
         </div>
 
@@ -646,7 +645,6 @@ export default function Home() {
             <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
             <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
             <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
-            <a href="tel:+79953668498" className={lnk}>+7 995 366 8498</a>
           </div>
         </div>
 
