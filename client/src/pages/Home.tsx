@@ -142,7 +142,7 @@ function ProductModal({
           <X size={18} className="text-[#2B2521]" />
         </button>
         <div className="relative bg-[#DDD5C0] md:w-[55%] flex-shrink-0 flex flex-col">
-          <div className="relative w-full aspect-[3/4]">
+          <div className="relative w-full max-h-[48vh] md:max-h-none md:aspect-[3/4] overflow-hidden">
             <img
               src={images[carouselIndex]}
               alt={product.name}
@@ -778,8 +778,8 @@ export default function Home() {
                   Это не просто бизнес, а ответственность за внешний вид и качество готового изделия. В процесс вкладывается максимум сил, чтобы гарантировать высокое качество исполнения и внимание к каждому шву.
                 </p>
               </div>
-              <div className="h-72 md:h-auto overflow-hidden">
-                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg" alt="Тансылу" className="w-full h-full object-cover object-center" />
+              <div className="aspect-[3/4] md:h-auto md:aspect-auto overflow-hidden">
+                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg" alt="Тансылу" className="w-full h-full object-cover object-top" />
               </div>
             </div>
           </section>
