@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+  <!-- Phone screen bg -->
+  <rect width="390" height="844" fill="#FFFDF0"/>
+
+  <!-- Eye SVG centered -->
+  <g transform="translate(105, 357)">
+    <!-- Outer oval frame -->
+    <ellipse cx="90" cy="65" rx="86" ry="58" stroke="#1A1A1A" stroke-width="2.5" fill="none"/>
+
+    <!-- Eye almond / lens shape -->
+    <path d="M4 65 C28 28, 152 28, 176 65 C152 102, 28 102, 4 65 Z"
+      fill="#FFFDF0" stroke="#1A1A1A" stroke-width="2.5" stroke-linejoin="round"/>
+
+    <!-- Iris -->
+    <circle cx="90" cy="65" r="26" stroke="#1A1A1A" stroke-width="2" fill="none"/>
+
+    <!-- Pupil -->
+    <circle cx="90" cy="65" r="9" fill="#1A1A1A"/>
+
+    <!-- Left corner decorative swirl -->
+    <path d="M4 65 C-4 55,-7 42, 2 34 C9 27, 18 31, 14 40 C11 47, 4 43, 7 36"
+      stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+
+    <!-- Right corner tail -->
+    <path d="M176 65 C184 56, 187 45, 180 37"
+      stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+
+    <!-- Top lashes -->
+    <path d="M62 36 C59 27, 56 20" stroke="#1A1A1A" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M90 30 L90 21" stroke="#1A1A1A" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M118 36 C121 27, 124 20" stroke="#1A1A1A" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>
