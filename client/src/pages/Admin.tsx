@@ -2,8 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers } from "lucide-react";
 
-// ─── Типы ────────────────────────────────────────────────────────────────────
-
 interface Spec { label: string; value: string; }
 interface SizeRow { size: string; ru: string; col3: string; col3label: string; waist: string; }
 interface SizeTable { title: string; rows: SizeRow[]; }
@@ -17,8 +15,6 @@ const CARE_ICONS: { value: string; label: string; svg: string }[] = [
   { value: "dry",    label: "Сушка",          svg: "M3 3h18v18H3zM7 12h10" },
 ];
 
-// ─── Иконка ухода ─────────────────────────────────────────────────────────────
-
 function CareIcon({ icon }: { icon: string }) {
   const found = CARE_ICONS.find(c => c.value === icon);
   if (!found) return null;
@@ -31,14 +27,10 @@ function CareIcon({ icon }: { icon: string }) {
   );
 }
 
-// ─── Парсинг JSON из БД ──────────────────────────────────────────────────────
-
 function parseJSON<T>(val: string | null | undefined, fallback: T): T {
   if (!val) return fallback;
   try { return JSON.parse(val) as T; } catch { return fallback; }
 }
-
-// ─── Начальное состояние формы ───────────────────────────────────────────────
 
 const emptyForm = () => ({
   name: "",
@@ -83,7 +75,7 @@ const emptyForm = () => ({
 
 type Form = ReturnType<typeof emptyForm>;
 
-// ─── Вспомогательные компоненты (ВНЕ ProductForm — иначе React размонтирует DOM на каждый ре-рендер) ──
+// Вспомогательные компоненты вне ProductForm — React размонтирует DOM на каждый ре-рендер
 
 function InputField({ label, value, onChange, type = "text", placeholder = "" }: any) {
   return (
@@ -122,8 +114,6 @@ function Section({ id, label, openSection, onToggle, children }: {
   );
 }
 
-// ─── Форма редактирования товара ─────────────────────────────────────────────
-
 function ProductForm({
   initial,
   onSave,
@@ -147,26 +137,17 @@ function ProductForm({
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   const set = (key: keyof Form, val: any) => setForm(f => ({ ...f, [key]: val }));
-
-  const toggle = (section: string) =>
-    setOpenSection(o => (o === section ? null : section));
+  const toggle = (section: string) => setOpenSection(o => (o === section ? null : section));
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("[upload] handleFileUpload triggered, files:", e.target.files?.length);
     const file = e.target.files?.[0];
-    console.log("[upload] file:", file ? `${file.name} (${file.size}b)` : "none", "| onUploadImage:", !!onUploadImage);
-    if (!file || !onUploadImage) {
-      console.warn("[upload] early return — file:", !!file, "onUploadImage:", !!onUploadImage);
-      return;
-    }
+    if (!file || !onUploadImage) return;
     setUploading(true);
     setUploadError(null);
     try {
       const url = await onUploadImage(file);
-      console.log("[upload] got url:", url);
       set("images", [...form.images, url]);
     } catch (err: any) {
-      console.error("[upload] error:", err);
       setUploadError(err?.message || "Ошибка загрузки фото");
     } finally {
       setUploading(false);
@@ -188,7 +169,6 @@ function ProductForm({
         />
       )}
 
-      {/* Основное */}
       <Section id="basic" label="Основная информация" openSection={openSection} onToggle={toggle}>
         <InputField label="Название" value={form.name} onChange={(v: string) => set("name", v)} placeholder="Спортивный костюм" />
         <div className="grid grid-cols-2 gap-4">
@@ -219,10 +199,7 @@ function ProductForm({
         </div>
       </Section>
 
-      {/* Фото */}
       <Section id="images" label={`Фотографии (${form.images.length})`} openSection={openSection} onToggle={toggle}>
-
-        {/* Кнопки: загрузить + из медиатеки */}
         <div className="flex flex-wrap gap-2">
           {onUploadImage && (
             <label
@@ -246,7 +223,6 @@ function ProductForm({
           )}
         </div>
 
-        {/* Медиапикер */}
         {showMediaPicker && (
           <div className="border border-[#E8E7E2] rounded-xl overflow-hidden bg-[#F9F9F7]">
             <div className="px-3 py-2 border-b border-[#E8E7E2] flex items-center justify-between">
@@ -270,12 +246,7 @@ function ProductForm({
                     <button
                       key={i}
                       type="button"
-                      onClick={() => {
-                        set("images", selected
-                          ? form.images.filter(u => u !== url)
-                          : [...form.images, url]
-                        );
-                      }}
+                      onClick={() => set("images", selected ? form.images.filter(u => u !== url) : [...form.images, url])}
                       className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all ${selected ? "border-[#1F1F1D] opacity-100" : "border-transparent opacity-80 hover:opacity-100"}`}
                     >
                       <img src={url} alt="" className="w-full h-full object-cover"
@@ -296,7 +267,6 @@ function ProductForm({
           </div>
         )}
 
-        {/* Текущие фото товара */}
         {form.images.length > 0 ? (
           <div className="grid grid-cols-3 gap-3">
             {form.images.map((url, i) => (
@@ -335,7 +305,6 @@ function ProductForm({
           </div>
         )}
 
-        {/* URL вручную */}
         <details className="text-xs">
           <summary className="cursor-pointer text-[#5A6262] hover:text-black select-none py-1">Добавить по URL</summary>
           <div className="flex gap-2 mt-2">
@@ -356,7 +325,6 @@ function ProductForm({
         </details>
       </Section>
 
-      {/* Характеристики */}
       <Section id="specs" label="Характеристики" openSection={openSection} onToggle={toggle}>
         <div className="space-y-2">
           {form.specs.map((spec, i) => (
@@ -384,7 +352,6 @@ function ProductForm({
         </button>
       </Section>
 
-      {/* Особенности */}
       <Section id="features" label="Особенности (✓ список)" openSection={openSection} onToggle={toggle}>
         <div className="space-y-2">
           {form.features.map((feat, i) => (
@@ -406,7 +373,6 @@ function ProductForm({
         </button>
       </Section>
 
-      {/* Размерные сетки */}
       <Section id="sizes" label={`Размерные сетки (${form.sizeTables.length})`} openSection={openSection} onToggle={toggle}>
         {form.sizeTables.map((table, ti) => (
           <div key={ti} className="border border-[#E8E7E2] rounded-lg p-4 mb-4">
@@ -488,7 +454,6 @@ function ProductForm({
         </button>
       </Section>
 
-      {/* Уход */}
       <Section id="care" label="Уход за изделием" openSection={openSection} onToggle={toggle}>
         <div className="space-y-2">
           {form.careInstructions.map((item, i) => (
@@ -524,7 +489,6 @@ function ProductForm({
         </div>
       </Section>
 
-      {/* Кнопки */}
       <div className="flex gap-3 pt-2">
         <button
           type="button"
@@ -546,8 +510,6 @@ function ProductForm({
     </div>
   );
 }
-
-// ─── Медиатека ────────────────────────────────────────────────────────────────
 
 function MediaLibrary({
   images,
@@ -631,7 +593,6 @@ function MediaLibrary({
 
       {uploadError && <p className="text-xs text-red-500 mb-4">{uploadError}</p>}
 
-      {/* Drag & drop zone */}
       <div
         onDragOver={e => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
@@ -693,8 +654,6 @@ function MediaLibrary({
   );
 }
 
-// ─── Главный компонент Admin ──────────────────────────────────────────────────
-
 export default function Admin() {
   const [view, setView] = useState<"list" | "create" | "edit" | "media">("list");
   const [editingProduct, setEditingProduct] = useState<any>(null);
@@ -708,12 +667,14 @@ export default function Admin() {
 
   const isSaving = createMut.isPending || updateMut.isPending;
 
-  useEffect(() => {
+  const refreshServerImages = () => {
     fetch("/api/uploads")
       .then(r => r.json())
       .then((urls: string[]) => setServerImages(urls))
       .catch(() => {});
-  }, []);
+  };
+
+  useEffect(() => { refreshServerImages(); }, []);
 
   const allMediaImages = serverImages.length > 0
     ? serverImages
@@ -724,23 +685,14 @@ export default function Admin() {
     setTimeout(() => setSavedMsg(""), 3000);
   };
 
-  const refreshServerImages = () => {
-    fetch("/api/uploads")
-      .then(r => r.json())
-      .then((urls: string[]) => setServerImages(urls))
-      .catch(() => {});
-  };
-
   const handleUploadImage = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
-
     const res = await fetch("/api/upload", { method: "POST", body: formData });
     if (!res.ok) {
       const text = await res.text().catch(() => "");
       throw new Error(`Upload failed (${res.status}): ${text}`);
     }
-
     const json = await res.json();
     refreshServerImages();
     return json.url;
@@ -792,7 +744,6 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-[#F9F9D7]">
-      {/* Header */}
       <header className="bg-[#F9F9D7] border-b border-[#E8E7E2] sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-3 md:px-6 h-14 md:h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-4 min-w-0">
@@ -819,7 +770,6 @@ export default function Admin() {
         </div>
       </header>
 
-      {/* Уведомление */}
       {savedMsg && (
         <div className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full text-sm font-medium shadow-lg transition-all ${savedMsg.startsWith("✓") ? "bg-[#1F1F1D] text-white" : "bg-red-500 text-white"}`}>
           {savedMsg}
@@ -827,8 +777,6 @@ export default function Admin() {
       )}
 
       <main className="max-w-6xl mx-auto px-3 md:px-6 py-6 md:py-8">
-
-        {/* Список товаров */}
         {view === "list" && (
           <div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-6">
@@ -883,7 +831,6 @@ export default function Admin() {
           </div>
         )}
 
-        {/* Создание */}
         {view === "create" && (
           <div>
             <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">Новый товар</h1>
@@ -898,7 +845,6 @@ export default function Admin() {
           </div>
         )}
 
-        {/* Редактирование */}
         {view === "edit" && editingProduct && (
           <div>
             <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">Редактирование: {editingProduct.name}</h1>
@@ -913,7 +859,6 @@ export default function Admin() {
           </div>
         )}
 
-        {/* Медиатека */}
         {view === "media" && (
           <MediaLibrary
             images={allMediaImages}
