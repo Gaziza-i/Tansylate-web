@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 300" width="560" height="300">
+  <!-- Outer eye almond — filled black -->
+  <path d="M 45 150
+    C 120 20, 440 20, 515 150
+    C 440 275, 120 275, 45 150 Z"
+    fill="#1A1A1A"/>
+
+  <!-- White sclera -->
+  <path d="M 105 150
+    C 165 72, 395 72, 460 150
+    C 395 228, 165 228, 105 150 Z"
+    fill="#FFFFFF"/>
+
+  <!-- Iris + pupil -->
+  <circle cx="268" cy="150" r="98" fill="#1A1A1A"/>
+
+  <!-- White swirl highlight (C-shape, upper-left of iris) -->
+  <path d="M 252 58
+    C 175 65, 155 120, 185 168
+    C 168 138, 172 85, 240 72
+    C 225 68, 238 59, 252 58 Z"
+    fill="#FFFFFF"/>
+
+  <!-- Swirl inner curve continuing -->
+  <path d="M 185 168
+    C 195 185, 210 192, 224 188
+    C 210 190, 196 180, 185 168 Z"
+    fill="#FFFFFF"/>
+
+  <!-- Left corner lower curl -->
+  <path d="M 45 150 C 22 168, 10 198, 32 222"
+    stroke="#1A1A1A" stroke-width="12" stroke-linecap="round" fill="none"/>
+
+  <!-- Right corner upper hook -->
+  <path d="M 515 150 C 538 132, 548 110, 532 92"
+    stroke="#1A1A1A" stroke-width="10" stroke-linecap="round" fill="none"/>
+</svg>
