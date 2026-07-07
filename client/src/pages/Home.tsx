@@ -131,9 +131,16 @@ function ProductModal({
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 md:p-6" onClick={onClose}>
       <div
-        className="bg-[#EEE8D2] rounded-2xl max-w-4xl w-full max-h-[94vh] overflow-hidden flex flex-col md:flex-row"
+        className="bg-[#EEE8D2] rounded-2xl max-w-4xl w-full max-h-[94vh] overflow-hidden flex flex-col md:flex-row relative"
         onClick={e => e.stopPropagation()}
       >
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 z-10 w-9 h-9 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow transition-all"
+          aria-label="Закрыть"
+        >
+          <X size={18} className="text-[#2B2521]" />
+        </button>
         <div className="relative bg-[#DDD5C0] md:w-[55%] flex-shrink-0 flex flex-col">
           <div className="relative w-full aspect-[3/4]">
             <img
@@ -170,13 +177,7 @@ function ProductModal({
         </div>
 
         <div className="flex-1 overflow-y-auto flex flex-col">
-          <div className="flex justify-end p-4 pb-0">
-            <button onClick={onClose} className="text-[#6B5C52] hover:text-[#2B2521] transition-colors">
-              <X size={22} />
-            </button>
-          </div>
-
-          <div className="px-6 md:px-8 pb-8 flex flex-col flex-1">
+          <div className="px-6 md:px-8 pt-6 pb-8 flex flex-col flex-1">
             <h2 className="text-xl md:text-2xl font-bold text-[#2B2521] leading-tight mb-1">
               {product.name}
             </h2>
@@ -191,7 +192,7 @@ function ProductModal({
             </p>
 
             {product.description && (
-              <p className="text-sm text-[#6B5C52] leading-relaxed mb-5">{product.description}</p>
+              <p className="text-[15px] text-[#2B2521] leading-relaxed mb-5">{product.description}</p>
             )}
 
             {availableSizes.length > 0 && (

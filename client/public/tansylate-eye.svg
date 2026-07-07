@@ -1,37 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 300" width="560" height="300">
-  <!-- Outer eye almond — filled black -->
-  <path d="M 45 150
-    C 120 20, 440 20, 515 150
-    C 440 275, 120 275, 45 150 Z"
-    fill="#1A1A1A"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 300" fill="none">
 
-  <!-- White sclera -->
-  <path d="M 105 150
-    C 165 72, 395 72, 460 150
-    C 395 228, 165 228, 105 150 Z"
-    fill="#FFFFFF"/>
+  <!-- Outer eye almond -->
+  <path fill="#1A1A1A" d="
+    M 55 150
+    C 130 10, 470 10, 525 150
+    C 470 285, 130 285, 55 150 Z"/>
 
-  <!-- Iris + pupil -->
-  <circle cx="268" cy="150" r="98" fill="#1A1A1A"/>
+  <!-- White sclera — upper lid much thicker, asymmetric -->
+  <path fill="#FFFFFF" d="
+    M 110 150
+    C 160 100, 390 88, 460 150
+    C 390 218, 160 212, 110 150 Z"/>
 
-  <!-- White swirl highlight (C-shape, upper-left of iris) -->
-  <path d="M 252 58
-    C 175 65, 155 120, 185 168
-    C 168 138, 172 85, 240 72
-    C 225 68, 238 59, 252 58 Z"
-    fill="#FFFFFF"/>
+  <!-- Black iris circle, slightly left of center -->
+  <circle cx="265" cy="148" r="90" fill="#1A1A1A"/>
 
-  <!-- Swirl inner curve continuing -->
-  <path d="M 185 168
-    C 195 185, 210 192, 224 188
-    C 210 190, 196 180, 185 168 Z"
-    fill="#FFFFFF"/>
+  <!-- White swirl — C-shape wrapping upper-right of iris, opening faces lower-left -->
+  <path fill="#FFFFFF" d="
+    M 325 70
+    C 345 85, 352 110, 348 138
+    C 344 162, 332 180, 312 188
+    C 290 196, 268 192, 252 180
+    C 268 195, 294 200, 318 192
+    C 344 183, 362 160, 364 134
+    C 366 104, 352 77, 325 70 Z"/>
 
-  <!-- Left corner lower curl -->
-  <path d="M 45 150 C 22 168, 10 198, 32 222"
-    stroke="#1A1A1A" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <!-- Inner pupil highlight gap — small dark comma -->
+  <path fill="#1A1A1A" d="
+    M 248 112
+    C 260 100, 285 102, 295 118
+    C 285 104, 262 102, 248 112 Z"/>
 
-  <!-- Right corner upper hook -->
-  <path d="M 515 150 C 538 132, 548 110, 532 92"
-    stroke="#1A1A1A" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <!-- Left hook — claw extending down-left from left corner -->
+  <path fill="#1A1A1A" d="
+    M 55 150
+    C 35 165, 18 192, 38 220
+    C 22 198, 28 168, 55 150 Z"/>
+
+  <!-- Right chevron — pointed arrow extending right -->
+  <path fill="#1A1A1A" d="
+    M 525 150
+    C 545 133, 558 112, 545 95
+    C 560 113, 558 140, 525 150 Z"/>
+
+  <!-- Small crescent detail below iris -->
+  <path stroke="#1A1A1A" stroke-width="6" stroke-linecap="round" fill="none"
+    d="M 310 225 C 335 218, 355 208, 365 195"/>
+
 </svg>
