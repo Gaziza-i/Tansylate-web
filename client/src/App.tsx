@@ -19,7 +19,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
     <div
       style={{
         position: "fixed", inset: 0,
-        background: "#FFFDF0",
+        background: "#f8f9d7",
         display: "flex", alignItems: "center", justifyContent: "center",
         zIndex: 9999,
         animation: "splash-hide 0.5s ease-in 2.7s forwards",
