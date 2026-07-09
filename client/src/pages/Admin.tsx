@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers } from "lucide-react";
+import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers, Video } from "lucide-react";
 
 interface Spec { label: string; value: string; }
 interface SizeTable { title: string; cols: string[]; rows: string[][]; }
@@ -865,9 +865,10 @@ export default function Admin() {
           <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
             <button
               onClick={() => setView(view === "bloggers" ? "list" : "bloggers")}
-              className={`text-xs uppercase tracking-wide transition-colors ${view === "bloggers" ? "text-[#1F1F1D] font-medium" : "text-[#5A6262] hover:text-black"}`}
+              className={`transition-colors ${view === "bloggers" ? "text-[#1F1F1D]" : "text-[#5A6262] hover:text-black"}`}
+              title="Блогеры"
             >
-              Блогеры
+              <Video size={16} />
             </button>
             <button
               onClick={() => setView(view === "media" ? "list" : "media")}
