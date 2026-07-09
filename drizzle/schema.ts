@@ -48,3 +48,12 @@ export const contacts = mysqlTable("contacts", {
 });
 export type Contact = typeof contacts.$inferSelect;
 export type InsertContact = typeof contacts.$inferInsert;
+
+export const bloggerVideos = mysqlTable("blogger_videos", {
+  id: int("id").autoincrement().primaryKey(),
+  videoUrl: varchar("videoUrl", { length: 1000 }).notNull(),
+  description: text("description"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type BloggerVideo = typeof bloggerVideos.$inferSelect;
+export type InsertBloggerVideo = typeof bloggerVideos.$inferInsert;

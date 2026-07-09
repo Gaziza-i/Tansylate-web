@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, contacts, InsertContact, InsertProduct, Product } from "../drizzle/schema";
+import { InsertUser, users, products, contacts, bloggerVideos, InsertContact, InsertProduct, Product } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -110,4 +110,24 @@ export async function createContact(contact: InsertContact) {
     const result = await db.insert(contacts as any).values(contact);
     return result;
   } catch (error) { console.error("[Database] Failed to create contact:", error); throw error; }
+}
+
+export async function getAllBloggerVideos() {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    return await db.select().from(bloggerVideos as any).orderBy((bloggerVideos as any).createdAt);
+  } catch { return []; }
+}
+
+export async function createBloggerVideo(videoUrl: string, description?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(bloggerVideos as any).values({ videoUrl, description: description ?? null });
+}
+
+export async function deleteBloggerVideo(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.delete(bloggerVideos as any).where(eq((bloggerVideos as any).id, id));
 }

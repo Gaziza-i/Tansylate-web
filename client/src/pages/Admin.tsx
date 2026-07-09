@@ -3,8 +3,25 @@ import { trpc } from "@/lib/trpc";
 import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers } from "lucide-react";
 
 interface Spec { label: string; value: string; }
-interface SizeRow { size: string; ru: string; col3: string; col3label: string; waist: string; }
-interface SizeTable { title: string; rows: SizeRow[]; }
+interface SizeTable { title: string; cols: string[]; rows: string[][]; }
+
+function normalizeSizeTable(raw: any): SizeTable {
+  if (raw.cols && Array.isArray(raw.rows?.[0])) return raw as SizeTable;
+  const col3label = raw.rows?.[0]?.col3label ?? "Обхват груди (см)";
+  const extraCols: string[] = [];
+  if (raw.rows?.some((r: any) => r.hips)) extraCols.push("Обхват бёдер (см)");
+  if (raw.rows?.some((r: any) => r.height)) extraCols.push("Рост (см)");
+  return {
+    title: raw.title ?? "Таблица",
+    cols: ["Размер", "RU", col3label, "Обхват талии (см)", ...extraCols],
+    rows: (raw.rows ?? []).map((r: any) => {
+      const base = [r.size ?? "", r.ru ?? "", r.col3 ?? "", r.waist ?? ""];
+      if (extraCols.includes("Обхват бёдер (см)")) base.push(r.hips ?? "");
+      if (extraCols.includes("Рост (см)")) base.push(r.height ?? "");
+      return base;
+    }),
+  };
+}
 interface CareItem { icon: string; text: string; }
 
 const CARE_ICONS: { value: string; label: string; svg: string }[] = [
@@ -48,18 +65,14 @@ const emptyForm = () => ({
   ] as Spec[],
   sizeTables: [
     {
-      title: "Размерная сетка: Кофта",
-      rows: [
-        { size: "XS-S", ru: "42", col3: "84 см", col3label: "Обхват груди", waist: "66 см" },
-        { size: "S-M",  ru: "44", col3: "88 см", col3label: "Обхват груди", waist: "70 см" },
-      ] as SizeRow[],
+      title: "Худи",
+      cols: ["Размер", "RU", "Обхват груди (см)", "Обхват талии (см)"],
+      rows: [["XS-S", "42", "84", "66"], ["S-M", "44", "88", "70"]],
     },
     {
-      title: "Размерная сетка: Штаны",
-      rows: [
-        { size: "XS-S", ru: "42", col3: "90 см", col3label: "Обхват бёдер", waist: "66 см" },
-        { size: "S-M",  ru: "44", col3: "94 см", col3label: "Обхват бёдер", waist: "70 см" },
-      ] as SizeRow[],
+      title: "Брюки",
+      cols: ["Размер", "RU", "Обхват бёдер (см)", "Обхват талии (см)"],
+      rows: [["XS-S", "42", "90", "66"], ["S-M", "44", "94", "70"]],
     },
   ] as SizeTable[],
   careInstructions: [
@@ -382,49 +395,72 @@ function ProductForm({
                 value={table.title}
                 onChange={e => { const arr = [...form.sizeTables]; arr[ti] = { ...arr[ti], title: e.target.value }; set("sizeTables", arr); }}
                 className="flex-1 px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm font-medium focus:outline-none focus:border-[#5A6262]"
-                placeholder="Название таблицы"
+                placeholder="Название (например: Худи)"
               />
               <button type="button" onClick={() => set("sizeTables", form.sizeTables.filter((_, j) => j !== ti))} className="text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+            </div>
+            <div className="mb-2">
+              <p className="text-[10px] text-[#5A6262] mb-1.5 uppercase tracking-wide">Колонки</p>
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {table.cols.map((col, ci) => (
+                  <div key={ci} className="flex items-center gap-1 bg-[#F9F9F7] border border-[#E8E7E2] rounded-lg px-2 py-1">
+                    <input
+                      type="text"
+                      value={col}
+                      onChange={e => {
+                        const arr = [...form.sizeTables];
+                        const cols = [...arr[ti].cols]; cols[ci] = e.target.value;
+                        arr[ti] = { ...arr[ti], cols };
+                        set("sizeTables", arr);
+                      }}
+                      className="text-xs font-medium text-[#1F1F1D] bg-transparent focus:outline-none w-28"
+                      placeholder="Название"
+                    />
+                    {table.cols.length > 1 && (
+                      <button type="button" onClick={() => {
+                        const arr = [...form.sizeTables];
+                        const cols = arr[ti].cols.filter((_, j) => j !== ci);
+                        const rows = arr[ti].rows.map(r => r.filter((_, j) => j !== ci));
+                        arr[ti] = { ...arr[ti], cols, rows };
+                        set("sizeTables", arr);
+                      }} className="text-red-400 hover:text-red-600 flex-shrink-0"><X size={10} /></button>
+                    )}
+                  </div>
+                ))}
+                <button type="button" onClick={() => {
+                  const arr = [...form.sizeTables];
+                  arr[ti] = { ...arr[ti], cols: [...arr[ti].cols, ""], rows: arr[ti].rows.map(r => [...r, ""]) };
+                  set("sizeTables", arr);
+                }} className="flex items-center gap-1 text-xs text-[#5A6262] hover:text-black border border-dashed border-[#E8E7E2] rounded-lg px-2 py-1 hover:border-[#5A6262] transition-colors">
+                  <Plus size={10} /> Колонка
+                </button>
+              </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs border-collapse mb-2">
                 <thead>
                   <tr className="bg-[#F9F9F7]">
-                    <th className="border border-[#E8E7E2] px-2 py-1 text-left font-medium text-[#5A6262]">Размер</th>
-                    <th className="border border-[#E8E7E2] px-2 py-1 text-left font-medium text-[#5A6262]">RU</th>
-                    <th className="border border-[#E8E7E2] px-2 py-1 text-left font-medium text-[#5A6262]">
-                      <input
-                        type="text"
-                        value={table.rows[0]?.col3label ?? ""}
-                        onChange={e => {
-                          const arr = [...form.sizeTables];
-                          arr[ti] = { ...arr[ti], rows: arr[ti].rows.map(r => ({ ...r, col3label: e.target.value })) };
-                          set("sizeTables", arr);
-                        }}
-                        placeholder="Обхват груди"
-                        className="w-full bg-transparent focus:outline-none"
-                      />
-                    </th>
-                    <th className="border border-[#E8E7E2] px-2 py-1 text-left font-medium text-[#5A6262]">Обхват талии</th>
-                    <th className="border border-[#E8E7E2] px-1 py-1"></th>
+                    {table.cols.map((col, ci) => (
+                      <th key={ci} className="border border-[#E8E7E2] px-2 py-1 text-left font-medium text-[#5A6262] whitespace-nowrap">{col || `Кол. ${ci+1}`}</th>
+                    ))}
+                    <th className="border border-[#E8E7E2] px-1 py-1 w-6"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {table.rows.map((row, ri) => (
                     <tr key={ri}>
-                      {(["size","ru","col3","waist"] as const).map(field => (
-                        <td key={field} className="border border-[#E8E7E2] px-1 py-1">
+                      {table.cols.map((_, ci) => (
+                        <td key={ci} className="border border-[#E8E7E2] px-1 py-1">
                           <input
                             type="text"
-                            value={row[field]}
+                            value={row[ci] ?? ""}
                             onChange={e => {
                               const arr = [...form.sizeTables];
-                              const rows = [...arr[ti].rows];
-                              rows[ri] = { ...rows[ri], [field]: e.target.value };
+                              const rows = arr[ti].rows.map((r, j) => j === ri ? r.map((c, k) => k === ci ? e.target.value : c) : r);
                               arr[ti] = { ...arr[ti], rows };
                               set("sizeTables", arr);
                             }}
-                            className="w-full px-1 py-0.5 bg-transparent focus:outline-none focus:bg-[#F9F9F7] rounded text-xs"
+                            className="w-full px-1 py-0.5 bg-transparent focus:outline-none focus:bg-[#F9F9F7] rounded text-xs min-w-[40px]"
                           />
                         </td>
                       ))}
@@ -442,14 +478,18 @@ function ProductForm({
             </div>
             <button type="button" onClick={() => {
               const arr = [...form.sizeTables];
-              arr[ti] = { ...arr[ti], rows: [...arr[ti].rows, { size: "", ru: "", col3: "", col3label: arr[ti].rows[0]?.col3label ?? "", waist: "" }] };
+              arr[ti] = { ...arr[ti], rows: [...arr[ti].rows, table.cols.map(() => "")] };
               set("sizeTables", arr);
             }} className="flex items-center gap-1 text-xs text-[#5A6262] hover:text-black mt-1">
               <Plus size={12} /> Добавить строку
             </button>
           </div>
         ))}
-        <button type="button" onClick={() => set("sizeTables", [...form.sizeTables, { title: "Новая таблица", rows: [{ size: "", ru: "", col3: "", col3label: "Обхват груди", waist: "" }] }])} className="flex items-center gap-2 text-sm text-[#5A6262] hover:text-black transition-colors">
+        <button type="button" onClick={() => set("sizeTables", [...form.sizeTables, {
+          title: "Новая таблица",
+          cols: ["Размер", "RU", "Обхват груди (см)", "Обхват талии (см)"],
+          rows: [["", "", "", ""]],
+        }])} className="flex items-center gap-2 text-sm text-[#5A6262] hover:text-black transition-colors">
           <Plus size={14} /> Добавить таблицу размеров
         </button>
       </Section>
@@ -654,8 +694,75 @@ function MediaLibrary({
   );
 }
 
+function BloggersView() {
+  const { data: videos = [], refetch } = trpc.bloggers.getAll.useQuery();
+  const addMut = trpc.bloggers.add.useMutation();
+  const deleteMut = trpc.bloggers.delete.useMutation();
+  const [url, setUrl] = useState("");
+  const [desc, setDesc] = useState("");
+  const [msg, setMsg] = useState("");
+
+  const notify = (m: string) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
+
+  const handleAdd = async () => {
+    if (!url.trim()) return;
+    await addMut.mutateAsync({ url: url.trim(), description: desc.trim() || undefined });
+    setUrl(""); setDesc("");
+    await refetch();
+    notify("✓ Видео добавлено");
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("Удалить?")) return;
+    await deleteMut.mutateAsync({ id });
+    await refetch();
+  };
+
+  return (
+    <div>
+      <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">Нас носят блогеры</h1>
+      {msg && <div className="mb-4 px-4 py-2 bg-[#1F1F1D] text-white text-sm rounded-full inline-block">{msg}</div>}
+      <div className="bg-white border border-[#E8E7E2] rounded-xl p-5 mb-6">
+        <p className="text-xs text-[#5A6262] mb-3 uppercase tracking-wide">Добавить видео</p>
+        <div className="space-y-3">
+          <input
+            type="text" value={url} onChange={e => setUrl(e.target.value)}
+            placeholder="Ссылка на видео (YouTube, TikTok, Instagram...)"
+            className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
+          />
+          <input
+            type="text" value={desc} onChange={e => setDesc(e.target.value)}
+            placeholder="Подпись (необязательно)"
+            className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
+          />
+          <button onClick={handleAdd} disabled={!url.trim() || addMut.isPending}
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50"
+          >
+            <Plus size={14} /> Добавить
+          </button>
+        </div>
+      </div>
+      {(videos as any[]).length === 0 ? (
+        <div className="text-center py-12 text-[#5A6262] text-sm">Видео пока нет</div>
+      ) : (
+        <div className="space-y-3">
+          {(videos as any[]).map((v: any) => (
+            <div key={v.id} className="bg-white border border-[#E8E7E2] rounded-xl p-4 flex items-start gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-[#1F1F1D] break-all">{v.videoUrl}</p>
+                {v.description && <p className="text-xs text-[#5A6262] mt-1">{v.description}</p>}
+              </div>
+              <button onClick={() => handleDelete(v.id)} className="text-red-400 hover:text-red-600 flex-shrink-0"><Trash2 size={16} /></button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Admin() {
-  const [view, setView] = useState<"list" | "create" | "edit" | "media">("list");
+  const [view, setView] = useState<"list" | "create" | "edit" | "media" | "bloggers">("list");
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [savedMsg, setSavedMsg] = useState("");
 
@@ -736,7 +843,7 @@ export default function Admin() {
     images: parseJSON<string[]>(p.images, []),
     features: parseJSON<string[]>(p.features, []),
     specs: parseJSON<Spec[]>(p.specs, []),
-    sizeTables: parseJSON<SizeTable[]>(p.sizeTables, []),
+    sizeTables: parseJSON<any[]>(p.sizeTables, []).map(normalizeSizeTable),
     careInstructions: parseJSON<CareItem[]>(p.careInstructions, []),
     careNote: p.careNote ?? "",
     isVisible: p.isVisible ?? 1,
@@ -756,6 +863,13 @@ export default function Admin() {
             <span className="text-xs text-[#5A6262] uppercase tracking-widest hidden sm:inline">Админ</span>
           </div>
           <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
+            <button
+              onClick={() => setView(view === "bloggers" ? "list" : "bloggers")}
+              className={`text-xs uppercase tracking-wide transition-colors ${view === "bloggers" ? "text-[#1F1F1D] font-medium" : "text-[#5A6262] hover:text-black"}`}
+            >
+              <span className="hidden sm:inline">Блогеры</span>
+              <span className="sm:hidden">📹</span>
+            </button>
             <button
               onClick={() => setView(view === "media" ? "list" : "media")}
               className={`flex items-center gap-1.5 text-xs uppercase tracking-wide transition-colors ${view === "media" ? "text-[#1F1F1D] font-medium" : "text-[#5A6262] hover:text-black"}`}
@@ -865,6 +979,8 @@ export default function Admin() {
             onUpload={handleUploadImage}
           />
         )}
+
+        {view === "bloggers" && <BloggersView />}
       </main>
     </div>
   );

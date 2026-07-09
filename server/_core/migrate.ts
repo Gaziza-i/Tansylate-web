@@ -17,6 +17,18 @@ export async function runStartupMigrations() {
       await conn.query("ALTER TABLE `products` ADD `sku` varchar(100)");
       console.log("[migrate] Added column: products.sku");
     }
+
+    // Create blogger_videos table if missing
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS \`blogger_videos\` (
+        \`id\` int NOT NULL AUTO_INCREMENT,
+        \`videoUrl\` varchar(1000) NOT NULL,
+        \`description\` text,
+        \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (\`id\`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    `);
+    console.log("[migrate] Ensured table: blogger_videos");
   } catch (err) {
     console.warn("[migrate] Startup migration warning:", err);
   } finally {

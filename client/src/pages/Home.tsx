@@ -16,17 +16,38 @@ const FALLBACK_IMAGES = [
   "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/WMXUqCBpOZdkohTw.jpeg",
 ];
 
-const NAV_LINKS = [
-  { label: "Каталог", id: "catalog" },
+const NAV_LEFT = [
+  { label: "Каталог", href: "/catalog" },
   { label: "О бренде", id: "about" },
+  { label: "Образы", id: "looks" },
+];
+const NAV_RIGHT = [
   { label: "Оплата и доставка", id: "delivery" },
   { label: "Контакты", id: "contacts" },
 ];
+const ALL_NAV = [...NAV_LEFT, ...NAV_RIGHT];
 
 const navLink = "text-sm text-[#6B5C52] hover:text-[#2B2521] transition-colors whitespace-nowrap";
 
-type SizeRow = { size: string; ru: string; col3: string; col3label: string; waist: string; hips?: string; height?: string };
-type SizeTable = { title: string; rows: SizeRow[] };
+type SizeTable = { title: string; cols?: string[]; rows: any[] };
+
+function normalizeSizeTable(raw: any): { title: string; cols: string[]; rows: string[][] } {
+  if (raw.cols && Array.isArray(raw.rows?.[0])) return raw;
+  const col3label = raw.rows?.[0]?.col3label ?? "Обхват груди";
+  const extraCols: string[] = [];
+  if (raw.rows?.some((r: any) => r.hips)) extraCols.push("Обхват бёдер (см)");
+  if (raw.rows?.some((r: any) => r.height)) extraCols.push("Рост (см)");
+  return {
+    title: raw.title ?? "Размерная сетка",
+    cols: ["Размер", "RU", col3label, "Обхват талии (см)", ...extraCols],
+    rows: (raw.rows ?? []).map((r: any) => {
+      const base = [r.size ?? "", r.ru ?? "", r.col3 ?? "", r.waist ?? ""];
+      if (extraCols.includes("Обхват бёдер (см)")) base.push(r.hips ?? "—");
+      if (extraCols.includes("Рост (см)")) base.push(r.height ?? "—");
+      return base;
+    }),
+  };
+}
 type Spec = { label: string; value: string };
 type CareItem = { icon: string; text: string };
 type CartItem = { id: number; name: string; price: number; image: string; qty: number; size?: string };
@@ -239,34 +260,26 @@ function ProductModal({
             </div>
 
             <div>
-              {sizeTables.map((table, ti) => {
-                const showHips = table.rows.some(r => r.hips);
-                const showHeight = table.rows.some(r => r.height);
-                const col3label = table.rows[0]?.col3label ?? "Обхват груди";
+              {sizeTables.map((raw, ti) => {
+                const table = normalizeSizeTable(raw);
                 return (
-                  <AccordionSection key={ti} title="Размерная сетка">
+                  <AccordionSection key={ti} title={table.title || "Размерная сетка"}>
                     <div className="rounded-lg overflow-hidden border border-[#DDD5C0] mb-1">
                       <div className="overflow-x-auto no-scrollbar">
                         <table className="w-full text-sm border-collapse min-w-[320px]">
                           <thead>
                             <tr className="bg-[#1A1A1A] text-white">
-                              <th className="text-left py-3 px-4 font-medium text-sm whitespace-nowrap">Размер</th>
-                              <th className="py-3 px-3 font-medium text-sm text-center">Российский размер</th>
-                              <th className="py-3 px-3 font-medium text-sm text-center">{col3label} (см)</th>
-                              <th className="py-3 px-3 font-medium text-sm text-center">Обхват талии (см)</th>
-                              {showHips && <th className="py-3 px-3 font-medium text-sm text-center">Обхват бёдер (см)</th>}
-                              {showHeight && <th className="py-3 px-3 font-medium text-sm text-center">Рост (см)</th>}
+                              {table.cols.map((col, ci) => (
+                                <th key={ci} className={`py-3 px-3 font-medium text-sm whitespace-nowrap ${ci === 0 ? "text-left px-4" : "text-center"}`}>{col}</th>
+                              ))}
                             </tr>
                           </thead>
                           <tbody>
                             {table.rows.map((row, ri) => (
-                              <tr key={row.size} className={`${ri < table.rows.length - 1 ? "border-b border-[#DDD5C0]" : ""} bg-white`}>
-                                <td className="py-3 px-4 font-semibold text-[#2B2521] whitespace-nowrap">{row.size}</td>
-                                <td className="py-3 px-3 text-center text-[#6B5C52]">{row.ru}</td>
-                                <td className="py-3 px-3 text-center text-[#6B5C52]">{row.col3}</td>
-                                <td className="py-3 px-3 text-center text-[#6B5C52]">{row.waist}</td>
-                                {showHips && <td className="py-3 px-3 text-center text-[#6B5C52]">{row.hips ?? "—"}</td>}
-                                {showHeight && <td className="py-3 px-3 text-center text-[#6B5C52]">{row.height ?? "—"}</td>}
+                              <tr key={ri} className={`${ri < table.rows.length - 1 ? "border-b border-[#DDD5C0]" : ""} bg-white`}>
+                                {row.map((cell: string, ci: number) => (
+                                  <td key={ci} className={`py-3 px-3 ${ci === 0 ? "font-semibold text-[#2B2521] text-left px-4 whitespace-nowrap" : "text-center text-[#6B5C52]"}`}>{cell}</td>
+                                ))}
                               </tr>
                             ))}
                           </tbody>
@@ -322,6 +335,56 @@ function ProductModal({
         </div>
       </div>
     </div>
+  );
+}
+
+function getYoutubeId(url: string): string | null {
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function BloggersSection() {
+  const { data: videos = [] } = trpc.bloggers.getAll.useQuery();
+  if ((videos as any[]).length === 0) return null;
+  return (
+    <section className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-10 text-center">Нас носят блогеры</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {(videos as any[]).map((v: any) => {
+            const ytId = getYoutubeId(v.videoUrl);
+            return (
+              <div key={v.id} className="bg-[#f8f9d7] rounded-2xl overflow-hidden">
+                {ytId ? (
+                  <div className="aspect-video">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${ytId}`}
+                      className="w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : (
+                  <a href={v.videoUrl} target="_blank" rel="noopener noreferrer"
+                    className="aspect-video flex items-center justify-center bg-[#DDD5C0] text-[#6B5C52] hover:text-[#2B2521] transition-colors block"
+                  >
+                    <div className="text-center p-6">
+                      <div className="w-14 h-14 rounded-full border-2 border-[#A0755A] flex items-center justify-center mx-auto mb-3">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#A0755A"><polygon points="5,3 19,12 5,21"/></svg>
+                      </div>
+                      <p className="text-xs uppercase tracking-widest">Смотреть видео</p>
+                    </div>
+                  </a>
+                )}
+                {v.description && (
+                  <p className="px-4 py-3 text-sm text-[#6B5C52]">{v.description}</p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -416,18 +479,24 @@ export default function Home() {
     </div>
   );
 
+  const navClick = (item: { href?: string; id?: string }) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (item.href) { setMobileMenuOpen(false); setLocation(item.href); }
+    else if (item.id) scrollToSection(item.id);
+  };
+
   const Header = () => (
     <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 lg:px-6">
       <div className="w-full max-w-7xl bg-white rounded-2xl shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
         <div className="hidden lg:flex items-center justify-between px-8 h-[68px]">
-          {NAV_LINKS.slice(0, 2).map(({ label, id }) => (
-            <a key={id} href={`#${id}`} onClick={e => { e.preventDefault(); scrollToSection(id); }} className={navLink}>{label}</a>
+          {NAV_LEFT.map(item => (
+            <a key={item.label} href={item.href ?? `#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
           ))}
           <a href="/" onClick={e => { e.preventDefault(); setLocation("/"); }} className="hover:opacity-60 transition-opacity cursor-pointer">
-            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-7" />
+            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-8" />
           </a>
-          {NAV_LINKS.slice(2).map(({ label, id }) => (
-            <a key={id} href={`#${id}`} onClick={e => { e.preventDefault(); scrollToSection(id); }} className={navLink}>{label}</a>
+          {NAV_RIGHT.map(item => (
+            <a key={item.label} href={item.href ?? `#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
           ))}
           <div className="flex items-center gap-2">
             <button onClick={() => setWishlistOpen(true)} className="w-9 h-9 rounded-full border border-[#DDD5C0] flex items-center justify-center gap-1 hover:border-[#A0755A] transition-colors text-[#6B5C52]" aria-label="Избранное">
@@ -449,7 +518,7 @@ export default function Home() {
             {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
           <a href="/" onClick={e => { e.preventDefault(); setLocation("/"); }} className="hover:opacity-60 transition-opacity cursor-pointer flex justify-center">
-            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-6" />
+            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-7" />
           </a>
           <div className="flex items-center gap-2">
             <button onClick={() => setWishlistOpen(true)} className="w-9 h-9 rounded-full border border-[#DDD5C0] flex items-center justify-center gap-1 hover:border-[#A0755A] transition-colors text-[#6B5C52]" aria-label="Избранное">
@@ -465,11 +534,11 @@ export default function Home() {
 
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white border-t border-[#f0f0f0] py-4 px-6 rounded-b-2xl">
-            {NAV_LINKS.map(({ label, id }, i) => (
-              <a key={id} href={`#${id}`}
-                className={`block py-3 text-sm text-[#6B5C52] hover:text-[#2B2521] transition-colors${i < NAV_LINKS.length - 1 ? " border-b border-[#f0f0f0]" : ""}`}
-                onClick={e => { e.preventDefault(); scrollToSection(id); }}
-              >{label}</a>
+            {ALL_NAV.map((item, i) => (
+              <a key={item.label} href={item.href ?? `#${item.id}`}
+                className={`block py-3 text-sm text-[#6B5C52] hover:text-[#2B2521] transition-colors${i < ALL_NAV.length - 1 ? " border-b border-[#f0f0f0]" : ""}`}
+                onClick={navClick(item)}
+              >{item.label}</a>
             ))}
           </div>
         )}
@@ -623,8 +692,9 @@ export default function Home() {
       <footer id="contacts" className="bg-[#EEE8D2] border-t border-[#D5D0C8]">
         <div className="hidden md:grid grid-cols-2 py-20">
           <div className="flex flex-col justify-center px-16 gap-7 border-r border-[#D5D0C8]">
-            <a href="#catalog" onClick={e => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
+            <a href="/catalog" onClick={e => { e.preventDefault(); setLocation("/catalog"); }} className={lnk}>Каталог</a>
             <a href="#about" onClick={e => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
+            <a href="#looks" onClick={e => { e.preventDefault(); scrollToSection("looks"); }} className={lnk}>Образы</a>
             <a href="#delivery" onClick={e => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Оплата и доставка</a>
             <a href="/privacy" onClick={e => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Политика конфиденциальности</a>
           </div>
@@ -637,8 +707,9 @@ export default function Home() {
 
         <div className="md:hidden flex gap-6 px-8 pb-12">
           <div className="flex flex-col gap-5 flex-1">
-            <a href="#catalog" onClick={e => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
+            <a href="/catalog" onClick={e => { e.preventDefault(); setLocation("/catalog"); }} className={lnk}>Каталог</a>
             <a href="#about" onClick={e => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
+            <a href="#looks" onClick={e => { e.preventDefault(); scrollToSection("looks"); }} className={lnk}>Образы</a>
             <a href="#delivery" onClick={e => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Доставка</a>
             <a href="/privacy" onClick={e => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Политика</a>
           </div>
@@ -734,7 +805,7 @@ export default function Home() {
 
   if (location === "/" || location === "/home") {
     return (
-      <div className="min-h-screen bg-[#f8f8d6]">
+      <div className="min-h-screen bg-[#f8f9d7]">
         <Header />
         <main className="pt-24 lg:pt-28">
           <section className="py-16 text-center px-4">
@@ -744,24 +815,11 @@ export default function Home() {
               Одежда, в которой ты разный
             </p>
             <button
-              onClick={() => scrollToSection("catalog")}
+              onClick={() => setLocation("/catalog")}
               className="px-8 py-3 bg-[#1A1A1A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors font-medium"
             >
               Каталог
             </button>
-          </section>
-
-          <section id="catalog" className="py-16 px-4 md:px-6">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-10 text-center">Каталог</h2>
-              {filteredProducts.length === 0 ? (
-                <p className="text-center text-[#6B5C52]">Товары не найдены</p>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                  {filteredProducts.map((p: any) => <ProductCard key={p.id} p={p} />)}
-                </div>
-              )}
-            </div>
           </section>
 
           <section id="about" className="bg-[#EEE8D2] overflow-hidden">
@@ -784,7 +842,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="trust" className="py-20 px-4 md:px-6 bg-[#f8f8d6]">
+          <section id="trust" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-12 text-center">Почему нам верят</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -818,6 +876,15 @@ export default function Home() {
               </div>
             </div>
           </section>
+
+          <section id="looks" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
+            <div className="max-w-7xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-4">Образы</h2>
+              <p className="text-[#6B5C52] mb-12">Скоро здесь появятся образы с нашими изделиями</p>
+            </div>
+          </section>
+
+          <BloggersSection />
 
           <section id="delivery" className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
             <div className="max-w-5xl mx-auto">
@@ -853,7 +920,7 @@ export default function Home() {
 
   if (location === "/catalog") {
     return (
-      <div className="min-h-screen bg-[#f8f8d6]">
+      <div className="min-h-screen bg-[#f8f9d7]">
         <Header />
         <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 lg:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Каталог" }]} />
@@ -889,7 +956,7 @@ export default function Home() {
 
   if (location === "/privacy") {
     return (
-      <div className="min-h-screen bg-[#f8f8d6]">
+      <div className="min-h-screen bg-[#f8f9d7]">
         <Header />
         <main className="max-w-4xl mx-auto px-4 md:px-6 pt-28 lg:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Политика конфиденциальности" }]} />
@@ -906,7 +973,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f8d6]">
+    <div className="min-h-screen bg-[#f8f9d7]">
       <Header />
       <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 lg:pt-32 pb-20 text-center">
         <p className="text-[#6B5C52]">Страница не найдена</p>

@@ -4,7 +4,8 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import {
   getAllProducts, getAllProductsAdmin, getProductById,
-  createProduct, updateProduct, deleteProduct, createContact
+  createProduct, updateProduct, deleteProduct, createContact,
+  getAllBloggerVideos, createBloggerVideo, deleteBloggerVideo,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
 
@@ -90,6 +91,16 @@ export const appRouter = router({
           throw error;
         }
       }),
+  }),
+
+  bloggers: router({
+    getAll: publicProcedure.query(async () => getAllBloggerVideos()),
+    add: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input }) => createBloggerVideo(input.url, input.description)),
+    delete: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input }) => deleteBloggerVideo(input.id)),
   }),
 });
 
