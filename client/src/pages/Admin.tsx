@@ -859,7 +859,7 @@ export default function Admin() {
                 ←
               </button>
             )}
-            <span className="text-lg md:text-xl text-[#1F1F1D] truncate" style={{ fontFamily: "'Montserrat', Arial, sans-serif", fontWeight: 700, letterSpacing: "-0.01em" }}>TANSYLATE</span>
+            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-6 md:h-7" />
             <span className="text-xs text-[#5A6262] uppercase tracking-widest hidden sm:inline">Админ</span>
           </div>
           <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
@@ -867,8 +867,7 @@ export default function Admin() {
               onClick={() => setView(view === "bloggers" ? "list" : "bloggers")}
               className={`text-xs uppercase tracking-wide transition-colors ${view === "bloggers" ? "text-[#1F1F1D] font-medium" : "text-[#5A6262] hover:text-black"}`}
             >
-              <span className="hidden sm:inline">Блогеры</span>
-              <span className="sm:hidden">📹</span>
+              Блогеры
             </button>
             <button
               onClick={() => setView(view === "media" ? "list" : "media")}
