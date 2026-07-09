@@ -877,14 +877,14 @@ export default function Home() {
             </div>
           </section>
 
+          <BloggersSection />
+
           <section id="looks" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
             <div className="max-w-7xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-4">Образы</h2>
               <p className="text-[#6B5C52] mb-12">Скоро здесь появятся образы с нашими изделиями</p>
             </div>
           </section>
-
-          <BloggersSection />
 
           <section id="delivery" className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
             <div className="max-w-5xl mx-auto">
