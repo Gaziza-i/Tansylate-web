@@ -338,6 +338,38 @@ function ProductModal({
   );
 }
 
+const DEFAULT_ABOUT = {
+  title: "О бренде",
+  paragraphs: [
+    "Меня зовут Тансылу, мне 16 лет. Моя цель — создавать по-настоящему долговечную одежду.",
+    "Все ключевые этапы контролирую лично: от разработки удобных эскизов и работы с дизайнерами до проверки швейного цеха и финальной упаковки.",
+    "Это не просто бизнес, а ответственность за внешний вид и качество готового изделия. В процесс вкладывается максимум сил, чтобы гарантировать высокое качество исполнения и внимание к каждому шву.",
+  ],
+  photo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg",
+};
+
+function AboutSection() {
+  const { data } = trpc.settings.getAbout.useQuery();
+  const about = data ?? DEFAULT_ABOUT;
+  return (
+    <section id="about" className="bg-[#EEE8D2] overflow-hidden">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2">
+        <div className="py-20 px-8 md:px-16 flex flex-col justify-center">
+          <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-6">{about.title}</h2>
+          {about.paragraphs.map((p: string, i: number) => (
+            <p key={i} className={`text-[#6B5C52] leading-relaxed ${i < about.paragraphs.length - 1 ? "mb-4" : ""}`}>{p}</p>
+          ))}
+        </div>
+        {about.photo && (
+          <div className="aspect-[3/4] md:h-auto md:aspect-auto overflow-hidden">
+            <img src={about.photo} alt={about.title} className="w-full h-full object-cover object-top" />
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 function getYoutubeId(url: string): string | null {
   const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
   return m ? m[1] : null;
@@ -822,25 +854,7 @@ export default function Home() {
             </button>
           </section>
 
-          <section id="about" className="bg-[#EEE8D2] overflow-hidden">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2">
-              <div className="py-20 px-8 md:px-16 flex flex-col justify-center">
-                <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-6">О бренде</h2>
-                <p className="text-[#6B5C52] mb-4 leading-relaxed">
-                  Меня зовут Тансылу, мне 16 лет. Моя цель — создавать по-настоящему долговечную одежду.
-                </p>
-                <p className="text-[#6B5C52] mb-4 leading-relaxed">
-                  Все ключевые этапы контролирую лично: от разработки удобных эскизов и работы с дизайнерами до проверки швейного цеха и финальной упаковки.
-                </p>
-                <p className="text-[#6B5C52] leading-relaxed">
-                  Это не просто бизнес, а ответственность за внешний вид и качество готового изделия. В процесс вкладывается максимум сил, чтобы гарантировать высокое качество исполнения и внимание к каждому шву.
-                </p>
-              </div>
-              <div className="aspect-[3/4] md:h-auto md:aspect-auto overflow-hidden">
-                <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg" alt="Тансылу" className="w-full h-full object-cover object-top" />
-              </div>
-            </div>
-          </section>
+          <AboutSection />
 
           <section id="trust" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
             <div className="max-w-7xl mx-auto">

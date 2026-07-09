@@ -18,6 +18,18 @@ export async function runStartupMigrations() {
       console.log("[migrate] Added column: products.sku");
     }
 
+    // Create site_settings table if missing
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS \`site_settings\` (
+        \`id\` int NOT NULL AUTO_INCREMENT,
+        \`key\` varchar(100) NOT NULL,
+        \`value\` text,
+        \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (\`id\`),
+        UNIQUE KEY \`key\` (\`key\`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    `);
+
     // Create blogger_videos table if missing
     await conn.query(`
       CREATE TABLE IF NOT EXISTS \`blogger_videos\` (

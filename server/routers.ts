@@ -6,6 +6,7 @@ import {
   getAllProducts, getAllProductsAdmin, getProductById,
   createProduct, updateProduct, deleteProduct, createContact,
   getAllBloggerVideos, createBloggerVideo, deleteBloggerVideo,
+  getSetting, setSetting,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
 
@@ -90,6 +91,19 @@ export const appRouter = router({
           console.error("Failed to submit contact:", error);
           throw error;
         }
+      }),
+  }),
+
+  settings: router({
+    getAbout: publicProcedure.query(async () => {
+      const raw = await getSetting("about_section");
+      return raw ? JSON.parse(raw) : null;
+    }),
+    setAbout: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input }) => {
+        await setSetting("about_section", JSON.stringify(input));
+        return { success: true };
       }),
   }),
 

@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, contacts, bloggerVideos, InsertContact, InsertProduct, Product } from "../drizzle/schema";
+import { InsertUser, users, products, contacts, bloggerVideos, siteSettings, InsertContact, InsertProduct, Product } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -110,6 +110,22 @@ export async function createContact(contact: InsertContact) {
     const result = await db.insert(contacts as any).values(contact);
     return result;
   } catch (error) { console.error("[Database] Failed to create contact:", error); throw error; }
+}
+
+export async function getSetting(key: string): Promise<string | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const rows = await db.select().from(siteSettings as any).where(eq((siteSettings as any).key, key)).limit(1);
+    return rows[0]?.value ?? null;
+  } catch { return null; }
+}
+
+export async function setSetting(key: string, value: string): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(siteSettings as any).values({ key, value })
+    .onDuplicateKeyUpdate({ set: { value } });
 }
 
 export async function getAllBloggerVideos() {

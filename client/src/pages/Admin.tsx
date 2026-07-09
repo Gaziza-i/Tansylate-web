@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers, Video } from "lucide-react";
+import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers, Video, FileText } from "lucide-react";
 
 interface Spec { label: string; value: string; }
 interface SizeTable { title: string; cols: string[]; rows: string[][]; }
@@ -694,6 +694,116 @@ function MediaLibrary({
   );
 }
 
+const DEFAULT_ABOUT = {
+  title: "О бренде",
+  paragraphs: [
+    "Меня зовут Тансылу, мне 16 лет. Моя цель — создавать по-настоящему долговечную одежду.",
+    "Все ключевые этапы контролирую лично: от разработки удобных эскизов и работы с дизайнерами до проверки швейного цеха и финальной упаковки.",
+    "Это не просто бизнес, а ответственность за внешний вид и качество готового изделия. В процесс вкладывается максимум сил, чтобы гарантировать высокое качество исполнения и внимание к каждому шву.",
+  ],
+  photo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg",
+};
+
+function AboutView({ onUploadImage }: { onUploadImage: (f: File) => Promise<string> }) {
+  const { data, refetch } = trpc.settings.getAbout.useQuery();
+  const saveMut = trpc.settings.setAbout.useMutation();
+  const [form, setForm] = useState(DEFAULT_ABOUT);
+  const [msg, setMsg] = useState("");
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => { if (data) setForm(data); }, [data]);
+
+  const notify = (m: string) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
+
+  const handleSave = async () => {
+    await saveMut.mutateAsync(form);
+    await refetch();
+    notify("✓ Сохранено");
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await onUploadImage(file);
+      setForm(f => ({ ...f, photo: url }));
+    } finally {
+      setUploading(false);
+      (e.target as HTMLInputElement).value = "";
+    }
+  };
+
+  return (
+    <div>
+      <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">О бренде</h1>
+      {msg && <div className="mb-4 px-4 py-2 bg-[#1F1F1D] text-white text-sm rounded-full inline-block">{msg}</div>}
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs text-[#5A6262] mb-1 uppercase tracking-wide">Заголовок</label>
+          <input
+            type="text" value={form.title}
+            onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
+            className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs text-[#5A6262] mb-2 uppercase tracking-wide">Абзацы текста</label>
+          <div className="space-y-2">
+            {form.paragraphs.map((p, i) => (
+              <div key={i} className="flex gap-2">
+                <textarea
+                  value={p} rows={3}
+                  onChange={e => { const arr = [...form.paragraphs]; arr[i] = e.target.value; setForm(f => ({ ...f, paragraphs: arr })); }}
+                  className="flex-1 px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262] resize-none"
+                />
+                {form.paragraphs.length > 1 && (
+                  <button type="button" onClick={() => setForm(f => ({ ...f, paragraphs: f.paragraphs.filter((_, j) => j !== i) }))} className="text-red-400 hover:text-red-600 self-start mt-1"><Trash2 size={16} /></button>
+                )}
+              </div>
+            ))}
+          </div>
+          <button type="button" onClick={() => setForm(f => ({ ...f, paragraphs: [...f.paragraphs, ""] }))}
+            className="flex items-center gap-2 text-sm text-[#5A6262] hover:text-black mt-2">
+            <Plus size={14} /> Добавить абзац
+          </button>
+        </div>
+
+        <div>
+          <label className="block text-xs text-[#5A6262] mb-2 uppercase tracking-wide">Фото</label>
+          {form.photo && (
+            <div className="mb-3 relative w-32 h-40 rounded-xl overflow-hidden border border-[#E8E7E2]">
+              <img src={form.photo} alt="" className="w-full h-full object-cover" />
+              <button onClick={() => setForm(f => ({ ...f, photo: "" }))} className="absolute top-1 right-1 bg-white/90 rounded-full p-0.5 text-red-400 hover:text-red-600"><X size={12} /></button>
+            </div>
+          )}
+          <div className="flex gap-2 flex-wrap">
+            <label className={`flex items-center gap-2 px-4 py-2.5 bg-[#1F1F1D] text-white rounded-lg text-xs cursor-pointer hover:bg-[#3a4242] transition-colors ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
+              <Upload size={14} />
+              {uploading ? "Загрузка..." : "Загрузить фото"}
+              <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+            </label>
+          </div>
+          <div className="mt-2">
+            <input
+              type="text" value={form.photo} placeholder="или вставьте URL фото"
+              onChange={e => setForm(f => ({ ...f, photo: e.target.value }))}
+              className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
+            />
+          </div>
+        </div>
+
+        <button onClick={handleSave} disabled={saveMut.isPending}
+          className="flex items-center gap-2 px-6 py-3 bg-[#1F1F1D] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50"
+        >
+          <Save size={16} /> {saveMut.isPending ? "Сохранение..." : "Сохранить"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function BloggersView() {
   const { data: videos = [], refetch } = trpc.bloggers.getAll.useQuery();
   const addMut = trpc.bloggers.add.useMutation();
@@ -762,7 +872,7 @@ function BloggersView() {
 }
 
 export default function Admin() {
-  const [view, setView] = useState<"list" | "create" | "edit" | "media" | "bloggers">("list");
+  const [view, setView] = useState<"list" | "create" | "edit" | "media" | "bloggers" | "about">("list");
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [savedMsg, setSavedMsg] = useState("");
 
@@ -863,6 +973,13 @@ export default function Admin() {
             <span className="text-xs text-[#5A6262] uppercase tracking-widest hidden sm:inline">Админ</span>
           </div>
           <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
+            <button
+              onClick={() => setView(view === "about" ? "list" : "about")}
+              className={`transition-colors ${view === "about" ? "text-[#1F1F1D]" : "text-[#5A6262] hover:text-black"}`}
+              title="О бренде"
+            >
+              <FileText size={16} />
+            </button>
             <button
               onClick={() => setView(view === "bloggers" ? "list" : "bloggers")}
               className={`transition-colors ${view === "bloggers" ? "text-[#1F1F1D]" : "text-[#5A6262] hover:text-black"}`}
@@ -981,6 +1098,7 @@ export default function Admin() {
         )}
 
         {view === "bloggers" && <BloggersView />}
+        {view === "about" && <AboutView onUploadImage={handleUploadImage} />}
       </main>
     </div>
   );

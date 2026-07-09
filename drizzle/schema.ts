@@ -49,6 +49,14 @@ export const contacts = mysqlTable("contacts", {
 export type Contact = typeof contacts.$inferSelect;
 export type InsertContact = typeof contacts.$inferInsert;
 
+export const siteSettings = mysqlTable("site_settings", {
+  id: int("id").autoincrement().primaryKey(),
+  key: varchar("key", { length: 100 }).notNull().unique(),
+  value: text("value"),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SiteSetting = typeof siteSettings.$inferSelect;
+
 export const bloggerVideos = mysqlTable("blogger_videos", {
   id: int("id").autoincrement().primaryKey(),
   videoUrl: varchar("videoUrl", { length: 1000 }).notNull(),
