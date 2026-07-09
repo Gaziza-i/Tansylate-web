@@ -879,14 +879,14 @@ export default function Home() {
 
           <BloggersSection />
 
-          <section id="looks" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
+          <section id="looks" className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
             <div className="max-w-7xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-4">Образы</h2>
               <p className="text-[#6B5C52] mb-12">Скоро здесь появятся образы с нашими изделиями</p>
             </div>
           </section>
 
-          <section id="delivery" className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
+          <section id="delivery" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
             <div className="max-w-5xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-12 text-center">Доставка и возврат</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
