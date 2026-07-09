@@ -808,7 +808,7 @@ export default function Home() {
       <div className="min-h-screen bg-[#f8f9d7]">
         <Header />
         <main className="pt-24 lg:pt-28">
-          <section className="py-16 text-center px-4">
+          <section className="min-h-[calc(100vh-88px)] flex flex-col items-center justify-center text-center px-4">
             <p className="text-xs uppercase tracking-widest text-[#A0755A] mb-4">Основано в 2026</p>
             <h1 className="text-5xl md:text-6xl font-serif text-[#2B2521] mb-6">История в двух цветах</h1>
             <p className="text-lg text-[#6B5C52] mb-12 max-w-2xl mx-auto leading-relaxed">
