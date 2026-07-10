@@ -338,6 +338,30 @@ function ProductModal({
   );
 }
 
+const DEFAULT_HERO = {
+  badge: "Основано в 2026",
+  title: "История в двух цветах",
+  subtitle: "Одежда, в которой ты разный",
+  buttonText: "Каталог",
+};
+const DEFAULT_DELIVERY = {
+  title: "Доставка и возврат",
+  cards: [
+    { title: "Доставка", items: ["Доставка по всей России (СДЭК / Почта России)", "Сроки: 3–7 рабочих дней", "Стоимость уточняется при оформлении", "Примерка перед оплатой"] },
+    { title: "Возврат", items: ["Возврат в течение 14 дней", "Бирки не срезаны, нет следов носки", "Стоимость упаковки не возвращается"] },
+  ],
+};
+const DEFAULT_CONTACTS = {
+  telegram: "https://t.me/tansylate",
+  instagram: "https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1",
+  tiktok: "https://www.tiktok.com/@tansylate",
+};
+const DEFAULT_LOOKS = {
+  title: "Образы",
+  description: "Скоро здесь появятся образы с нашими изделиями",
+  photos: [] as string[],
+};
+
 const DEFAULT_ABOUT = {
   title: "О бренде",
   paragraphs: [
@@ -440,6 +464,16 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem("tansylate_cart", JSON.stringify(cart));
   }, [cart]);
+
+  const { data: heroData } = trpc.settings.getHero.useQuery();
+  const { data: deliveryData } = trpc.settings.getDelivery.useQuery();
+  const { data: contactsData } = trpc.settings.getContacts.useQuery();
+  const { data: looksData } = trpc.settings.getLooks.useQuery();
+
+  const heroS = (heroData ?? DEFAULT_HERO) as typeof DEFAULT_HERO;
+  const deliveryS = (deliveryData ?? DEFAULT_DELIVERY) as typeof DEFAULT_DELIVERY;
+  const contactsS = (contactsData ?? DEFAULT_CONTACTS) as typeof DEFAULT_CONTACTS;
+  const looksS = (looksData ?? DEFAULT_LOOKS) as typeof DEFAULT_LOOKS;
 
   const { data: products = [] } = trpc.catalog.products.useQuery();
 
@@ -731,9 +765,9 @@ export default function Home() {
             <a href="/privacy" onClick={e => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Политика конфиденциальности</a>
           </div>
           <div className="flex flex-col justify-center px-16 gap-7">
-            <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
-            <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
-            <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
+            {contactsS.telegram && <a href={contactsS.telegram} target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>}
+            {contactsS.instagram && <a href={contactsS.instagram} target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>}
+            {contactsS.tiktok && <a href={contactsS.tiktok} target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>}
           </div>
         </div>
 
@@ -746,9 +780,9 @@ export default function Home() {
             <a href="/privacy" onClick={e => { e.preventDefault(); setLocation("/privacy"); }} className={lnk}>Политика</a>
           </div>
           <div className="flex flex-col gap-5 flex-1">
-            <a href="https://t.me/tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>
-            <a href="https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1" target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>
-            <a href="https://www.tiktok.com/@tansylate" target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>
+            {contactsS.telegram && <a href={contactsS.telegram} target="_blank" rel="noopener noreferrer" className={lnk}>Telegram</a>}
+            {contactsS.instagram && <a href={contactsS.instagram} target="_blank" rel="noopener noreferrer" className={lnk}>Instagram</a>}
+            {contactsS.tiktok && <a href={contactsS.tiktok} target="_blank" rel="noopener noreferrer" className={lnk}>TikTok</a>}
           </div>
         </div>
 
@@ -841,16 +875,16 @@ export default function Home() {
         <Header />
         <main className="pt-24 lg:pt-28">
           <section className="min-h-[calc(100vh-88px)] flex flex-col items-center justify-center text-center px-4">
-            <p className="text-xs uppercase tracking-widest text-[#A0755A] mb-4">Основано в 2026</p>
-            <h1 className="text-5xl md:text-6xl font-serif text-[#2B2521] mb-6">История в двух цветах</h1>
+            <p className="text-xs uppercase tracking-widest text-[#A0755A] mb-4">{heroS.badge}</p>
+            <h1 className="text-5xl md:text-6xl font-serif text-[#2B2521] mb-6">{heroS.title}</h1>
             <p className="text-lg text-[#6B5C52] mb-12 max-w-2xl mx-auto leading-relaxed">
-              Одежда, в которой ты разный
+              {heroS.subtitle}
             </p>
             <button
               onClick={() => setLocation("/catalog")}
               className="px-8 py-3 bg-[#1A1A1A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors font-medium"
             >
-              Каталог
+              {heroS.buttonText}
             </button>
           </section>
 
@@ -894,33 +928,40 @@ export default function Home() {
           <BloggersSection />
 
           <section id="looks" className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
-            <div className="max-w-7xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-4">Образы</h2>
-              <p className="text-[#6B5C52] mb-12">Скоро здесь появятся образы с нашими изделиями</p>
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-4 text-center">{looksS.title}</h2>
+              {(looksS.photos ?? []).length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mt-8">
+                  {(looksS.photos ?? []).map((src, i) => (
+                    <div key={i} className="aspect-[3/4] overflow-hidden rounded-xl">
+                      <img src={src} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[#6B5C52] text-center">{looksS.description}</p>
+              )}
             </div>
           </section>
 
           <section id="delivery" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
             <div className="max-w-5xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-12 text-center">Доставка и возврат</h2>
+              <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-12 text-center">{deliveryS.title}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-[#FFFFFF] rounded-2xl p-8">
-                  <h3 className="font-serif text-[#2B2521] text-lg mb-6">Доставка</h3>
-                  <ul className="space-y-3 text-sm text-[#6B5C52]">
-                    <li className="flex items-start gap-3"><span className="text-[#A0755A] font-semibold mt-0.5">•</span><span>Доставка по всей России (СДЭК / Почта России)</span></li>
-                    <li className="flex items-start gap-3"><span className="text-[#A0755A] font-semibold mt-0.5">•</span><span>Сроки: 3–7 рабочих дней</span></li>
-                    <li className="flex items-start gap-3"><span className="text-[#A0755A] font-semibold mt-0.5">•</span><span>Стоимость уточняется при оформлении</span></li>
-                    <li className="flex items-start gap-3"><span className="text-[#A0755A] font-semibold mt-0.5">•</span><span>Примерка перед оплатой</span></li>
-                  </ul>
-                </div>
-                <div className="bg-[#FFFFFF] rounded-2xl p-8">
-                  <h3 className="font-serif text-[#2B2521] text-lg mb-6">Возврат</h3>
-                  <ul className="space-y-3 text-sm text-[#6B5C52]">
-                    <li className="flex items-start gap-3"><span className="text-[#A0755A] font-semibold mt-0.5">•</span><span>Возврат в течение 14 дней</span></li>
-                    <li className="flex items-start gap-3"><span className="text-[#A0755A] font-semibold mt-0.5">•</span><span>Бирки не срезаны, нет следов носки</span></li>
-                    <li className="flex items-start gap-3"><span className="text-[#A0755A] font-semibold mt-0.5">•</span><span>Стоимость упаковки не возвращается</span></li>
-                  </ul>
-                </div>
+                {(deliveryS.cards ?? []).map((dc: any, ci: number) => (
+                  <div key={ci} className="bg-[#FFFFFF] rounded-2xl p-8">
+                    <h3 className="font-serif text-[#2B2521] text-lg mb-6">{dc.title}</h3>
+                    <ul className="space-y-3 text-sm text-[#6B5C52]">
+                      {(dc.items ?? []).map((item: string, ii: number) => (
+                        <li key={ii} className="flex items-start gap-3">
+                          <span className="text-[#A0755A] font-semibold mt-0.5">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
           </section>

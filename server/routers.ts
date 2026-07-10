@@ -105,6 +105,46 @@ export const appRouter = router({
         await setSetting("about_section", JSON.stringify(input));
         return { success: true };
       }),
+    getHero: publicProcedure.query(async () => {
+      const raw = await getSetting("hero_section");
+      return raw ? JSON.parse(raw) : null;
+    }),
+    setHero: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input }) => {
+        await setSetting("hero_section", JSON.stringify(input));
+        return { success: true };
+      }),
+    getDelivery: publicProcedure.query(async () => {
+      const raw = await getSetting("delivery_section");
+      return raw ? JSON.parse(raw) : null;
+    }),
+    setDelivery: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input }) => {
+        await setSetting("delivery_section", JSON.stringify(input));
+        return { success: true };
+      }),
+    getContacts: publicProcedure.query(async () => {
+      const raw = await getSetting("contacts_section");
+      return raw ? JSON.parse(raw) : null;
+    }),
+    setContacts: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input }) => {
+        await setSetting("contacts_section", JSON.stringify(input));
+        return { success: true };
+      }),
+    getLooks: publicProcedure.query(async () => {
+      const raw = await getSetting("looks_section");
+      return raw ? JSON.parse(raw) : null;
+    }),
+    setLooks: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input }) => {
+        await setSetting("looks_section", JSON.stringify(input));
+        return { success: true };
+      }),
   }),
 
   bloggers: router({

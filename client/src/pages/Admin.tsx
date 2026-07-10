@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers, Video, FileText } from "lucide-react";
+import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers, Video, FileText, Globe } from "lucide-react";
 
 interface Spec { label: string; value: string; }
 interface SizeTable { title: string; cols: string[]; rows: string[][]; }
@@ -804,6 +804,240 @@ function AboutView({ onUploadImage }: { onUploadImage: (f: File) => Promise<stri
   );
 }
 
+const DEFAULT_HERO_CONTENT = {
+  badge: "Основано в 2026",
+  title: "История в двух цветах",
+  subtitle: "Одежда, в которой ты разный",
+  buttonText: "Каталог",
+};
+const DEFAULT_DELIVERY_CONTENT = {
+  title: "Доставка и возврат",
+  cards: [
+    { title: "Доставка", items: ["Доставка по всей России (СДЭК / Почта России)", "Сроки: 3–7 рабочих дней", "Стоимость уточняется при оформлении", "Примерка перед оплатой"] },
+    { title: "Возврат", items: ["Возврат в течение 14 дней", "Бирки не срезаны, нет следов носки", "Стоимость упаковки не возвращается"] },
+  ],
+};
+const DEFAULT_CONTACTS_CONTENT = {
+  telegram: "https://t.me/tansylate",
+  instagram: "https://www.instagram.com/p/DYaX6I5iA-x/?img_index=9&igsh=MTFnZDI4b3A1Ymx1",
+  tiktok: "https://www.tiktok.com/@tansylate",
+};
+const DEFAULT_LOOKS_CONTENT = {
+  title: "Образы",
+  description: "Скоро здесь появятся образы с нашими изделиями",
+  photos: [] as string[],
+};
+
+function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<string> }) {
+  const heroQ = trpc.settings.getHero.useQuery();
+  const deliveryQ = trpc.settings.getDelivery.useQuery();
+  const contactsQ = trpc.settings.getContacts.useQuery();
+  const looksQ = trpc.settings.getLooks.useQuery();
+
+  const heroMut = trpc.settings.setHero.useMutation();
+  const deliveryMut = trpc.settings.setDelivery.useMutation();
+  const contactsMut = trpc.settings.setContacts.useMutation();
+  const looksMut = trpc.settings.setLooks.useMutation();
+
+  const [hero, setHero] = useState(DEFAULT_HERO_CONTENT);
+  const [delivery, setDelivery] = useState(DEFAULT_DELIVERY_CONTENT);
+  const [contacts, setContacts] = useState(DEFAULT_CONTACTS_CONTENT);
+  const [looks, setLooks] = useState(DEFAULT_LOOKS_CONTENT);
+  const [msg, setMsg] = useState("");
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => { if (heroQ.data) setHero(heroQ.data); }, [heroQ.data]);
+  useEffect(() => { if (deliveryQ.data) setDelivery(deliveryQ.data); }, [deliveryQ.data]);
+  useEffect(() => { if (contactsQ.data) setContacts(contactsQ.data); }, [contactsQ.data]);
+  useEffect(() => { if (looksQ.data) setLooks(looksQ.data); }, [looksQ.data]);
+
+  const notify = (m: string) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
+
+  const handleLooksPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await onUploadImage(file);
+      setLooks(l => ({ ...l, photos: [...(l.photos ?? []), url] }));
+    } finally {
+      setUploading(false);
+      (e.target as HTMLInputElement).value = "";
+    }
+  };
+
+  const card = "bg-white border border-[#E8E7E2] rounded-2xl p-5 md:p-6 mb-6";
+  const lbl = "block text-xs text-[#5A6262] mb-1 uppercase tracking-wide";
+  const inp = "w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#1F1F1D] focus:outline-none focus:border-[#5A6262]";
+
+  return (
+    <div>
+      <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">Контент сайта</h1>
+      {msg && <div className="mb-5 px-4 py-2 bg-[#1F1F1D] text-white text-sm rounded-full inline-block">{msg}</div>}
+
+      {/* Герой */}
+      <div className={card}>
+        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Главный экран</h2>
+        <div className="space-y-3">
+          <div>
+            <label className={lbl}>Плашка сверху</label>
+            <input type="text" value={hero.badge} onChange={e => setHero(h => ({ ...h, badge: e.target.value }))} className={inp} />
+          </div>
+          <div>
+            <label className={lbl}>Заголовок</label>
+            <input type="text" value={hero.title} onChange={e => setHero(h => ({ ...h, title: e.target.value }))} className={inp} />
+          </div>
+          <div>
+            <label className={lbl}>Подзаголовок</label>
+            <input type="text" value={hero.subtitle} onChange={e => setHero(h => ({ ...h, subtitle: e.target.value }))} className={inp} />
+          </div>
+          <div>
+            <label className={lbl}>Текст кнопки</label>
+            <input type="text" value={hero.buttonText} onChange={e => setHero(h => ({ ...h, buttonText: e.target.value }))} className={inp} />
+          </div>
+        </div>
+        <div className="mt-4">
+          <button onClick={async () => { await heroMut.mutateAsync(hero); await heroQ.refetch(); notify("✓ Герой сохранён"); }}
+            disabled={heroMut.isPending}
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
+            <Save size={14} /> {heroMut.isPending ? "Сохранение..." : "Сохранить"}
+          </button>
+        </div>
+      </div>
+
+      {/* Образы */}
+      <div className={card}>
+        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Образы</h2>
+        <div className="space-y-3 mb-4">
+          <div>
+            <label className={lbl}>Заголовок секции</label>
+            <input type="text" value={looks.title} onChange={e => setLooks(l => ({ ...l, title: e.target.value }))} className={inp} />
+          </div>
+          <div>
+            <label className={lbl}>Текст-заглушка (если нет фото)</label>
+            <input type="text" value={looks.description} onChange={e => setLooks(l => ({ ...l, description: e.target.value }))} className={inp} />
+          </div>
+        </div>
+        <label className={lbl}>Фотографии</label>
+        {(looks.photos ?? []).length > 0 ? (
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 mb-3">
+            {(looks.photos ?? []).map((src, i) => (
+              <div key={i} className="relative group aspect-[3/4] rounded-lg overflow-hidden border border-[#E8E7E2]">
+                <img src={src} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                <button type="button"
+                  onClick={() => setLooks(l => ({ ...l, photos: (l.photos ?? []).filter((_, j) => j !== i) }))}
+                  className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <X size={10} />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="border-2 border-dashed border-[#E8E7E2] rounded-xl py-6 text-center text-sm text-[#5A6262] mb-3">
+            <ImageIcon size={22} className="mx-auto mb-1 opacity-30" />
+            Нет фото
+          </div>
+        )}
+        <label className={`flex items-center gap-2 px-4 py-2 bg-[#1F1F1D] text-white rounded-lg text-xs cursor-pointer hover:bg-[#3a4242] transition-colors inline-flex mb-4 ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
+          <Upload size={13} /> {uploading ? "Загрузка..." : "Загрузить фото"}
+          <input type="file" accept="image/*" className="hidden" onChange={handleLooksPhotoUpload} />
+        </label>
+        <div>
+          <button onClick={async () => { await looksMut.mutateAsync(looks); await looksQ.refetch(); notify("✓ Образы сохранены"); }}
+            disabled={looksMut.isPending}
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
+            <Save size={14} /> {looksMut.isPending ? "Сохранение..." : "Сохранить"}
+          </button>
+        </div>
+      </div>
+
+      {/* Доставка */}
+      <div className={card}>
+        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Доставка и возврат</h2>
+        <div className="mb-4">
+          <label className={lbl}>Заголовок секции</label>
+          <input type="text" value={delivery.title} onChange={e => setDelivery(d => ({ ...d, title: e.target.value }))} className={inp} />
+        </div>
+        <div className="space-y-4">
+          {delivery.cards.map((dc, ci) => (
+            <div key={ci} className="border border-[#E8E7E2] rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <input type="text" value={dc.title}
+                  onChange={e => {
+                    const cards = delivery.cards.map((c, j) => j === ci ? { ...c, title: e.target.value } : c);
+                    setDelivery(d => ({ ...d, cards }));
+                  }}
+                  className="flex-1 px-3 py-1.5 border border-[#E8E7E2] rounded-lg text-sm font-medium focus:outline-none focus:border-[#5A6262]"
+                  placeholder="Заголовок блока" />
+                {delivery.cards.length > 1 && (
+                  <button type="button" onClick={() => setDelivery(d => ({ ...d, cards: d.cards.filter((_, j) => j !== ci) }))} className="text-red-400 hover:text-red-600"><Trash2 size={14} /></button>
+                )}
+              </div>
+              <div className="space-y-2">
+                {dc.items.map((item, ii) => (
+                  <div key={ii} className="flex gap-2">
+                    <input type="text" value={item}
+                      onChange={e => {
+                        const cards = delivery.cards.map((c, j) => j === ci ? { ...c, items: c.items.map((it, k) => k === ii ? e.target.value : it) } : c);
+                        setDelivery(d => ({ ...d, cards }));
+                      }}
+                      className="flex-1 px-3 py-1.5 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]" />
+                    <button type="button" onClick={() => {
+                      const cards = delivery.cards.map((c, j) => j === ci ? { ...c, items: c.items.filter((_, k) => k !== ii) } : c);
+                      setDelivery(d => ({ ...d, cards }));
+                    }} className="text-red-400 hover:text-red-600 flex-shrink-0"><X size={14} /></button>
+                  </div>
+                ))}
+              </div>
+              <button type="button" onClick={() => {
+                const cards = delivery.cards.map((c, j) => j === ci ? { ...c, items: [...c.items, ""] } : c);
+                setDelivery(d => ({ ...d, cards }));
+              }} className="flex items-center gap-1 text-xs text-[#5A6262] hover:text-black mt-2">
+                <Plus size={12} /> Добавить пункт
+              </button>
+            </div>
+          ))}
+        </div>
+        <button type="button" onClick={() => setDelivery(d => ({ ...d, cards: [...d.cards, { title: "", items: [""] }] }))}
+          className="flex items-center gap-2 text-sm text-[#5A6262] hover:text-black mt-3 mb-4">
+          <Plus size={14} /> Добавить блок
+        </button>
+        <button onClick={async () => { await deliveryMut.mutateAsync(delivery); await deliveryQ.refetch(); notify("✓ Доставка сохранена"); }}
+          disabled={deliveryMut.isPending}
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
+          <Save size={14} /> {deliveryMut.isPending ? "Сохранение..." : "Сохранить"}
+        </button>
+      </div>
+
+      {/* Контакты */}
+      <div className={card}>
+        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Контакты (ссылки в футере)</h2>
+        <div className="space-y-3">
+          <div>
+            <label className={lbl}>Telegram</label>
+            <input type="text" value={contacts.telegram} onChange={e => setContacts(c => ({ ...c, telegram: e.target.value }))} className={inp} placeholder="https://t.me/..." />
+          </div>
+          <div>
+            <label className={lbl}>Instagram</label>
+            <input type="text" value={contacts.instagram} onChange={e => setContacts(c => ({ ...c, instagram: e.target.value }))} className={inp} placeholder="https://www.instagram.com/..." />
+          </div>
+          <div>
+            <label className={lbl}>TikTok</label>
+            <input type="text" value={contacts.tiktok} onChange={e => setContacts(c => ({ ...c, tiktok: e.target.value }))} className={inp} placeholder="https://www.tiktok.com/@..." />
+          </div>
+        </div>
+        <div className="mt-4">
+          <button onClick={async () => { await contactsMut.mutateAsync(contacts); await contactsQ.refetch(); notify("✓ Контакты сохранены"); }}
+            disabled={contactsMut.isPending}
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
+            <Save size={14} /> {contactsMut.isPending ? "Сохранение..." : "Сохранить"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function BloggersView() {
   const { data: videos = [], refetch } = trpc.bloggers.getAll.useQuery();
   const addMut = trpc.bloggers.add.useMutation();
@@ -872,7 +1106,7 @@ function BloggersView() {
 }
 
 export default function Admin() {
-  const [view, setView] = useState<"list" | "create" | "edit" | "media" | "bloggers" | "about">("list");
+  const [view, setView] = useState<"list" | "create" | "edit" | "media" | "bloggers" | "about" | "content">("list");
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [savedMsg, setSavedMsg] = useState("");
 
@@ -973,6 +1207,13 @@ export default function Admin() {
             <span className="text-xs text-[#5A6262] uppercase tracking-widest hidden sm:inline">Админ</span>
           </div>
           <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
+            <button
+              onClick={() => setView(view === "content" ? "list" : "content")}
+              className={`transition-colors ${view === "content" ? "text-[#1F1F1D]" : "text-[#5A6262] hover:text-black"}`}
+              title="Контент сайта"
+            >
+              <Globe size={16} />
+            </button>
             <button
               onClick={() => setView(view === "about" ? "list" : "about")}
               className={`transition-colors ${view === "about" ? "text-[#1F1F1D]" : "text-[#5A6262] hover:text-black"}`}
@@ -1099,6 +1340,7 @@ export default function Admin() {
 
         {view === "bloggers" && <BloggersView />}
         {view === "about" && <AboutView onUploadImage={handleUploadImage} />}
+        {view === "content" && <ContentView onUploadImage={handleUploadImage} />}
       </main>
     </div>
   );
