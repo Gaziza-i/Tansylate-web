@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers, Video, FileText, Globe } from "lucide-react";
+import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers, Globe } from "lucide-react";
 
 interface Spec { label: string; value: string; }
 interface SizeTable { title: string; cols: string[]; rows: string[][]; }
@@ -704,105 +704,6 @@ const DEFAULT_ABOUT = {
   photo: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663598344304/IQqWhEnndFbtqytb.jpeg",
 };
 
-function AboutView({ onUploadImage }: { onUploadImage: (f: File) => Promise<string> }) {
-  const { data, refetch } = trpc.settings.getAbout.useQuery();
-  const saveMut = trpc.settings.setAbout.useMutation();
-  const [form, setForm] = useState(DEFAULT_ABOUT);
-  const [msg, setMsg] = useState("");
-  const [uploading, setUploading] = useState(false);
-
-  useEffect(() => { if (data) setForm(data); }, [data]);
-
-  const notify = (m: string) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
-
-  const handleSave = async () => {
-    await saveMut.mutateAsync(form);
-    await refetch();
-    notify("✓ Сохранено");
-  };
-
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    try {
-      const url = await onUploadImage(file);
-      setForm(f => ({ ...f, photo: url }));
-    } finally {
-      setUploading(false);
-      (e.target as HTMLInputElement).value = "";
-    }
-  };
-
-  return (
-    <div>
-      <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">О бренде</h1>
-      {msg && <div className="mb-4 px-4 py-2 bg-[#1F1F1D] text-white text-sm rounded-full inline-block">{msg}</div>}
-      <div className="space-y-4">
-        <div>
-          <label className="block text-xs text-[#5A6262] mb-1 uppercase tracking-wide">Заголовок</label>
-          <input
-            type="text" value={form.title}
-            onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-            className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
-          />
-        </div>
-
-        <div>
-          <label className="block text-xs text-[#5A6262] mb-2 uppercase tracking-wide">Абзацы текста</label>
-          <div className="space-y-2">
-            {form.paragraphs.map((p, i) => (
-              <div key={i} className="flex gap-2">
-                <textarea
-                  value={p} rows={3}
-                  onChange={e => { const arr = [...form.paragraphs]; arr[i] = e.target.value; setForm(f => ({ ...f, paragraphs: arr })); }}
-                  className="flex-1 px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262] resize-none"
-                />
-                {form.paragraphs.length > 1 && (
-                  <button type="button" onClick={() => setForm(f => ({ ...f, paragraphs: f.paragraphs.filter((_, j) => j !== i) }))} className="text-red-400 hover:text-red-600 self-start mt-1"><Trash2 size={16} /></button>
-                )}
-              </div>
-            ))}
-          </div>
-          <button type="button" onClick={() => setForm(f => ({ ...f, paragraphs: [...f.paragraphs, ""] }))}
-            className="flex items-center gap-2 text-sm text-[#5A6262] hover:text-black mt-2">
-            <Plus size={14} /> Добавить абзац
-          </button>
-        </div>
-
-        <div>
-          <label className="block text-xs text-[#5A6262] mb-2 uppercase tracking-wide">Фото</label>
-          {form.photo && (
-            <div className="mb-3 relative w-32 h-40 rounded-xl overflow-hidden border border-[#E8E7E2]">
-              <img src={form.photo} alt="" className="w-full h-full object-cover" />
-              <button onClick={() => setForm(f => ({ ...f, photo: "" }))} className="absolute top-1 right-1 bg-white/90 rounded-full p-0.5 text-red-400 hover:text-red-600"><X size={12} /></button>
-            </div>
-          )}
-          <div className="flex gap-2 flex-wrap">
-            <label className={`flex items-center gap-2 px-4 py-2.5 bg-[#1F1F1D] text-white rounded-lg text-xs cursor-pointer hover:bg-[#3a4242] transition-colors ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
-              <Upload size={14} />
-              {uploading ? "Загрузка..." : "Загрузить фото"}
-              <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
-            </label>
-          </div>
-          <div className="mt-2">
-            <input
-              type="text" value={form.photo} placeholder="или вставьте URL фото"
-              onChange={e => setForm(f => ({ ...f, photo: e.target.value }))}
-              className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
-            />
-          </div>
-        </div>
-
-        <button onClick={handleSave} disabled={saveMut.isPending}
-          className="flex items-center gap-2 px-6 py-3 bg-[#1F1F1D] text-white text-sm uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50"
-        >
-          <Save size={16} /> {saveMut.isPending ? "Сохранение..." : "Сохранить"}
-        </button>
-      </div>
-    </div>
-  );
-}
 
 const DEFAULT_HERO_CONTENT = {
   badge: "Основано в 2026",
@@ -830,23 +731,34 @@ const DEFAULT_LOOKS_CONTENT = {
 
 function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<string> }) {
   const heroQ = trpc.settings.getHero.useQuery();
+  const aboutQ = trpc.settings.getAbout.useQuery();
   const deliveryQ = trpc.settings.getDelivery.useQuery();
   const contactsQ = trpc.settings.getContacts.useQuery();
   const looksQ = trpc.settings.getLooks.useQuery();
 
   const heroMut = trpc.settings.setHero.useMutation();
+  const aboutMut = trpc.settings.setAbout.useMutation();
   const deliveryMut = trpc.settings.setDelivery.useMutation();
   const contactsMut = trpc.settings.setContacts.useMutation();
   const looksMut = trpc.settings.setLooks.useMutation();
 
+  const { data: videos = [], refetch: refetchVideos } = trpc.bloggers.getAll.useQuery();
+  const addVideoMut = trpc.bloggers.add.useMutation();
+  const deleteVideoMut = trpc.bloggers.delete.useMutation();
+
   const [hero, setHero] = useState(DEFAULT_HERO_CONTENT);
+  const [about, setAbout] = useState(DEFAULT_ABOUT);
   const [delivery, setDelivery] = useState(DEFAULT_DELIVERY_CONTENT);
   const [contacts, setContacts] = useState(DEFAULT_CONTACTS_CONTENT);
   const [looks, setLooks] = useState(DEFAULT_LOOKS_CONTENT);
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoDesc, setVideoDesc] = useState("");
   const [msg, setMsg] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [uploadingLooks, setUploadingLooks] = useState(false);
+  const [uploadingAbout, setUploadingAbout] = useState(false);
 
   useEffect(() => { if (heroQ.data) setHero(heroQ.data); }, [heroQ.data]);
+  useEffect(() => { if (aboutQ.data) setAbout(aboutQ.data); }, [aboutQ.data]);
   useEffect(() => { if (deliveryQ.data) setDelivery(deliveryQ.data); }, [deliveryQ.data]);
   useEffect(() => { if (contactsQ.data) setContacts(contactsQ.data); }, [contactsQ.data]);
   useEffect(() => { if (looksQ.data) setLooks(looksQ.data); }, [looksQ.data]);
@@ -856,12 +768,25 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
   const handleLooksPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setUploading(true);
+    setUploadingLooks(true);
     try {
       const url = await onUploadImage(file);
       setLooks(l => ({ ...l, photos: [...(l.photos ?? []), url] }));
     } finally {
-      setUploading(false);
+      setUploadingLooks(false);
+      (e.target as HTMLInputElement).value = "";
+    }
+  };
+
+  const handleAboutPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingAbout(true);
+    try {
+      const url = await onUploadImage(file);
+      setAbout(a => ({ ...a, photo: url }));
+    } finally {
+      setUploadingAbout(false);
       (e.target as HTMLInputElement).value = "";
     }
   };
@@ -869,54 +794,121 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
   const card = "bg-white border border-[#E8E7E2] rounded-2xl p-5 md:p-6 mb-6";
   const lbl = "block text-xs text-[#5A6262] mb-1 uppercase tracking-wide";
   const inp = "w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#1F1F1D] focus:outline-none focus:border-[#5A6262]";
+  const saveBtn = (onClick: () => void, pending: boolean, label = "Сохранить") => (
+    <button onClick={onClick} disabled={pending}
+      className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
+      <Save size={14} /> {pending ? "Сохранение..." : label}
+    </button>
+  );
 
   return (
     <div>
       <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">Контент сайта</h1>
       {msg && <div className="mb-5 px-4 py-2 bg-[#1F1F1D] text-white text-sm rounded-full inline-block">{msg}</div>}
 
-      {/* Герой */}
+      {/* Главный экран */}
       <div className={card}>
         <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Главный экран</h2>
         <div className="space-y-3">
+          <div><label className={lbl}>Плашка сверху</label>
+            <input type="text" value={hero.badge} onChange={e => setHero(h => ({ ...h, badge: e.target.value }))} className={inp} /></div>
+          <div><label className={lbl}>Заголовок</label>
+            <input type="text" value={hero.title} onChange={e => setHero(h => ({ ...h, title: e.target.value }))} className={inp} /></div>
+          <div><label className={lbl}>Подзаголовок</label>
+            <input type="text" value={hero.subtitle} onChange={e => setHero(h => ({ ...h, subtitle: e.target.value }))} className={inp} /></div>
+          <div><label className={lbl}>Текст кнопки</label>
+            <input type="text" value={hero.buttonText} onChange={e => setHero(h => ({ ...h, buttonText: e.target.value }))} className={inp} /></div>
+        </div>
+        <div className="mt-4">{saveBtn(async () => { await heroMut.mutateAsync(hero); await heroQ.refetch(); notify("✓ Герой сохранён"); }, heroMut.isPending)}</div>
+      </div>
+
+      {/* О бренде */}
+      <div className={card}>
+        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">О бренде</h2>
+        <div className="space-y-4">
+          <div><label className={lbl}>Заголовок</label>
+            <input type="text" value={about.title} onChange={e => setAbout(a => ({ ...a, title: e.target.value }))} className={inp} /></div>
           <div>
-            <label className={lbl}>Плашка сверху</label>
-            <input type="text" value={hero.badge} onChange={e => setHero(h => ({ ...h, badge: e.target.value }))} className={inp} />
+            <label className={lbl}>Абзацы текста</label>
+            <div className="space-y-2">
+              {about.paragraphs.map((p, i) => (
+                <div key={i} className="flex gap-2">
+                  <textarea value={p} rows={3}
+                    onChange={e => { const arr = [...about.paragraphs]; arr[i] = e.target.value; setAbout(a => ({ ...a, paragraphs: arr })); }}
+                    className="flex-1 px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262] resize-none" />
+                  {about.paragraphs.length > 1 && (
+                    <button type="button" onClick={() => setAbout(a => ({ ...a, paragraphs: a.paragraphs.filter((_, j) => j !== i) }))} className="text-red-400 hover:text-red-600 self-start mt-1"><Trash2 size={16} /></button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <button type="button" onClick={() => setAbout(a => ({ ...a, paragraphs: [...a.paragraphs, ""] }))}
+              className="flex items-center gap-2 text-sm text-[#5A6262] hover:text-black mt-2"><Plus size={14} /> Добавить абзац</button>
           </div>
           <div>
-            <label className={lbl}>Заголовок</label>
-            <input type="text" value={hero.title} onChange={e => setHero(h => ({ ...h, title: e.target.value }))} className={inp} />
-          </div>
-          <div>
-            <label className={lbl}>Подзаголовок</label>
-            <input type="text" value={hero.subtitle} onChange={e => setHero(h => ({ ...h, subtitle: e.target.value }))} className={inp} />
-          </div>
-          <div>
-            <label className={lbl}>Текст кнопки</label>
-            <input type="text" value={hero.buttonText} onChange={e => setHero(h => ({ ...h, buttonText: e.target.value }))} className={inp} />
+            <label className={lbl}>Фото</label>
+            {about.photo && (
+              <div className="mb-2 relative w-24 h-32 rounded-xl overflow-hidden border border-[#E8E7E2]">
+                <img src={about.photo} alt="" className="w-full h-full object-cover" />
+                <button onClick={() => setAbout(a => ({ ...a, photo: "" }))} className="absolute top-1 right-1 bg-white/90 rounded-full p-0.5 text-red-400 hover:text-red-600"><X size={12} /></button>
+              </div>
+            )}
+            <label className={`flex items-center gap-2 px-4 py-2 bg-[#1F1F1D] text-white rounded-lg text-xs cursor-pointer hover:bg-[#3a4242] transition-colors inline-flex mb-2 ${uploadingAbout ? "opacity-50 pointer-events-none" : ""}`}>
+              <Upload size={13} /> {uploadingAbout ? "Загрузка..." : "Загрузить фото"}
+              <input type="file" accept="image/*" className="hidden" onChange={handleAboutPhotoUpload} />
+            </label>
+            <input type="text" value={about.photo} placeholder="или вставьте URL фото"
+              onChange={e => setAbout(a => ({ ...a, photo: e.target.value }))} className={inp} />
           </div>
         </div>
-        <div className="mt-4">
-          <button onClick={async () => { await heroMut.mutateAsync(hero); await heroQ.refetch(); notify("✓ Герой сохранён"); }}
-            disabled={heroMut.isPending}
+        <div className="mt-4">{saveBtn(async () => { await aboutMut.mutateAsync(about); await aboutQ.refetch(); notify("✓ О бренде сохранено"); }, aboutMut.isPending)}</div>
+      </div>
+
+      {/* Нас носят блогеры */}
+      <div className={card}>
+        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Нас носят блогеры</h2>
+        <div className="space-y-2 mb-4">
+          <input type="text" value={videoUrl} onChange={e => setVideoUrl(e.target.value)}
+            placeholder="Ссылка на видео (YouTube, TikTok, Instagram...)" className={inp} />
+          <input type="text" value={videoDesc} onChange={e => setVideoDesc(e.target.value)}
+            placeholder="Подпись (необязательно)" className={inp} />
+          <button onClick={async () => {
+            if (!videoUrl.trim()) return;
+            await addVideoMut.mutateAsync({ url: videoUrl.trim(), description: videoDesc.trim() || undefined });
+            setVideoUrl(""); setVideoDesc("");
+            await refetchVideos();
+            notify("✓ Видео добавлено");
+          }} disabled={!videoUrl.trim() || addVideoMut.isPending}
             className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
-            <Save size={14} /> {heroMut.isPending ? "Сохранение..." : "Сохранить"}
+            <Plus size={14} /> Добавить
           </button>
         </div>
+        {(videos as any[]).length === 0 ? (
+          <div className="py-6 text-center text-sm text-[#5A6262] border-2 border-dashed border-[#E8E7E2] rounded-xl">Видео пока нет</div>
+        ) : (
+          <div className="space-y-2">
+            {(videos as any[]).map((v: any) => (
+              <div key={v.id} className="flex items-start gap-3 border border-[#E8E7E2] rounded-xl p-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-[#1F1F1D] break-all">{v.videoUrl}</p>
+                  {v.description && <p className="text-xs text-[#5A6262] mt-0.5">{v.description}</p>}
+                </div>
+                <button onClick={async () => { if (!confirm("Удалить?")) return; await deleteVideoMut.mutateAsync({ id: v.id }); await refetchVideos(); }}
+                  className="text-red-400 hover:text-red-600 flex-shrink-0"><Trash2 size={14} /></button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Образы */}
       <div className={card}>
         <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Образы</h2>
         <div className="space-y-3 mb-4">
-          <div>
-            <label className={lbl}>Заголовок секции</label>
-            <input type="text" value={looks.title} onChange={e => setLooks(l => ({ ...l, title: e.target.value }))} className={inp} />
-          </div>
-          <div>
-            <label className={lbl}>Текст-заглушка (если нет фото)</label>
-            <input type="text" value={looks.description} onChange={e => setLooks(l => ({ ...l, description: e.target.value }))} className={inp} />
-          </div>
+          <div><label className={lbl}>Заголовок секции</label>
+            <input type="text" value={looks.title} onChange={e => setLooks(l => ({ ...l, title: e.target.value }))} className={inp} /></div>
+          <div><label className={lbl}>Текст-заглушка (если нет фото)</label>
+            <input type="text" value={looks.description} onChange={e => setLooks(l => ({ ...l, description: e.target.value }))} className={inp} /></div>
         </div>
         <label className={lbl}>Фотографии</label>
         {(looks.photos ?? []).length > 0 ? (
@@ -924,51 +916,35 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
             {(looks.photos ?? []).map((src, i) => (
               <div key={i} className="relative group aspect-[3/4] rounded-lg overflow-hidden border border-[#E8E7E2]">
                 <img src={src} alt="" className="w-full h-full object-cover" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                <button type="button"
-                  onClick={() => setLooks(l => ({ ...l, photos: (l.photos ?? []).filter((_, j) => j !== i) }))}
-                  className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <X size={10} />
-                </button>
+                <button type="button" onClick={() => setLooks(l => ({ ...l, photos: (l.photos ?? []).filter((_, j) => j !== i) }))}
+                  className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><X size={10} /></button>
               </div>
             ))}
           </div>
         ) : (
           <div className="border-2 border-dashed border-[#E8E7E2] rounded-xl py-6 text-center text-sm text-[#5A6262] mb-3">
-            <ImageIcon size={22} className="mx-auto mb-1 opacity-30" />
-            Нет фото
+            <ImageIcon size={22} className="mx-auto mb-1 opacity-30" />Нет фото
           </div>
         )}
-        <label className={`flex items-center gap-2 px-4 py-2 bg-[#1F1F1D] text-white rounded-lg text-xs cursor-pointer hover:bg-[#3a4242] transition-colors inline-flex mb-4 ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
-          <Upload size={13} /> {uploading ? "Загрузка..." : "Загрузить фото"}
+        <label className={`flex items-center gap-2 px-4 py-2 bg-[#1F1F1D] text-white rounded-lg text-xs cursor-pointer hover:bg-[#3a4242] transition-colors inline-flex mb-4 ${uploadingLooks ? "opacity-50 pointer-events-none" : ""}`}>
+          <Upload size={13} /> {uploadingLooks ? "Загрузка..." : "Загрузить фото"}
           <input type="file" accept="image/*" className="hidden" onChange={handleLooksPhotoUpload} />
         </label>
-        <div>
-          <button onClick={async () => { await looksMut.mutateAsync(looks); await looksQ.refetch(); notify("✓ Образы сохранены"); }}
-            disabled={looksMut.isPending}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
-            <Save size={14} /> {looksMut.isPending ? "Сохранение..." : "Сохранить"}
-          </button>
-        </div>
+        <div>{saveBtn(async () => { await looksMut.mutateAsync(looks); await looksQ.refetch(); notify("✓ Образы сохранены"); }, looksMut.isPending)}</div>
       </div>
 
       {/* Доставка */}
       <div className={card}>
         <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Доставка и возврат</h2>
-        <div className="mb-4">
-          <label className={lbl}>Заголовок секции</label>
-          <input type="text" value={delivery.title} onChange={e => setDelivery(d => ({ ...d, title: e.target.value }))} className={inp} />
-        </div>
+        <div className="mb-4"><label className={lbl}>Заголовок секции</label>
+          <input type="text" value={delivery.title} onChange={e => setDelivery(d => ({ ...d, title: e.target.value }))} className={inp} /></div>
         <div className="space-y-4">
           {delivery.cards.map((dc, ci) => (
             <div key={ci} className="border border-[#E8E7E2] rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <input type="text" value={dc.title}
-                  onChange={e => {
-                    const cards = delivery.cards.map((c, j) => j === ci ? { ...c, title: e.target.value } : c);
-                    setDelivery(d => ({ ...d, cards }));
-                  }}
-                  className="flex-1 px-3 py-1.5 border border-[#E8E7E2] rounded-lg text-sm font-medium focus:outline-none focus:border-[#5A6262]"
-                  placeholder="Заголовок блока" />
+                  onChange={e => { const cards = delivery.cards.map((c, j) => j === ci ? { ...c, title: e.target.value } : c); setDelivery(d => ({ ...d, cards })); }}
+                  className="flex-1 px-3 py-1.5 border border-[#E8E7E2] rounded-lg text-sm font-medium focus:outline-none focus:border-[#5A6262]" placeholder="Заголовок блока" />
                 {delivery.cards.length > 1 && (
                   <button type="button" onClick={() => setDelivery(d => ({ ...d, cards: d.cards.filter((_, j) => j !== ci) }))} className="text-red-400 hover:text-red-600"><Trash2 size={14} /></button>
                 )}
@@ -977,136 +953,43 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
                 {dc.items.map((item, ii) => (
                   <div key={ii} className="flex gap-2">
                     <input type="text" value={item}
-                      onChange={e => {
-                        const cards = delivery.cards.map((c, j) => j === ci ? { ...c, items: c.items.map((it, k) => k === ii ? e.target.value : it) } : c);
-                        setDelivery(d => ({ ...d, cards }));
-                      }}
+                      onChange={e => { const cards = delivery.cards.map((c, j) => j === ci ? { ...c, items: c.items.map((it, k) => k === ii ? e.target.value : it) } : c); setDelivery(d => ({ ...d, cards })); }}
                       className="flex-1 px-3 py-1.5 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]" />
-                    <button type="button" onClick={() => {
-                      const cards = delivery.cards.map((c, j) => j === ci ? { ...c, items: c.items.filter((_, k) => k !== ii) } : c);
-                      setDelivery(d => ({ ...d, cards }));
-                    }} className="text-red-400 hover:text-red-600 flex-shrink-0"><X size={14} /></button>
+                    <button type="button" onClick={() => { const cards = delivery.cards.map((c, j) => j === ci ? { ...c, items: c.items.filter((_, k) => k !== ii) } : c); setDelivery(d => ({ ...d, cards })); }}
+                      className="text-red-400 hover:text-red-600 flex-shrink-0"><X size={14} /></button>
                   </div>
                 ))}
               </div>
-              <button type="button" onClick={() => {
-                const cards = delivery.cards.map((c, j) => j === ci ? { ...c, items: [...c.items, ""] } : c);
-                setDelivery(d => ({ ...d, cards }));
-              }} className="flex items-center gap-1 text-xs text-[#5A6262] hover:text-black mt-2">
-                <Plus size={12} /> Добавить пункт
-              </button>
+              <button type="button" onClick={() => { const cards = delivery.cards.map((c, j) => j === ci ? { ...c, items: [...c.items, ""] } : c); setDelivery(d => ({ ...d, cards })); }}
+                className="flex items-center gap-1 text-xs text-[#5A6262] hover:text-black mt-2"><Plus size={12} /> Добавить пункт</button>
             </div>
           ))}
         </div>
         <button type="button" onClick={() => setDelivery(d => ({ ...d, cards: [...d.cards, { title: "", items: [""] }] }))}
-          className="flex items-center gap-2 text-sm text-[#5A6262] hover:text-black mt-3 mb-4">
-          <Plus size={14} /> Добавить блок
-        </button>
-        <button onClick={async () => { await deliveryMut.mutateAsync(delivery); await deliveryQ.refetch(); notify("✓ Доставка сохранена"); }}
-          disabled={deliveryMut.isPending}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
-          <Save size={14} /> {deliveryMut.isPending ? "Сохранение..." : "Сохранить"}
-        </button>
+          className="flex items-center gap-2 text-sm text-[#5A6262] hover:text-black mt-3 mb-4"><Plus size={14} /> Добавить блок</button>
+        {saveBtn(async () => { await deliveryMut.mutateAsync(delivery); await deliveryQ.refetch(); notify("✓ Доставка сохранена"); }, deliveryMut.isPending)}
       </div>
 
       {/* Контакты */}
       <div className={card}>
         <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Контакты (ссылки в футере)</h2>
         <div className="space-y-3">
-          <div>
-            <label className={lbl}>Telegram</label>
-            <input type="text" value={contacts.telegram} onChange={e => setContacts(c => ({ ...c, telegram: e.target.value }))} className={inp} placeholder="https://t.me/..." />
-          </div>
-          <div>
-            <label className={lbl}>Instagram</label>
-            <input type="text" value={contacts.instagram} onChange={e => setContacts(c => ({ ...c, instagram: e.target.value }))} className={inp} placeholder="https://www.instagram.com/..." />
-          </div>
-          <div>
-            <label className={lbl}>TikTok</label>
-            <input type="text" value={contacts.tiktok} onChange={e => setContacts(c => ({ ...c, tiktok: e.target.value }))} className={inp} placeholder="https://www.tiktok.com/@..." />
-          </div>
+          <div><label className={lbl}>Telegram</label>
+            <input type="text" value={contacts.telegram} onChange={e => setContacts(c => ({ ...c, telegram: e.target.value }))} className={inp} placeholder="https://t.me/..." /></div>
+          <div><label className={lbl}>Instagram</label>
+            <input type="text" value={contacts.instagram} onChange={e => setContacts(c => ({ ...c, instagram: e.target.value }))} className={inp} placeholder="https://www.instagram.com/..." /></div>
+          <div><label className={lbl}>TikTok</label>
+            <input type="text" value={contacts.tiktok} onChange={e => setContacts(c => ({ ...c, tiktok: e.target.value }))} className={inp} placeholder="https://www.tiktok.com/@..." /></div>
         </div>
-        <div className="mt-4">
-          <button onClick={async () => { await contactsMut.mutateAsync(contacts); await contactsQ.refetch(); notify("✓ Контакты сохранены"); }}
-            disabled={contactsMut.isPending}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
-            <Save size={14} /> {contactsMut.isPending ? "Сохранение..." : "Сохранить"}
-          </button>
-        </div>
+        <div className="mt-4">{saveBtn(async () => { await contactsMut.mutateAsync(contacts); await contactsQ.refetch(); notify("✓ Контакты сохранены"); }, contactsMut.isPending)}</div>
       </div>
     </div>
   );
 }
 
-function BloggersView() {
-  const { data: videos = [], refetch } = trpc.bloggers.getAll.useQuery();
-  const addMut = trpc.bloggers.add.useMutation();
-  const deleteMut = trpc.bloggers.delete.useMutation();
-  const [url, setUrl] = useState("");
-  const [desc, setDesc] = useState("");
-  const [msg, setMsg] = useState("");
-
-  const notify = (m: string) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
-
-  const handleAdd = async () => {
-    if (!url.trim()) return;
-    await addMut.mutateAsync({ url: url.trim(), description: desc.trim() || undefined });
-    setUrl(""); setDesc("");
-    await refetch();
-    notify("✓ Видео добавлено");
-  };
-
-  const handleDelete = async (id: number) => {
-    if (!confirm("Удалить?")) return;
-    await deleteMut.mutateAsync({ id });
-    await refetch();
-  };
-
-  return (
-    <div>
-      <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">Нас носят блогеры</h1>
-      {msg && <div className="mb-4 px-4 py-2 bg-[#1F1F1D] text-white text-sm rounded-full inline-block">{msg}</div>}
-      <div className="bg-white border border-[#E8E7E2] rounded-xl p-5 mb-6">
-        <p className="text-xs text-[#5A6262] mb-3 uppercase tracking-wide">Добавить видео</p>
-        <div className="space-y-3">
-          <input
-            type="text" value={url} onChange={e => setUrl(e.target.value)}
-            placeholder="Ссылка на видео (YouTube, TikTok, Instagram...)"
-            className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
-          />
-          <input
-            type="text" value={desc} onChange={e => setDesc(e.target.value)}
-            placeholder="Подпись (необязательно)"
-            className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]"
-          />
-          <button onClick={handleAdd} disabled={!url.trim() || addMut.isPending}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50"
-          >
-            <Plus size={14} /> Добавить
-          </button>
-        </div>
-      </div>
-      {(videos as any[]).length === 0 ? (
-        <div className="text-center py-12 text-[#5A6262] text-sm">Видео пока нет</div>
-      ) : (
-        <div className="space-y-3">
-          {(videos as any[]).map((v: any) => (
-            <div key={v.id} className="bg-white border border-[#E8E7E2] rounded-xl p-4 flex items-start gap-3">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-[#1F1F1D] break-all">{v.videoUrl}</p>
-                {v.description && <p className="text-xs text-[#5A6262] mt-1">{v.description}</p>}
-              </div>
-              <button onClick={() => handleDelete(v.id)} className="text-red-400 hover:text-red-600 flex-shrink-0"><Trash2 size={16} /></button>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function Admin() {
-  const [view, setView] = useState<"list" | "create" | "edit" | "media" | "bloggers" | "about" | "content">("list");
+  const [view, setView] = useState<"list" | "create" | "edit" | "media" | "content">("list");
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [savedMsg, setSavedMsg] = useState("");
 
@@ -1214,20 +1097,7 @@ export default function Admin() {
             >
               <Globe size={16} />
             </button>
-            <button
-              onClick={() => setView(view === "about" ? "list" : "about")}
-              className={`transition-colors ${view === "about" ? "text-[#1F1F1D]" : "text-[#5A6262] hover:text-black"}`}
-              title="О бренде"
-            >
-              <FileText size={16} />
-            </button>
-            <button
-              onClick={() => setView(view === "bloggers" ? "list" : "bloggers")}
-              className={`transition-colors ${view === "bloggers" ? "text-[#1F1F1D]" : "text-[#5A6262] hover:text-black"}`}
-              title="Блогеры"
-            >
-              <Video size={16} />
-            </button>
+
             <button
               onClick={() => setView(view === "media" ? "list" : "media")}
               className={`flex items-center gap-1.5 text-xs uppercase tracking-wide transition-colors ${view === "media" ? "text-[#1F1F1D] font-medium" : "text-[#5A6262] hover:text-black"}`}
@@ -1338,8 +1208,6 @@ export default function Admin() {
           />
         )}
 
-        {view === "bloggers" && <BloggersView />}
-        {view === "about" && <AboutView onUploadImage={handleUploadImage} />}
         {view === "content" && <ContentView onUploadImage={handleUploadImage} />}
       </main>
     </div>
