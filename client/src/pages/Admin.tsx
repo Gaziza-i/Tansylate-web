@@ -660,25 +660,28 @@ function MediaLibrary({
             const filename = url.split("/").pop() ?? "";
             return (
               <div key={i} className="group relative rounded-xl overflow-hidden border border-[#E8E7E2] bg-white">
-                <div className="aspect-square">
+                <div className="aspect-square relative">
                   <img
                     src={url} alt=""
                     className="w-full h-full object-cover"
                     onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23E8E7E2' width='100' height='100'/%3E%3C/svg%3E"; }}
                   />
-                  <div className="absolute inset-0 bg-transparent group-hover:bg-black/40 transition-all flex items-center justify-center gap-1.5">
+                  {/* Кнопка удаления — всегда видна */}
+                  <button
+                    onClick={() => deleteImage(url)}
+                    className="absolute top-1.5 right-1.5 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow transition-colors z-10"
+                    title="Удалить"
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                  {/* Кнопка копирования URL — только на десктопе при hover */}
+                  <div className="absolute inset-0 bg-transparent group-hover:bg-black/30 transition-all flex items-end justify-center pb-2 opacity-0 group-hover:opacity-100">
                     <button
                       onClick={() => copyUrl(url)}
-                      className="hidden group-hover:flex items-center gap-1 px-2.5 py-1.5 bg-white text-[#1F1F1D] text-xs rounded-full shadow hover:bg-[#F0EFEA] transition-colors"
+                      className="flex items-center gap-1 px-2.5 py-1.5 bg-white text-[#1F1F1D] text-xs rounded-full shadow hover:bg-[#F0EFEA] transition-colors"
                     >
                       {copied === url ? <Check size={12} className="text-green-600" /> : <Copy size={12} />}
                       {copied === url ? "Скопировано" : "URL"}
-                    </button>
-                    <button
-                      onClick={() => deleteImage(url)}
-                      className="hidden group-hover:flex items-center gap-1 px-2 py-1.5 bg-red-500 text-white text-xs rounded-full shadow hover:bg-red-600 transition-colors"
-                    >
-                      <Trash2 size={12} />
                     </button>
                   </div>
                 </div>
