@@ -1,12 +1,13 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 import {
   getAllProducts, getAllProductsAdmin, getProductById,
   createProduct, updateProduct, deleteProduct, createContact,
   getAllBloggerVideos, createBloggerVideo, deleteBloggerVideo,
   getSetting, setSetting,
+  createOrder, getAllOrders,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
 
@@ -29,11 +30,9 @@ export const appRouter = router({
   }),
 
   admin: router({
-    // Получить все товары (включая скрытые)
-    products: publicProcedure.query(async () => getAllProductsAdmin()),
+    products: adminProcedure.query(async () => getAllProductsAdmin()),
 
-    // Создать товар
-    createProduct: publicProcedure
+    createProduct: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => {
         return createProduct({
@@ -55,8 +54,7 @@ export const appRouter = router({
         });
       }),
 
-    // Обновить товар
-    updateProduct: publicProcedure
+    updateProduct: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => {
         const { id, ...data } = input;
@@ -70,8 +68,7 @@ export const appRouter = router({
         return updateProduct(id, updateData);
       }),
 
-    // Удалить товар
-    deleteProduct: publicProcedure
+    deleteProduct: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => deleteProduct(input.id)),
   }),
@@ -99,7 +96,7 @@ export const appRouter = router({
       const raw = await getSetting("about_section");
       return raw ? JSON.parse(raw) : null;
     }),
-    setAbout: publicProcedure
+    setAbout: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => {
         await setSetting("about_section", JSON.stringify(input));
@@ -109,7 +106,7 @@ export const appRouter = router({
       const raw = await getSetting("hero_section");
       return raw ? JSON.parse(raw) : null;
     }),
-    setHero: publicProcedure
+    setHero: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => {
         await setSetting("hero_section", JSON.stringify(input));
@@ -119,7 +116,7 @@ export const appRouter = router({
       const raw = await getSetting("delivery_section");
       return raw ? JSON.parse(raw) : null;
     }),
-    setDelivery: publicProcedure
+    setDelivery: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => {
         await setSetting("delivery_section", JSON.stringify(input));
@@ -129,7 +126,7 @@ export const appRouter = router({
       const raw = await getSetting("contacts_section");
       return raw ? JSON.parse(raw) : null;
     }),
-    setContacts: publicProcedure
+    setContacts: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => {
         await setSetting("contacts_section", JSON.stringify(input));
@@ -139,7 +136,7 @@ export const appRouter = router({
       const raw = await getSetting("looks_section");
       return raw ? JSON.parse(raw) : null;
     }),
-    setLooks: publicProcedure
+    setLooks: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => {
         await setSetting("looks_section", JSON.stringify(input));
@@ -149,12 +146,34 @@ export const appRouter = router({
 
   bloggers: router({
     getAll: publicProcedure.query(async () => getAllBloggerVideos()),
-    add: publicProcedure
+    add: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => createBloggerVideo(input.url, input.description)),
-    delete: publicProcedure
+    delete: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => deleteBloggerVideo(input.id)),
+  }),
+
+  orders: router({
+    create: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input }) => {
+        const result = await createOrder({
+          name: input.name,
+          phone: input.phone,
+          address: input.address ?? null,
+          items: JSON.stringify(input.items),
+          total: input.total,
+        });
+        try {
+          await notifyOwner({
+            title: `Новый заказ #${result.id}`,
+            content: `Имя: ${input.name}\nТелефон: ${input.phone}\nАдрес: ${input.address ?? "не указан"}\nСумма: ${input.total.toLocaleString("ru-RU")} ₽`,
+          });
+        } catch {}
+        return { id: result.id };
+      }),
+    getAll: adminProcedure.query(async () => getAllOrders()),
   }),
 });
 

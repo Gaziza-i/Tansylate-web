@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, contacts, bloggerVideos, siteSettings, InsertContact, InsertProduct, Product } from "../drizzle/schema";
+import { InsertUser, users, products, contacts, bloggerVideos, siteSettings, orders, InsertContact, InsertProduct, InsertOrder, Product } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -146,4 +146,19 @@ export async function deleteBloggerVideo(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.delete(bloggerVideos as any).where(eq((bloggerVideos as any).id, id));
+}
+
+export async function createOrder(data: Omit<InsertOrder, "id" | "status" | "createdAt">) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(orders as any).values(data);
+  return { id: (result as any)[0].insertId as number };
+}
+
+export async function getAllOrders() {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    return await db.select().from(orders as any).orderBy((orders as any).createdAt);
+  } catch { return []; }
 }

@@ -7,6 +7,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
+import { trpc } from "@/lib/trpc";
 
 
 function SplashScreen({ onDone }: { onDone: () => void }) {
@@ -34,6 +35,26 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
   );
 }
 
+function AdminRoute() {
+  const { data: user, isLoading } = trpc.auth.me.useQuery();
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f8f9d7]">
+        <div className="w-8 h-8 border-2 border-[#A0755A] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+  if (!user || (user as any).role !== "admin") {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8f9d7] gap-4">
+        <p className="text-[#2B2521] text-lg font-serif">Доступ запрещён</p>
+        <a href="/" className="text-sm text-[#A0755A] hover:underline">На главную</a>
+      </div>
+    );
+  }
+  return <Admin />;
+}
+
 function Router() {
   return (
     <Switch>
@@ -41,7 +62,7 @@ function Router() {
       <Route path="/catalog" component={Home} />
       <Route path="/product/:id" component={Home} />
       <Route path="/privacy" component={Home} />
-      <Route path="/admin" component={Admin} />
+      <Route path="/admin" component={AdminRoute} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

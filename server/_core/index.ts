@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express from "express";
+import express, { type NextFunction, type Request, type Response } from "express";
 import { createServer } from "http";
 import net from "net";
 import path from "path";
@@ -12,6 +12,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { runStartupMigrations } from "./migrate";
+import { sdk } from "./sdk";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -32,6 +33,19 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
+async function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = await sdk.authenticateRequest(req);
+    if (!user || user.role !== "admin") {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+    next();
+  } catch {
+    res.status(403).json({ error: "Forbidden" });
+  }
+}
+
 async function startServer() {
   await runStartupMigrations();
   const app = express();
@@ -48,12 +62,17 @@ async function startServer() {
       cb(null, `${base}_${Date.now()}${ext}`);
     },
   });
-  const upload = multer({ storage, limits: { fileSize: 20 * 1024 * 1024 } });
+  const fileFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (allowed.includes(file.mimetype)) cb(null, true);
+    else cb(new Error("Допустимы только JPEG, PNG и WebP"));
+  };
+  const upload = multer({ storage, limits: { fileSize: 20 * 1024 * 1024 }, fileFilter });
 
-  // Static file serving and upload endpoint — registered before any auth middleware
+  // Static file serving
   app.use("/uploads", express.static(uploadsDir));
 
-  app.get("/api/uploads", (_req, res) => {
+  app.get("/api/uploads", requireAdmin, (_req, res) => {
     try {
       const files = fs.readdirSync(uploadsDir)
         .filter(f => /\.(jpe?g|png|gif|webp|svg|avif)$/i.test(f))
@@ -69,7 +88,7 @@ async function startServer() {
     }
   });
 
-  app.delete("/api/uploads/:filename", (req, res) => {
+  app.delete("/api/uploads/:filename", requireAdmin, (req, res) => {
     const filename = path.basename(req.params.filename);
     const filePath = path.join(uploadsDir, filename);
     try {
@@ -90,7 +109,7 @@ async function startServer() {
     res.json({ ok: true, uploadsDir, writable, files });
   });
 
-  app.post("/api/upload", (req, res) => {
+  app.post("/api/upload", requireAdmin, (req, res) => {
     upload.single("file")(req, res, (err) => {
       if (err) {
         console.error("[upload] multer error:", err.message);

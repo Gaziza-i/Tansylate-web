@@ -460,10 +460,22 @@ export default function Home() {
   });
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [checkoutForm, setCheckoutForm] = useState({ name: "", phone: "", address: "" });
+  const [orderConfirm, setOrderConfirm] = useState<{ id: number; telegramUrl: string } | null>(null);
 
   useEffect(() => {
     localStorage.setItem("tansylate_cart", JSON.stringify(cart));
   }, [cart]);
+
+  const createOrder = trpc.orders.create.useMutation({
+    onSuccess: (data, variables) => {
+      const lines = (variables.items as CartItem[]).map(i => `${i.name}${i.size ? ` (${i.size})` : ""} × ${i.qty}`).join(", ");
+      const total = (variables.total as number).toLocaleString("ru-RU");
+      const msg = encodeURIComponent(`Заказ #${data.id}\n${lines}\nИтого: ${total} ₽\nИмя: ${variables.name}\nТел: ${variables.phone}${variables.address ? `\nАдрес: ${variables.address}` : ""}`);
+      setOrderConfirm({ id: data.id, telegramUrl: `https://t.me/tansylate_bot?text=${msg}` });
+    },
+  });
 
   const { data: heroData } = trpc.settings.getHero.useQuery();
   const { data: deliveryData } = trpc.settings.getDelivery.useQuery();
@@ -518,11 +530,23 @@ export default function Home() {
     });
   };
 
-  const checkoutTelegram = () => {
-    const lines = cart.map(i => `${i.name}${i.size ? ` (${i.size})` : ""} × ${i.qty} — ${(i.price * i.qty).toLocaleString("ru-RU")} ₽`).join("\n");
+  const openCheckout = () => {
+    setCheckoutForm({ name: "", phone: "", address: "" });
+    setOrderConfirm(null);
+    setCartOpen(false);
+    setCheckoutOpen(true);
+  };
+
+  const submitOrder = () => {
+    if (!checkoutForm.name.trim() || !checkoutForm.phone.trim()) return;
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const msg = encodeURIComponent(`Здравствуйте! Хочу оформить заказ:\n\n${lines}\n\nИтого: ${total.toLocaleString("ru-RU")} ₽`);
-    window.open(`https://t.me/tansylate_bot?text=${msg}`, "_blank");
+    createOrder.mutate({
+      name: checkoutForm.name.trim(),
+      phone: checkoutForm.phone.trim(),
+      address: checkoutForm.address.trim() || undefined,
+      items: cart,
+      total,
+    });
   };
 
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
@@ -673,7 +697,7 @@ export default function Home() {
                 </span>
               </div>
               <button
-                onClick={checkoutTelegram}
+                onClick={openCheckout}
                 className="w-full py-3 bg-[#A0755A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#8B6444] transition-colors font-medium"
               >
                 Оформить заказ
@@ -848,10 +872,107 @@ export default function Home() {
     );
   };
 
+  const CheckoutModal = () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={() => { if (!createOrder.isPending) setCheckoutOpen(false); }}>
+      <div className="bg-[#EEE8D2] rounded-2xl w-full max-w-md p-6 shadow-xl relative" onClick={e => e.stopPropagation()}>
+        <button
+          onClick={() => setCheckoutOpen(false)}
+          disabled={createOrder.isPending}
+          className="absolute top-4 right-4 text-[#6B5C52] hover:text-[#2B2521] transition-colors disabled:opacity-40"
+        >
+          <X size={20} />
+        </button>
+
+        {orderConfirm ? (
+          <div className="text-center py-4">
+            <div className="w-14 h-14 bg-[#A0755A]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A0755A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <h3 className="font-serif text-[#2B2521] text-xl mb-1">Заказ принят!</h3>
+            <p className="text-sm text-[#6B5C52] mb-6">Номер заказа: <span className="font-semibold text-[#2B2521]">#{orderConfirm.id}</span></p>
+            <a
+              href={orderConfirm.telegramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => { setCheckoutOpen(false); setCart([]); }}
+              className="block w-full py-3 bg-[#A0755A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#8B6444] transition-colors font-medium text-center mb-3"
+            >
+              Перейти в Telegram
+            </a>
+            <button
+              onClick={() => { setCheckoutOpen(false); setCart([]); }}
+              className="text-sm text-[#6B5C52] hover:text-[#2B2521] transition-colors"
+            >
+              Закрыть
+            </button>
+          </div>
+        ) : (
+          <>
+            <h3 className="font-serif text-[#2B2521] text-xl mb-5">Оформление заказа</h3>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-[#6B5C52] mb-1.5">Имя *</label>
+                <input
+                  type="text"
+                  value={checkoutForm.name}
+                  onChange={e => setCheckoutForm(f => ({ ...f, name: e.target.value }))}
+                  placeholder="Ваше имя"
+                  className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl bg-white focus:outline-none focus:border-[#1A1A1A] text-sm text-[#2B2521]"
+                  disabled={createOrder.isPending}
+                />
+              </div>
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-[#6B5C52] mb-1.5">Телефон *</label>
+                <input
+                  type="tel"
+                  value={checkoutForm.phone}
+                  onChange={e => setCheckoutForm(f => ({ ...f, phone: e.target.value }))}
+                  placeholder="+7 (___) ___-__-__"
+                  className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl bg-white focus:outline-none focus:border-[#1A1A1A] text-sm text-[#2B2521]"
+                  disabled={createOrder.isPending}
+                />
+              </div>
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-[#6B5C52] mb-1.5">Адрес доставки</label>
+                <textarea
+                  value={checkoutForm.address}
+                  onChange={e => setCheckoutForm(f => ({ ...f, address: e.target.value }))}
+                  placeholder="Город, улица, дом, квартира"
+                  rows={2}
+                  className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl bg-white focus:outline-none focus:border-[#1A1A1A] text-sm text-[#2B2521] resize-none"
+                  disabled={createOrder.isPending}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-sm text-[#6B5C52]">Итого</span>
+              <span className="font-semibold text-[#2B2521]">
+                {cart.reduce((s, i) => s + i.price * i.qty, 0).toLocaleString("ru-RU")} ₽
+              </span>
+            </div>
+            {createOrder.isError && (
+              <p className="text-red-500 text-xs mb-3">Ошибка. Попробуйте ещё раз.</p>
+            )}
+            <button
+              onClick={submitOrder}
+              disabled={!checkoutForm.name.trim() || !checkoutForm.phone.trim() || createOrder.isPending}
+              className="w-full py-3 bg-[#A0755A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#8B6444] transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {createOrder.isPending ? "Отправка..." : "Подтвердить заказ"}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+
   const Modals = () => (
     <>
       {cartOpen && <CartDrawer />}
       {wishlistOpen && <WishlistDrawer />}
+      {checkoutOpen && <CheckoutModal />}
       {selectedProduct && (
         <ProductModal
           product={selectedProduct}

@@ -41,6 +41,22 @@ export async function runStartupMigrations() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
     console.log("[migrate] Ensured table: blogger_videos");
+
+    // Create orders table if missing
+    await conn.query(`
+      CREATE TABLE IF NOT EXISTS \`orders\` (
+        \`id\` int NOT NULL AUTO_INCREMENT,
+        \`name\` varchar(255) NOT NULL,
+        \`phone\` varchar(50) NOT NULL,
+        \`address\` text,
+        \`items\` text NOT NULL,
+        \`total\` int NOT NULL,
+        \`status\` enum('new','processing','completed','cancelled') NOT NULL DEFAULT 'new',
+        \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (\`id\`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    `);
+    console.log("[migrate] Ensured table: orders");
   } catch (err) {
     console.warn("[migrate] Startup migration warning:", err);
   } finally {
