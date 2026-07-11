@@ -38,6 +38,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
 function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const utils = trpc.useUtils();
 
@@ -77,14 +78,35 @@ function AdminLogin() {
             </div>
             <div>
               <label className="block text-xs uppercase tracking-widest text-[#6B5C52] mb-1.5">Пароль</label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                autoComplete="current-password"
-                className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl text-sm text-[#2B2521] focus:outline-none focus:border-[#1A1A1A]"
-                disabled={login.isPending}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  className="w-full px-4 py-3 pr-11 border border-[#DDD5C0] rounded-xl text-sm text-[#2B2521] focus:outline-none focus:border-[#1A1A1A]"
+                  disabled={login.isPending}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(s => !s)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9A8B7E] hover:text-[#2B2521] transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+                      <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
+                      <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
           {error && <p className="text-red-500 text-xs mb-4 text-center">{error}</p>}
