@@ -1086,43 +1086,45 @@ export default function Admin() {
   return (
     <div className="min-h-screen bg-[#F9F9D7]">
       <header className="bg-[#F9F9D7] border-b border-[#E8E7E2] sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-3 md:px-6 h-14 md:h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 md:gap-4 min-w-0">
-            {view !== "list" && view !== "media" && (
-              <button onClick={() => setView("list")} className="text-[#5A6262] hover:text-black transition-colors flex-shrink-0">
+        <div className="max-w-6xl mx-auto px-3 md:px-6 h-14 md:h-16 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 md:gap-3 min-w-0">
+            {view !== "list" && view !== "media" && view !== "content" && (
+              <button onClick={() => setView("list")} className="px-2.5 py-1.5 rounded-lg border border-[#DDD5C0] text-[#5A6262] hover:text-black hover:border-[#B0A898] transition-colors text-sm flex-shrink-0">
                 ←
               </button>
             )}
-            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-6 md:h-7" />
-            <span className="text-xs text-[#5A6262] uppercase tracking-widest hidden sm:inline">Админ</span>
-          </div>
-          <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
-            <button
-              onClick={() => setView(view === "content" ? "list" : "content")}
-              className={`transition-colors ${view === "content" ? "text-[#1F1F1D]" : "text-[#5A6262] hover:text-black"}`}
-              title="Контент сайта"
-            >
-              <Globe size={16} />
-            </button>
-
-            <button
-              onClick={() => setView(view === "media" ? "list" : "media")}
-              className={`flex items-center gap-1.5 text-xs uppercase tracking-wide transition-colors ${view === "media" ? "text-[#1F1F1D] font-medium" : "text-[#5A6262] hover:text-black"}`}
-            >
-              <Layers size={14} />
-              <span className="hidden sm:inline">Медиатека</span>
-            </button>
-            <a href="/" target="_blank" className="text-xs text-[#5A6262] hover:text-black uppercase tracking-wide transition-colors">
-              Сайт →
-            </a>
+            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-6 md:h-7 flex-shrink-0" />
             <button
               onClick={() => logoutMut.mutate({})}
               disabled={logoutMut.isPending}
-              className="text-xs text-[#5A6262] hover:text-red-600 uppercase tracking-wide transition-colors disabled:opacity-40"
-              title="Выйти"
+              className="px-3 py-1.5 rounded-lg border border-red-200 text-xs text-red-500 hover:bg-red-50 hover:border-red-300 transition-colors disabled:opacity-40 uppercase tracking-wide flex-shrink-0"
             >
               Выйти
             </button>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={() => setView(view === "content" ? "list" : "content")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs uppercase tracking-wide transition-colors ${view === "content" ? "bg-[#1F1F1D] text-white border-[#1F1F1D]" : "border-[#DDD5C0] text-[#5A6262] hover:text-black hover:border-[#B0A898]"}`}
+            >
+              <Globe size={13} />
+              <span className="hidden sm:inline">Контент</span>
+            </button>
+            <button
+              onClick={() => setView(view === "media" ? "list" : "media")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs uppercase tracking-wide transition-colors ${view === "media" ? "bg-[#1F1F1D] text-white border-[#1F1F1D]" : "border-[#DDD5C0] text-[#5A6262] hover:text-black hover:border-[#B0A898]"}`}
+            >
+              <Layers size={13} />
+              <span className="hidden sm:inline">Медиатека</span>
+            </button>
+            <a
+              href="/"
+              target="_blank"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#DDD5C0] text-xs text-[#5A6262] hover:text-black hover:border-[#B0A898] uppercase tracking-wide transition-colors"
+            >
+              <span className="hidden sm:inline">Сайт</span>
+              <span>↗</span>
+            </a>
           </div>
         </div>
       </header>
