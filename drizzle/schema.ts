@@ -65,3 +65,16 @@ export const bloggerVideos = mysqlTable("blogger_videos", {
 });
 export type BloggerVideo = typeof bloggerVideos.$inferSelect;
 export type InsertBloggerVideo = typeof bloggerVideos.$inferInsert;
+
+export const orders = mysqlTable("orders", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 50 }).notNull(),
+  address: text("address"),
+  items: text("items").notNull(),
+  total: int("total").notNull(),
+  status: mysqlEnum("status", ["new", "processing", "completed", "cancelled"]).default("new").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;
