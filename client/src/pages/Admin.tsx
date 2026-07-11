@@ -995,6 +995,10 @@ export default function Admin() {
   const [view, setView] = useState<"list" | "create" | "edit" | "media" | "content">("list");
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [savedMsg, setSavedMsg] = useState("");
+  const utils = trpc.useUtils();
+  const logoutMut = trpc.auth.logout.useMutation({
+    onSuccess: () => { utils.auth.me.invalidate(); },
+  });
 
   const { data: products = [], refetch } = trpc.admin.products.useQuery();
   const createMut = trpc.admin.createProduct.useMutation();
@@ -1111,6 +1115,14 @@ export default function Admin() {
             <a href="/" target="_blank" className="text-xs text-[#5A6262] hover:text-black uppercase tracking-wide transition-colors">
               Сайт →
             </a>
+            <button
+              onClick={() => logoutMut.mutate({})}
+              disabled={logoutMut.isPending}
+              className="text-xs text-[#5A6262] hover:text-red-600 uppercase tracking-wide transition-colors disabled:opacity-40"
+              title="Выйти"
+            >
+              Выйти
+            </button>
           </div>
         </div>
       </header>
