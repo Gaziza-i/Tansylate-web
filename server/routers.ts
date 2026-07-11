@@ -27,12 +27,12 @@ export const appRouter = router({
     adminLogin: publicProcedure
       .input((input: any) => input)
       .mutation(async ({ input, ctx }) => {
-        const expectedUsername = process.env.ADMIN_USERNAME || "admin";
-        const expectedPassword = process.env.ADMIN_PASSWORD;
+        const expectedUsername = (process.env.ADMIN_USERNAME || "admin").trim();
+        const expectedPassword = process.env.ADMIN_PASSWORD?.trim();
         if (!expectedPassword) {
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "ADMIN_PASSWORD не настроен на сервере" });
         }
-        if (input.username !== expectedUsername || input.password !== expectedPassword) {
+        if (input.username.trim() !== expectedUsername || input.password !== expectedPassword) {
           throw new TRPCError({ code: "UNAUTHORIZED", message: "Неверный логин или пароль" });
         }
         const ownerOpenId = ENV.ownerOpenId || "tansylate_admin";
