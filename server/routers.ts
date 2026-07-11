@@ -29,10 +29,11 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         const expectedUsername = (process.env.ADMIN_USERNAME || "admin").trim();
         const expectedPassword = process.env.ADMIN_PASSWORD?.trim();
+        console.log("[adminLogin] expectedPw len:", expectedPassword?.length, "inputPw len:", input.password?.length, "userMatch:", input.username?.trim() === expectedUsername, "expectedPw codes:", [...(expectedPassword?.slice(0,4) ?? "")].map(c => c.charCodeAt(0)), "inputPw codes:", [...(String(input.password ?? "").slice(0,4))].map(c => c.charCodeAt(0)));
         if (!expectedPassword) {
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "ADMIN_PASSWORD не настроен на сервере" });
         }
-        if (input.username.trim() !== expectedUsername || input.password !== expectedPassword) {
+        if (input.username?.trim() !== expectedUsername || String(input.password) !== expectedPassword) {
           throw new TRPCError({ code: "UNAUTHORIZED", message: "Неверный логин или пароль" });
         }
         const ownerOpenId = ENV.ownerOpenId || "tansylate_admin";
