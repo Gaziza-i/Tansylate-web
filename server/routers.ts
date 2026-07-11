@@ -1,5 +1,7 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
+import { ENV } from "./_core/env";
+import { sdk } from "./_core/sdk";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -8,8 +10,10 @@ import {
   getAllBloggerVideos, createBloggerVideo, deleteBloggerVideo,
   getSetting, setSetting,
   createOrder, getAllOrders,
+  upsertUser,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
+import { TRPCError } from "@trpc/server";
 
 export const appRouter = router({
   system: systemRouter,
@@ -20,6 +24,24 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+    adminLogin: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input, ctx }) => {
+        const expectedUsername = process.env.ADMIN_USERNAME || "admin";
+        const expectedPassword = process.env.ADMIN_PASSWORD;
+        if (!expectedPassword) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "ADMIN_PASSWORD не настроен на сервере" });
+        }
+        if (input.username !== expectedUsername || input.password !== expectedPassword) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Неверный логин или пароль" });
+        }
+        const ownerOpenId = ENV.ownerOpenId || "tansylate_admin";
+        await upsertUser({ openId: ownerOpenId, name: "Admin", role: "admin", lastSignedIn: new Date() });
+        const token = await sdk.createSessionToken(ownerOpenId, { name: "Admin", expiresInMs: ONE_YEAR_MS });
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+        return { success: true };
+      }),
   }),
 
   catalog: router({

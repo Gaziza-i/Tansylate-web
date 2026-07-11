@@ -35,6 +35,75 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
   );
 }
 
+function AdminLogin() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const utils = trpc.useUtils();
+
+  const login = trpc.auth.adminLogin.useMutation({
+    onSuccess: () => {
+      setError("");
+      utils.auth.me.invalidate();
+    },
+    onError: (e) => setError(e.message),
+  });
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!username.trim() || !password.trim()) return;
+    login.mutate({ username: username.trim(), password });
+  };
+
+  return (
+    <div className="min-h-screen bg-[#f8f9d7] flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-8 mx-auto mb-6 opacity-80" />
+          <p className="text-xs uppercase tracking-widest text-[#6B5C52]">Вход в панель управления</p>
+        </div>
+        <form onSubmit={submit} className="bg-white rounded-2xl p-8 shadow-sm">
+          <div className="space-y-4 mb-6">
+            <div>
+              <label className="block text-xs uppercase tracking-widest text-[#6B5C52] mb-1.5">Логин</label>
+              <input
+                type="text"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                autoComplete="username"
+                className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl text-sm text-[#2B2521] focus:outline-none focus:border-[#1A1A1A]"
+                disabled={login.isPending}
+              />
+            </div>
+            <div>
+              <label className="block text-xs uppercase tracking-widest text-[#6B5C52] mb-1.5">Пароль</label>
+              <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                autoComplete="current-password"
+                className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl text-sm text-[#2B2521] focus:outline-none focus:border-[#1A1A1A]"
+                disabled={login.isPending}
+              />
+            </div>
+          </div>
+          {error && <p className="text-red-500 text-xs mb-4 text-center">{error}</p>}
+          <button
+            type="submit"
+            disabled={!username.trim() || !password.trim() || login.isPending}
+            className="w-full py-3 bg-[#1A1A1A] text-white text-xs uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors disabled:opacity-40"
+          >
+            {login.isPending ? "Вход..." : "Войти"}
+          </button>
+        </form>
+        <p className="text-center mt-6">
+          <a href="/" className="text-xs text-[#6B5C52] hover:text-[#2B2521] transition-colors">← На главную</a>
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function AdminRoute() {
   const { data: user, isLoading } = trpc.auth.me.useQuery();
   if (isLoading) {
@@ -44,14 +113,7 @@ function AdminRoute() {
       </div>
     );
   }
-  if (!user || (user as any).role !== "admin") {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8f9d7] gap-4">
-        <p className="text-[#2B2521] text-lg font-serif">Доступ запрещён</p>
-        <a href="/" className="text-sm text-[#A0755A] hover:underline">На главную</a>
-      </div>
-    );
-  }
+  if (!user || (user as any).role !== "admin") return <AdminLogin />;
   return <Admin />;
 }
 
