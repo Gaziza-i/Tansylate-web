@@ -46,10 +46,38 @@ async function requireAdmin(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+function requireSitePassword(req: Request, res: Response, next: NextFunction) {
+  if (process.env.SITE_PASSWORD_PROTECT !== "true") {
+    next();
+    return;
+  }
+  const expectedUser = (process.env.ADMIN_USERNAME || "admin").trim();
+  const expectedPass = process.env.ADMIN_PASSWORD?.trim();
+  if (!expectedPass) {
+    next();
+    return;
+  }
+  const header = req.headers.authorization;
+  if (header?.startsWith("Basic ")) {
+    const decoded = Buffer.from(header.slice(6), "base64").toString("utf8");
+    const sep = decoded.indexOf(":");
+    const user = decoded.slice(0, sep);
+    const pass = decoded.slice(sep + 1);
+    if (user === expectedUser && pass === expectedPass) {
+      next();
+      return;
+    }
+  }
+  res.set("WWW-Authenticate", 'Basic realm="Tansylate"');
+  res.status(401).send("Требуется авторизация");
+}
+
 async function startServer() {
   await runStartupMigrations();
   const app = express();
   const server = createServer(app);
+
+  app.use(requireSitePassword);
 
   const uploadsDir = process.env.UPLOADS_DIR || path.join(process.cwd(), "uploads");
   fs.mkdirSync(uploadsDir, { recursive: true });
