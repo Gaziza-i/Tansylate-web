@@ -43,3 +43,16 @@ export const adminProcedure = t.procedure.use(
     });
   }),
 );
+
+export const siteProcedure = t.procedure.use(
+  t.middleware(async opts => {
+    const { ctx, next } = opts;
+
+    const locked = process.env.SITE_PASSWORD_PROTECT === "true";
+    if (!locked || ctx.siteAccess || ctx.user?.role === "admin") {
+      return next();
+    }
+
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Сайт временно закрыт" });
+  }),
+);

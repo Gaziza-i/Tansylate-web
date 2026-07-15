@@ -35,25 +35,35 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
   );
 }
 
-function AdminLogin() {
+function SpinnerScreen() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#f8f9d7]">
+      <div className="w-8 h-8 border-2 border-[#A0755A] border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
+
+function PasswordGate({
+  subtitle,
+  isPending,
+  error,
+  onSubmit,
+  footer,
+}: {
+  subtitle: string;
+  isPending: boolean;
+  error: string;
+  onSubmit: (username: string, password: string) => void;
+  footer?: React.ReactNode;
+}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const utils = trpc.useUtils();
-
-  const login = trpc.auth.adminLogin.useMutation({
-    onSuccess: () => {
-      setError("");
-      utils.auth.me.invalidate();
-    },
-    onError: (e) => setError(e.message),
-  });
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim() || !password.trim()) return;
-    login.mutate({ username: username.trim(), password });
+    onSubmit(username.trim(), password);
   };
 
   return (
@@ -61,7 +71,7 @@ function AdminLogin() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-8 mx-auto mb-6 opacity-80" />
-          <p className="text-xs uppercase tracking-widest text-[#6B5C52]">Вход в панель управления</p>
+          <p className="text-xs uppercase tracking-widest text-[#6B5C52]">{subtitle}</p>
         </div>
         <form onSubmit={submit} className="bg-white rounded-2xl p-8 shadow-sm">
           <div className="space-y-4 mb-6">
@@ -73,7 +83,7 @@ function AdminLogin() {
                 onChange={e => setUsername(e.target.value)}
                 autoComplete="username"
                 className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl text-sm text-[#2B2521] focus:outline-none focus:border-[#1A1A1A]"
-                disabled={login.isPending}
+                disabled={isPending}
               />
             </div>
             <div>
@@ -85,7 +95,7 @@ function AdminLogin() {
                   onChange={e => setPassword(e.target.value)}
                   autoComplete="current-password"
                   className="w-full px-4 py-3 pr-11 border border-[#DDD5C0] rounded-xl text-sm text-[#2B2521] focus:outline-none focus:border-[#1A1A1A]"
-                  disabled={login.isPending}
+                  disabled={isPending}
                 />
                 <button
                   type="button"
@@ -112,31 +122,63 @@ function AdminLogin() {
           {error && <p className="text-red-500 text-xs mb-4 text-center">{error}</p>}
           <button
             type="submit"
-            disabled={!username.trim() || !password.trim() || login.isPending}
+            disabled={!username.trim() || !password.trim() || isPending}
             className="w-full py-3 bg-[#1A1A1A] text-white text-xs uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors disabled:opacity-40"
           >
-            {login.isPending ? "Вход..." : "Войти"}
+            {isPending ? "Вход..." : "Войти"}
           </button>
         </form>
-        <p className="text-center mt-6">
-          <a href="/" className="text-xs text-[#6B5C52] hover:text-[#2B2521] transition-colors">← На главную</a>
-        </p>
+        {footer && <p className="text-center mt-6">{footer}</p>}
       </div>
     </div>
   );
 }
 
+function AdminLogin() {
+  const utils = trpc.useUtils();
+  const login = trpc.auth.adminLogin.useMutation({
+    onSuccess: () => utils.auth.me.invalidate(),
+  });
+
+  return (
+    <PasswordGate
+      subtitle="Вход в панель управления"
+      isPending={login.isPending}
+      error={login.error?.message ?? ""}
+      onSubmit={(username, password) => login.mutate({ username, password })}
+      footer={<a href="/" className="text-xs text-[#6B5C52] hover:text-[#2B2521] transition-colors">← На главную</a>}
+    />
+  );
+}
+
 function AdminRoute() {
   const { data: user, isLoading } = trpc.auth.me.useQuery();
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8f9d7]">
-        <div className="w-8 h-8 border-2 border-[#A0755A] border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  if (isLoading) return <SpinnerScreen />;
   if (!user || (user as any).role !== "admin") return <AdminLogin />;
   return <Admin />;
+}
+
+function SiteLogin() {
+  const utils = trpc.useUtils();
+  const login = trpc.auth.siteLogin.useMutation({
+    onSuccess: () => utils.auth.siteStatus.invalidate(),
+  });
+
+  return (
+    <PasswordGate
+      subtitle="Сайт в разработке"
+      isPending={login.isPending}
+      error={login.error?.message ?? ""}
+      onSubmit={(username, password) => login.mutate({ username, password })}
+    />
+  );
+}
+
+function SiteGate({ children }: { children: React.ReactNode }) {
+  const { data, isLoading } = trpc.auth.siteStatus.useQuery();
+  if (isLoading) return <SpinnerScreen />;
+  if (!data?.granted) return <SiteLogin />;
+  return <>{children}</>;
 }
 
 function Router() {
@@ -167,7 +209,9 @@ function App() {
         <TooltipProvider>
           <Toaster />
           {showSplash && <SplashScreen onDone={handleSplashDone} />}
-          <Router />
+          <SiteGate>
+            <Router />
+          </SiteGate>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

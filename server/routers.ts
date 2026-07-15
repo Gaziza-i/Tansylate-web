@@ -1,9 +1,9 @@
-import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { COOKIE_NAME, ONE_YEAR_MS, SITE_COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { ENV } from "./_core/env";
 import { sdk } from "./_core/sdk";
 import { systemRouter } from "./_core/systemRouter";
-import { adminProcedure, publicProcedure, router } from "./_core/trpc";
+import { adminProcedure, publicProcedure, siteProcedure, router } from "./_core/trpc";
 import {
   getAllProducts, getAllProductsAdmin, getProductById,
   createProduct, updateProduct, deleteProduct, createContact,
@@ -14,6 +14,13 @@ import {
 } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { TRPCError } from "@trpc/server";
+
+function checkCredentials(username: unknown, password: unknown): boolean {
+  const expectedUsername = (process.env.ADMIN_USERNAME || "admin").trim();
+  const expectedPassword = process.env.ADMIN_PASSWORD?.trim();
+  if (!expectedPassword) return false;
+  return String(username ?? "").trim() === expectedUsername && String(password ?? "") === expectedPassword;
+}
 
 export const appRouter = router({
   system: systemRouter,
@@ -27,13 +34,10 @@ export const appRouter = router({
     adminLogin: publicProcedure
       .input((input: any) => input)
       .mutation(async ({ input, ctx }) => {
-        const expectedUsername = (process.env.ADMIN_USERNAME || "admin").trim();
-        const expectedPassword = process.env.ADMIN_PASSWORD?.trim();
-        console.log("[adminLogin] expectedPw len:", expectedPassword?.length, "inputPw len:", input.password?.length, "userMatch:", input.username?.trim() === expectedUsername, "expectedPw codes:", [...(expectedPassword?.slice(0,4) ?? "")].map(c => c.charCodeAt(0)), "inputPw codes:", [...(String(input.password ?? "").slice(0,4))].map(c => c.charCodeAt(0)));
-        if (!expectedPassword) {
+        if (!process.env.ADMIN_PASSWORD?.trim()) {
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "ADMIN_PASSWORD не настроен на сервере" });
         }
-        if (input.username?.trim() !== expectedUsername || String(input.password) !== expectedPassword) {
+        if (!checkCredentials(input.username, input.password)) {
           throw new TRPCError({ code: "UNAUTHORIZED", message: "Неверный логин или пароль" });
         }
         const ownerOpenId = ENV.ownerOpenId || "tansylate_admin";
@@ -43,11 +47,30 @@ export const appRouter = router({
         ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: ONE_YEAR_MS });
         return { success: true };
       }),
+    siteStatus: publicProcedure.query(({ ctx }) => {
+      const locked = process.env.SITE_PASSWORD_PROTECT === "true";
+      const granted = !locked || ctx.siteAccess || ctx.user?.role === "admin";
+      return { locked, granted };
+    }),
+    siteLogin: publicProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input, ctx }) => {
+        if (!checkCredentials(input.username, input.password)) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Неверный логин или пароль" });
+        }
+        const token = await sdk.signSession(
+          { openId: "site_guest", appId: ENV.appId || "tansylate", name: "guest" },
+          { expiresInMs: ONE_YEAR_MS }
+        );
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(SITE_COOKIE_NAME, token, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+        return { success: true };
+      }),
   }),
 
   catalog: router({
-    products: publicProcedure.query(async () => getAllProducts()),
-    product: publicProcedure
+    products: siteProcedure.query(async () => getAllProducts()),
+    product: siteProcedure
       .input((input: any) => input)
       .query(async ({ input }) => getProductById(input.id)),
   }),
@@ -115,7 +138,7 @@ export const appRouter = router({
   }),
 
   settings: router({
-    getAbout: publicProcedure.query(async () => {
+    getAbout: siteProcedure.query(async () => {
       const raw = await getSetting("about_section");
       return raw ? JSON.parse(raw) : null;
     }),
@@ -125,7 +148,7 @@ export const appRouter = router({
         await setSetting("about_section", JSON.stringify(input));
         return { success: true };
       }),
-    getHero: publicProcedure.query(async () => {
+    getHero: siteProcedure.query(async () => {
       const raw = await getSetting("hero_section");
       return raw ? JSON.parse(raw) : null;
     }),
@@ -135,7 +158,7 @@ export const appRouter = router({
         await setSetting("hero_section", JSON.stringify(input));
         return { success: true };
       }),
-    getDelivery: publicProcedure.query(async () => {
+    getDelivery: siteProcedure.query(async () => {
       const raw = await getSetting("delivery_section");
       return raw ? JSON.parse(raw) : null;
     }),
@@ -145,7 +168,7 @@ export const appRouter = router({
         await setSetting("delivery_section", JSON.stringify(input));
         return { success: true };
       }),
-    getContacts: publicProcedure.query(async () => {
+    getContacts: siteProcedure.query(async () => {
       const raw = await getSetting("contacts_section");
       return raw ? JSON.parse(raw) : null;
     }),
@@ -155,7 +178,7 @@ export const appRouter = router({
         await setSetting("contacts_section", JSON.stringify(input));
         return { success: true };
       }),
-    getLooks: publicProcedure.query(async () => {
+    getLooks: siteProcedure.query(async () => {
       const raw = await getSetting("looks_section");
       return raw ? JSON.parse(raw) : null;
     }),
@@ -168,7 +191,7 @@ export const appRouter = router({
   }),
 
   bloggers: router({
-    getAll: publicProcedure.query(async () => getAllBloggerVideos()),
+    getAll: siteProcedure.query(async () => getAllBloggerVideos()),
     add: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => createBloggerVideo(input.url, input.description)),
