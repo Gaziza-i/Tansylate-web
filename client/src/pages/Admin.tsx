@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers, Globe } from "lucide-react";
+import { Plus, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp, Image as ImageIcon, Upload, Copy, Check, Layers, Globe, ExternalLink } from "lucide-react";
 
 interface Spec { label: string; value: string; }
 interface SizeTable { title: string; cols: string[]; rows: string[][]; }
@@ -1123,7 +1123,7 @@ export default function Admin() {
               className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#DDD5C0] text-xs text-[#5A6262] hover:text-black hover:border-[#B0A898] uppercase tracking-wide transition-colors"
             >
               <span className="hidden sm:inline">Сайт</span>
-              <span>↗</span>
+              <ExternalLink size={13} />
             </a>
           </div>
         </div>
