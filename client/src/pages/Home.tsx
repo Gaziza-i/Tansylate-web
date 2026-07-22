@@ -376,7 +376,7 @@ function AboutSection() {
   const { data } = trpc.settings.getAbout.useQuery();
   const about = data ?? DEFAULT_ABOUT;
   return (
-    <section id="about" className="bg-[#EEE8D2] overflow-hidden">
+    <section id="about" className="bg-[#f8f9d7] overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2">
         <div className="py-20 px-8 md:px-16 flex flex-col justify-center">
           <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-6">{about.title}</h2>
@@ -403,7 +403,7 @@ function BloggersSection() {
   const { data: videos = [] } = trpc.bloggers.getAll.useQuery();
   if ((videos as any[]).length === 0) return null;
   return (
-    <section className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
+    <section className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-10 text-center">Нас носят блогеры</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -583,8 +583,7 @@ export default function Home() {
 
   const Header = () => (
     <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 lg:px-6">
-      <div className="relative w-full max-w-[1400px]">
-        <div className="absolute inset-x-0 top-0 h-[60px] lg:h-[68px] bg-white/50 backdrop-blur-md rounded-[2rem] -z-10" aria-hidden="true" />
+      <div className="w-full max-w-[1400px]">
         <div className="flex justify-center">
           <div className="w-full max-w-6xl bg-white rounded-2xl shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
             <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center px-10 h-[68px]">
@@ -1026,7 +1025,7 @@ export default function Home() {
             </button>
           </section>
 
-          <section id="catalog" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
+          <section id="catalog" className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-8 text-center">Каталог товаров</h2>
 
@@ -1037,7 +1036,7 @@ export default function Home() {
                   placeholder="Поиск товаров..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-[#DDD5C0] rounded-xl focus:outline-none focus:border-[#1A1A1A] bg-[#EEE8D2]"
+                  className="w-full pl-12 pr-4 py-3 border border-[#DDD5C0] rounded-xl focus:outline-none focus:border-[#1A1A1A] bg-[#f8f9d7]"
                 />
               </div>
 
@@ -1056,7 +1055,7 @@ export default function Home() {
 
           <AboutSection />
 
-          <section id="trust" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
+          <section id="trust" className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-12 text-center">Почему нам верят</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
