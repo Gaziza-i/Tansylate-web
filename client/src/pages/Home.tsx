@@ -838,10 +838,12 @@ export default function Home() {
     const img = imgs[0] ?? FALLBACK_IMAGES[0];
     const care = parseJSON<CareItem[]>(p.careInstructions, []);
     const hasWash = care.some(c => c.icon === "wash");
+    const isNew = !!p.createdAt && Date.now() - new Date(p.createdAt).getTime() < 14 * 24 * 60 * 60 * 1000;
+    const installment = Math.round((p.price ?? 0) / 4);
     return (
-      <div className="rounded-2xl overflow-hidden bg-[#EEE8D2] hover:shadow-lg transition-shadow flex flex-col">
+      <div className="flex flex-col">
         <div
-          className="w-full aspect-square bg-[#DDD5C0] overflow-hidden relative cursor-pointer"
+          className="w-full aspect-[3/4] rounded-2xl bg-[#DDD5C0] overflow-hidden relative cursor-pointer"
           onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
         >
           <img
@@ -850,14 +852,19 @@ export default function Home() {
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
             onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
+          {isNew && (
+            <span className="absolute top-3 left-3 px-3 py-1.5 bg-[#E0937A] text-white text-[11px] font-semibold uppercase tracking-wide rounded-full">
+              Новинка
+            </span>
+          )}
           <button
             onClick={e => { e.stopPropagation(); toggleWishlist(p.id); }}
-            className="absolute top-3 right-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-all shadow-sm"
+            className="absolute top-3 right-3 w-10 h-10 bg-white/95 rounded-full flex items-center justify-center hover:bg-white transition-all shadow-sm"
             aria-label="Добавить в избранное"
           >
             <Heart
-              size={16}
-              className={wishlist.has(p.id) ? "text-red-500" : "text-[#6B5C52]"}
+              size={17}
+              className={wishlist.has(p.id) ? "text-red-500" : "text-[#2B2521]"}
               fill={wishlist.has(p.id) ? "currentColor" : "none"}
             />
           </button>
@@ -870,18 +877,29 @@ export default function Home() {
             </div>
           )}
         </div>
-        <div className="p-4 flex flex-col flex-1">
+        <div className="pt-4 flex flex-col items-center text-center">
           <h3
-            className="text-base font-semibold text-[#2B2521] mb-1 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
+            className="text-base font-bold text-[#1A1A1A] mb-1 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
             onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
           >{p.name}</h3>
-          {p.collection && <p className="text-xs text-[#A0755A] uppercase tracking-wide mb-1">{p.collection}</p>}
-          <p className="text-sm font-medium text-[#2B2521] mb-3">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
+          {p.collection && <p className="text-xs text-[#A0755A] uppercase tracking-wide mb-1.5">{p.collection}</p>}
+          {installment > 0 && (
+            <p className="flex items-center gap-1.5 text-xs text-[#2B2521] mb-2">
+              <svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor" aria-hidden="true">
+                <rect x="0" y="2" width="2" height="8" />
+                <rect x="4" y="0" width="2" height="12" />
+                <rect x="8" y="2" width="2" height="8" />
+                <rect x="12" y="4" width="2" height="4" />
+              </svg>
+              <span className="font-semibold">долями</span> от {installment.toLocaleString("ru-RU")} р.
+            </p>
+          )}
+          <p className="text-lg text-[#6B5C52] mb-4">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
           <button
             onClick={e => { e.stopPropagation(); addToCart(p); setCartOpen(true); }}
-            className="mt-auto w-full py-2.5 bg-[#A0755A] text-white text-xs uppercase tracking-widest rounded hover:bg-[#8B6444] transition-colors active:scale-95"
+            className="w-full py-3 bg-[#1A1A1A] text-white text-sm font-medium rounded-xl hover:bg-[#333] transition-colors active:scale-95"
           >
-            В корзину
+            Добавить в корзину
           </button>
         </div>
       </div>
