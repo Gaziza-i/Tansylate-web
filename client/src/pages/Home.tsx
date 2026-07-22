@@ -576,27 +576,33 @@ export default function Home() {
   };
 
   const Header = () => (
-    <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 lg:px-6">
-      <div className="w-full max-w-7xl bg-white rounded-2xl shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
-        <div className="hidden lg:flex items-center justify-between px-8 h-[68px]">
-          {NAV_LEFT.map(item => (
-            <a key={item.label} href={item.href ?? `#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
-          ))}
+    <header className="fixed top-3 left-0 right-0 z-50 flex justify-center">
+      <div className="w-full bg-white rounded-2xl shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
+        <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center px-8 h-[68px]">
+          <div className="flex items-center justify-end gap-8 pr-8">
+            {NAV_LEFT.map(item => (
+              <a key={item.label} href={item.href ?? `#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
+            ))}
+          </div>
           <a href="/" onClick={e => { e.preventDefault(); setLocation("/"); }} className="hover:opacity-60 transition-opacity cursor-pointer">
             <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-11" />
           </a>
-          {NAV_RIGHT.map(item => (
-            <a key={item.label} href={item.href ?? `#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
-          ))}
-          <div className="flex items-center gap-2">
-            <button onClick={() => setWishlistOpen(true)} className="w-9 h-9 rounded-full border border-[#DDD5C0] flex items-center justify-center gap-1 hover:border-[#A0755A] transition-colors text-[#6B5C52]" aria-label="Избранное">
-              <Heart size={15} strokeWidth={1.5} />
-              <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
-            </button>
-            <button onClick={() => setCartOpen(true)} className="w-9 h-9 rounded-full border border-[#DDD5C0] flex items-center justify-center gap-1 hover:border-[#A0755A] transition-colors text-[#6B5C52]" aria-label="Корзина">
-              <ShoppingBag size={15} strokeWidth={1.5} />
-              <span className="text-[11px] font-medium leading-none">{cartCount}</span>
-            </button>
+          <div className="flex items-center justify-between pl-8">
+            <div className="flex items-center gap-8">
+              {NAV_RIGHT.map(item => (
+                <a key={item.label} href={item.href ?? `#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <button onClick={() => setWishlistOpen(true)} className="w-9 h-9 rounded-full border border-[#DDD5C0] flex items-center justify-center gap-1 hover:border-[#A0755A] transition-colors text-[#6B5C52]" aria-label="Избранное">
+                <Heart size={15} strokeWidth={1.5} />
+                <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
+              </button>
+              <button onClick={() => setCartOpen(true)} className="w-9 h-9 rounded-full border border-[#DDD5C0] flex items-center justify-center gap-1 hover:border-[#A0755A] transition-colors text-[#6B5C52]" aria-label="Корзина">
+                <ShoppingBag size={15} strokeWidth={1.5} />
+                <span className="text-[11px] font-medium leading-none">{cartCount}</span>
+              </button>
+            </div>
           </div>
         </div>
 
