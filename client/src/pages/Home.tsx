@@ -583,7 +583,7 @@ export default function Home() {
             <a key={item.label} href={item.href ?? `#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
           ))}
           <a href="/" onClick={e => { e.preventDefault(); setLocation("/"); }} className="hover:opacity-60 transition-opacity cursor-pointer">
-            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-8" />
+            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-11" />
           </a>
           {NAV_RIGHT.map(item => (
             <a key={item.label} href={item.href ?? `#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
