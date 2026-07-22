@@ -17,7 +17,7 @@ const FALLBACK_IMAGES = [
 ];
 
 const NAV_LEFT = [
-  { label: "Каталог", href: "/catalog" },
+  { label: "Каталог", id: "catalog" },
   { label: "О бренде", id: "about" },
   { label: "Образы", id: "looks" },
 ];
@@ -468,6 +468,12 @@ export default function Home() {
     localStorage.setItem("tansylate_cart", JSON.stringify(cart));
   }, [cart]);
 
+  useEffect(() => {
+    if (location === "/catalog") {
+      setTimeout(() => document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" }), 100);
+    }
+  }, [location]);
+
   const createOrder = trpc.orders.create.useMutation({
     onSuccess: (data, variables) => {
       const lines = (variables.items as CartItem[]).map(i => `${i.name}${i.size ? ` (${i.size})` : ""} × ${i.qty}`).join(", ");
@@ -581,7 +587,7 @@ export default function Home() {
         <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center px-8 h-[68px]">
           <div className="flex items-center justify-end gap-8 pr-8">
             {NAV_LEFT.map(item => (
-              <a key={item.label} href={item.href ?? `#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
+              <a key={item.label} href={`#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
             ))}
           </div>
           <a href="/" onClick={e => { e.preventDefault(); setLocation("/"); }} className="hover:opacity-60 transition-opacity cursor-pointer">
@@ -590,7 +596,7 @@ export default function Home() {
           <div className="flex items-center justify-between pl-8">
             <div className="flex items-center gap-8">
               {NAV_RIGHT.map(item => (
-                <a key={item.label} href={item.href ?? `#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
+                <a key={item.label} href={`#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
               ))}
             </div>
             <div className="flex items-center gap-2">
@@ -631,7 +637,7 @@ export default function Home() {
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white border-t border-[#f0f0f0] py-4 px-6 rounded-b-2xl">
             {ALL_NAV.map((item, i) => (
-              <a key={item.label} href={item.href ?? `#${item.id}`}
+              <a key={item.label} href={`#${item.id}`}
                 className={`block py-3 text-sm text-[#6B5C52] hover:text-[#2B2521] transition-colors${i < ALL_NAV.length - 1 ? " border-b border-[#f0f0f0]" : ""}`}
                 onClick={navClick(item)}
               >{item.label}</a>
@@ -788,7 +794,7 @@ export default function Home() {
       <footer id="contacts" className="bg-[#EEE8D2] border-t border-[#D5D0C8] pt-16 md:pt-0">
         <div className="hidden md:grid grid-cols-2 py-20">
           <div className="flex flex-col justify-center px-16 gap-7 border-r border-[#D5D0C8]">
-            <a href="/catalog" onClick={e => { e.preventDefault(); setLocation("/catalog"); }} className={lnk}>Каталог</a>
+            <a href="#catalog" onClick={e => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
             <a href="#about" onClick={e => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
             <a href="#looks" onClick={e => { e.preventDefault(); scrollToSection("looks"); }} className={lnk}>Образы</a>
             <a href="#delivery" onClick={e => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Оплата и доставка</a>
@@ -803,7 +809,7 @@ export default function Home() {
 
         <div className="md:hidden flex gap-6 px-8 pb-12">
           <div className="flex flex-col gap-5 flex-1">
-            <a href="/catalog" onClick={e => { e.preventDefault(); setLocation("/catalog"); }} className={lnk}>Каталог</a>
+            <a href="#catalog" onClick={e => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
             <a href="#about" onClick={e => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
             <a href="#looks" onClick={e => { e.preventDefault(); scrollToSection("looks"); }} className={lnk}>Образы</a>
             <a href="#delivery" onClick={e => { e.preventDefault(); scrollToSection("delivery"); }} className={lnk}>Доставка</a>
@@ -996,7 +1002,7 @@ export default function Home() {
     </>
   );
 
-  if (location === "/" || location === "/home") {
+  if (location === "/" || location === "/home" || location === "/catalog") {
     return (
       <div className="min-h-screen bg-[#f8f9d7]">
         <Header />
@@ -1008,11 +1014,39 @@ export default function Home() {
               {heroS.subtitle}
             </p>
             <button
-              onClick={() => setLocation("/catalog")}
+              onClick={() => scrollToSection("catalog")}
               className="px-8 py-3 bg-[#1A1A1A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors font-medium"
             >
               {heroS.buttonText}
             </button>
+          </section>
+
+          <section id="catalog" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-8 text-center">Каталог товаров</h2>
+
+              <div className="mb-12 relative max-w-xl mx-auto">
+                <Search className="absolute left-4 top-3 text-[#6B5C52]" size={20} />
+                <input
+                  type="text"
+                  placeholder="Поиск товаров..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 border border-[#DDD5C0] rounded-xl focus:outline-none focus:border-[#1A1A1A] bg-[#EEE8D2]"
+                />
+              </div>
+
+              {filteredProducts.length === 0 ? (
+                <div className="text-center py-20 text-[#6B5C52]">
+                  <p className="text-lg mb-2">Товары не найдены</p>
+                  {searchQuery && <p className="text-sm">Попробуйте изменить запрос</p>}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                  {filteredProducts.map((p: any) => <ProductCard key={p.id} p={p} />)}
+                </div>
+              )}
+            </div>
           </section>
 
           <AboutSection />
@@ -1093,42 +1127,6 @@ export default function Home() {
             </div>
           </section>
 
-        </main>
-        <FooterEditorial />
-        <Modals />
-      </div>
-    );
-  }
-
-  if (location === "/catalog") {
-    return (
-      <div className="min-h-screen bg-[#f8f9d7]">
-        <Header />
-        <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 lg:pt-32 pb-12">
-          <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Каталог" }]} />
-          <h1 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-8">Каталог товаров</h1>
-
-          <div className="mb-12 relative">
-            <Search className="absolute left-4 top-3 text-[#6B5C52]" size={20} />
-            <input
-              type="text"
-              placeholder="Поиск товаров..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border border-[#DDD5C0] rounded-xl focus:outline-none focus:border-[#1A1A1A] bg-[#EEE8D2]"
-            />
-          </div>
-
-          {filteredProducts.length === 0 ? (
-            <div className="text-center py-20 text-[#6B5C52]">
-              <p className="text-lg mb-2">Товары не найдены</p>
-              {searchQuery && <p className="text-sm">Попробуйте изменить запрос</p>}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-              {filteredProducts.map((p: any) => <ProductCard key={p.id} p={p} />)}
-            </div>
-          )}
         </main>
         <FooterEditorial />
         <Modals />
