@@ -875,14 +875,14 @@ export default function Home() {
         </div>
         <div className="pt-4 flex flex-col items-center text-center">
           <h3
-            className="text-base font-bold text-[#1A1A1A] mb-2 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
+            className="text-[20px] font-bold text-[#1A1A1A] mb-2 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
             onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
           >{p.name}</h3>
           {p.collection && <p className="text-xs text-[#A0755A] uppercase tracking-wide mb-4">{p.collection}</p>}
-          <p className="text-lg text-[#6B5C52] mb-10">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
+          <p className="text-[20px] text-[#6B5C52] mb-10">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
           <button
             onClick={e => { e.stopPropagation(); addToCart(p); setCartOpen(true); }}
-            className="w-full py-3 bg-[#1A1A1A] text-white text-sm font-medium rounded-xl hover:bg-[#333] transition-colors active:scale-95"
+            className="w-full py-3 bg-[#1A1A1A] text-white text-[14px] font-medium rounded-xl hover:bg-[#333] transition-colors active:scale-95"
           >
             Добавить в корзину
           </button>
