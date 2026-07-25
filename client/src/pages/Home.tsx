@@ -585,8 +585,8 @@ export default function Home() {
     <>
       <div className="absolute top-0 left-0 right-0 h-[72px] lg:h-20 bg-white rounded-[90px] z-10" aria-hidden="true" />
       <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-3 lg:px-6">
-        <div className="w-full max-w-7xl bg-white rounded-2xl shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
-        <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center px-10 h-[68px]">
+        <div className="w-full max-w-7xl bg-white rounded-2xl">
+        <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center px-10 h-20">
           <div className="flex items-center justify-between pr-10">
             {NAV_LEFT.map(item => (
               <a key={item.label} href={`#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
