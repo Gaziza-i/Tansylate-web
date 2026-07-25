@@ -591,7 +591,7 @@ export default function Home() {
             ))}
           </div>
           <a href="/" onClick={e => { e.preventDefault(); setLocation("/"); }} className="hover:opacity-60 transition-opacity cursor-pointer">
-            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-11" />
+            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-16" />
           </a>
           <div className="flex items-center justify-between pl-10">
             {NAV_RIGHT.map(item => (
