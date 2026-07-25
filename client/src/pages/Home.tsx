@@ -150,7 +150,7 @@ function ProductModal({
   );
 
   return (
-    <div className="fixed inset-0 bg-[#f8f9d7] z-50 flex items-center justify-center p-3 md:p-6" onClick={onClose}>
+    <div className="fixed inset-0 bg-[#F5F7D0] z-50 flex items-center justify-center p-3 md:p-6" onClick={onClose}>
       <div
         className="bg-[#EEE8D2] rounded-2xl max-w-4xl w-full max-h-[94vh] overflow-y-auto md:overflow-hidden flex flex-col md:flex-row relative"
         onClick={e => e.stopPropagation()}
@@ -376,7 +376,7 @@ function AboutSection() {
   const { data } = trpc.settings.getAbout.useQuery();
   const about = data ?? DEFAULT_ABOUT;
   return (
-    <section id="about" className="min-h-screen flex items-center bg-[#f8f9d7] overflow-hidden">
+    <section id="about" className="min-h-screen flex items-center bg-[#F5F7D0] overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 w-full">
         <div className="py-20 px-8 md:px-16 flex flex-col justify-center">
           <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-6">{about.title}</h2>
@@ -403,14 +403,14 @@ function BloggersSection() {
   const { data: videos = [] } = trpc.bloggers.getAll.useQuery();
   if ((videos as any[]).length === 0) return null;
   return (
-    <section className="min-h-screen flex flex-col justify-center py-20 px-4 md:px-6 bg-[#f8f9d7]">
+    <section className="min-h-screen flex flex-col justify-center py-20 px-4 md:px-6 bg-[#F5F7D0]">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-10 text-center">Нас носят блогеры</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {(videos as any[]).map((v: any) => {
             const ytId = getYoutubeId(v.videoUrl);
             return (
-              <div key={v.id} className="bg-[#f8f9d7] rounded-2xl overflow-hidden">
+              <div key={v.id} className="bg-[#F5F7D0] rounded-2xl overflow-hidden">
                 {ytId ? (
                   <div className="aspect-video">
                     <iframe
@@ -1011,7 +1011,7 @@ export default function Home() {
 
   if (location === "/" || location === "/home" || location === "/catalog") {
     return (
-      <div className="min-h-screen bg-[#f8f9d7]">
+      <div className="min-h-screen bg-[#F5F7D0]">
         <Header />
         <main className="pt-24 lg:pt-28">
           <section className="min-h-[calc(100vh-88px)] flex flex-col items-center justify-center text-center px-4">
@@ -1039,7 +1039,7 @@ export default function Home() {
                   placeholder="Поиск товаров..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-[#DDD5C0] rounded-xl focus:outline-none focus:border-[#1A1A1A] bg-[#f8f9d7]"
+                  className="w-full pl-12 pr-4 py-3 border border-[#DDD5C0] rounded-xl focus:outline-none focus:border-[#1A1A1A] bg-[#F5F7D0]"
                 />
               </div>
 
@@ -1113,7 +1113,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="delivery" className="min-h-screen flex flex-col justify-center py-20 px-4 md:px-6 bg-[#f8f9d7]">
+          <section id="delivery" className="min-h-screen flex flex-col justify-center py-20 px-4 md:px-6 bg-[#F5F7D0]">
             <div className="max-w-5xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-12 text-center">{deliveryS.title}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -1143,7 +1143,7 @@ export default function Home() {
 
   if (location === "/privacy") {
     return (
-      <div className="min-h-screen bg-[#f8f9d7] flex flex-col">
+      <div className="min-h-screen bg-[#F5F7D0] flex flex-col">
         <Header />
         <main className="flex-1 max-w-4xl mx-auto w-full px-4 md:px-6 pt-28 lg:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Политика конфиденциальности" }]} />
@@ -1160,7 +1160,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9d7] flex flex-col">
+    <div className="min-h-screen bg-[#F5F7D0] flex flex-col">
       <Header />
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-6 pt-28 lg:pt-32 pb-20 text-center">
         <p className="text-[#6B5C52]">Страница не найдена</p>

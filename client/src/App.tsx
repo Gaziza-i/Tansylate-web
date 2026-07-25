@@ -20,7 +20,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
     <div
       style={{
         position: "fixed", inset: 0,
-        background: "#f8f9d7",
+        background: "#F5F7D0",
         display: "flex", alignItems: "center", justifyContent: "center",
         zIndex: 9999,
         animation: "splash-hide 0.5s ease-in 2.7s forwards",
@@ -37,7 +37,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
 
 function SpinnerScreen() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8f9d7]">
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F7D0]">
       <div className="w-8 h-8 border-2 border-[#A0755A] border-t-transparent rounded-full animate-spin" />
     </div>
   );
@@ -67,7 +67,7 @@ function PasswordGate({
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f9d7] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#F5F7D0] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-8 mx-auto mb-6 opacity-80" />
