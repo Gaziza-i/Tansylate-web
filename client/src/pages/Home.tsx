@@ -790,11 +790,11 @@ export default function Home() {
   );
 
   const FooterEditorial = () => {
-    const lnk = "text-[11px] uppercase tracking-[0.18em] text-[#6B5C52] hover:text-[#2B2521] transition-colors";
+    const lnk = "text-[18px] uppercase tracking-[0.18em] text-[#6B5C52] hover:text-[#2B2521] transition-colors";
     return (
       <footer id="contacts" className="bg-[#EEE8D2] border-t border-[#D5D0C8] pt-16 md:pt-0">
-        <div className="hidden md:grid grid-cols-2 py-20">
-          <div className="flex flex-col justify-center px-16 gap-7 border-r border-[#D5D0C8]">
+        <div className="hidden md:flex justify-between py-20">
+          <div className="flex flex-col justify-center px-16 gap-7">
             <a href="#catalog" onClick={e => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
             <a href="#about" onClick={e => { e.preventDefault(); scrollToSection("about"); }} className={lnk}>О бренде</a>
             <a href="#looks" onClick={e => { e.preventDefault(); scrollToSection("looks"); }} className={lnk}>Образы</a>
