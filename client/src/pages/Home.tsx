@@ -836,11 +836,10 @@ export default function Home() {
     const care = parseJSON<CareItem[]>(p.careInstructions, []);
     const hasWash = care.some(c => c.icon === "wash");
     const isNew = !!p.createdAt && Date.now() - new Date(p.createdAt).getTime() < 14 * 24 * 60 * 60 * 1000;
-    const installment = Math.round((p.price ?? 0) / 4);
     return (
       <div className="flex flex-col">
         <div
-          className="w-full aspect-[3/4] rounded-2xl bg-[#DDD5C0] overflow-hidden relative cursor-pointer"
+          className="w-full aspect-[3/4] bg-[#DDD5C0] overflow-hidden relative cursor-pointer"
           onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
         >
           <img
@@ -880,17 +879,6 @@ export default function Home() {
             onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
           >{p.name}</h3>
           {p.collection && <p className="text-xs text-[#A0755A] uppercase tracking-wide mb-1.5">{p.collection}</p>}
-          {installment > 0 && (
-            <p className="flex items-center gap-1.5 text-xs text-[#2B2521] mb-2">
-              <svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor" aria-hidden="true">
-                <rect x="0" y="2" width="2" height="8" />
-                <rect x="4" y="0" width="2" height="12" />
-                <rect x="8" y="2" width="2" height="8" />
-                <rect x="12" y="4" width="2" height="4" />
-              </svg>
-              <span className="font-semibold">долями</span> от {installment.toLocaleString("ru-RU")} р.
-            </p>
-          )}
           <p className="text-lg text-[#6B5C52] mb-4">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
           <button
             onClick={e => { e.stopPropagation(); addToCart(p); setCartOpen(true); }}
@@ -1061,7 +1049,7 @@ export default function Home() {
                   {searchQuery && <p className="text-sm">Попробуйте изменить запрос</p>}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                   {filteredProducts.map((p: any) => <ProductCard key={p.id} p={p} />)}
                 </div>
               )}
