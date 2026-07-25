@@ -582,8 +582,10 @@ export default function Home() {
   };
 
   const Header = () => (
-    <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 lg:px-6">
-      <div className="w-full bg-white rounded-2xl shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
+    <>
+      <div className="absolute top-0 left-0 right-0 h-[72px] lg:h-20 bg-white z-10" aria-hidden="true" />
+      <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 lg:px-6">
+        <div className="w-full bg-white rounded-2xl shadow-[0_4px_24px_0_rgba(0,0,0,0.10)]">
         <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center px-10 h-[68px]">
           <div className="flex items-center justify-between pr-10">
             {NAV_LEFT.map(item => (
@@ -643,7 +645,8 @@ export default function Home() {
           </div>
         )}
       </div>
-    </header>
+      </header>
+    </>
   );
 
   const CartDrawer = () => (
