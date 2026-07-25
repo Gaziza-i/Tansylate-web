@@ -878,7 +878,7 @@ export default function Home() {
             className="text-base font-bold text-[#1A1A1A] mb-1 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
             onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
           >{p.name}</h3>
-          {p.collection && <p className="text-xs text-[#A0755A] uppercase tracking-wide mb-1.5">{p.collection}</p>}
+          {p.collection && <p className="text-xs text-[#A0755A] uppercase tracking-wide mb-4">{p.collection}</p>}
           <p className="text-lg text-[#6B5C52] mb-4">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
           <button
             onClick={e => { e.stopPropagation(); addToCart(p); setCartOpen(true); }}
