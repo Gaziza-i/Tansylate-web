@@ -1158,9 +1158,9 @@ export default function Home() {
 
   if (location === "/privacy") {
     return (
-      <div className="min-h-screen bg-[#f8f9d7]">
+      <div className="min-h-screen bg-[#f8f9d7] flex flex-col">
         <Header />
-        <main className="max-w-4xl mx-auto px-4 md:px-6 pt-28 lg:pt-32 pb-12">
+        <main className="flex-1 max-w-4xl mx-auto w-full px-4 md:px-6 pt-28 lg:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Политика конфиденциальности" }]} />
           <h1 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-8">Политика конфиденциальности</h1>
           <div className="prose prose-sm max-w-none">
@@ -1175,9 +1175,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9d7]">
+    <div className="min-h-screen bg-[#f8f9d7] flex flex-col">
       <Header />
-      <main className="max-w-7xl mx-auto px-4 md:px-6 pt-28 lg:pt-32 pb-20 text-center">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-6 pt-28 lg:pt-32 pb-20 text-center">
         <p className="text-[#6B5C52]">Страница не найдена</p>
       </main>
       <FooterEditorial />
