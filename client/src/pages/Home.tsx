@@ -875,7 +875,7 @@ export default function Home() {
         </div>
         <div className="pt-4 flex flex-col items-center text-center">
           <h3
-            className="text-base font-bold text-[#1A1A1A] mb-1 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
+            className="text-base font-bold text-[#1A1A1A] mb-2 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
             onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
           >{p.name}</h3>
           {p.collection && <p className="text-xs text-[#A0755A] uppercase tracking-wide mb-4">{p.collection}</p>}
