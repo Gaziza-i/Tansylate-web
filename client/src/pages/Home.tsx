@@ -376,8 +376,8 @@ function AboutSection() {
   const { data } = trpc.settings.getAbout.useQuery();
   const about = data ?? DEFAULT_ABOUT;
   return (
-    <section id="about" className="bg-[#f8f9d7] overflow-hidden">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2">
+    <section id="about" className="min-h-screen flex items-center bg-[#f8f9d7] overflow-hidden">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 w-full">
         <div className="py-20 px-8 md:px-16 flex flex-col justify-center">
           <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-6">{about.title}</h2>
           {about.paragraphs.map((p: string, i: number) => (
@@ -403,7 +403,7 @@ function BloggersSection() {
   const { data: videos = [] } = trpc.bloggers.getAll.useQuery();
   if ((videos as any[]).length === 0) return null;
   return (
-    <section className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
+    <section className="min-h-screen flex flex-col justify-center py-20 px-4 md:px-6 bg-[#f8f9d7]">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-10 text-center">Нас носят блогеры</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1043,7 +1043,7 @@ export default function Home() {
             </button>
           </section>
 
-          <section id="catalog" className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
+          <section id="catalog" className="min-h-screen flex flex-col justify-center py-20 px-4 md:px-6 bg-[#EEE8D2]">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-8 text-center">Каталог товаров</h2>
 
@@ -1073,7 +1073,7 @@ export default function Home() {
 
           <AboutSection />
 
-          <section id="trust" className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
+          <section id="trust" className="min-h-screen flex flex-col justify-center py-20 px-4 md:px-6 bg-[#EEE8D2]">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-12 text-center">Почему нам верят</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -1110,7 +1110,7 @@ export default function Home() {
 
           <BloggersSection />
 
-          <section id="looks" className="py-20 px-4 md:px-6 bg-[#EEE8D2]">
+          <section id="looks" className="min-h-screen flex flex-col justify-center py-20 px-4 md:px-6 bg-[#EEE8D2]">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-4 text-center">{looksS.title}</h2>
               {(looksS.photos ?? []).length > 0 ? (
@@ -1128,7 +1128,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="delivery" className="py-20 px-4 md:px-6 bg-[#f8f9d7]">
+          <section id="delivery" className="min-h-screen flex flex-col justify-center py-20 px-4 md:px-6 bg-[#f8f9d7]">
             <div className="max-w-5xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-12 text-center">{deliveryS.title}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
