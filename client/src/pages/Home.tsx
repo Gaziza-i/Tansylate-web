@@ -213,7 +213,7 @@ function ProductModal({
             </p>
 
             {product.description && (
-              <p className="text-[15px] text-[#2B2521] leading-relaxed mb-5">{product.description}</p>
+              <p className="text-[17px] text-[#2B2521] leading-relaxed mb-5">{product.description}</p>
             )}
 
             {availableSizes.length > 0 && (
@@ -381,7 +381,7 @@ function AboutSection() {
         <div className="py-20 px-8 md:px-16 flex flex-col justify-center">
           <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-6">{about.title}</h2>
           {about.paragraphs.map((p: string, i: number) => (
-            <p key={i} className={`text-[#6B5C52] leading-relaxed ${i < about.paragraphs.length - 1 ? "mb-4" : ""}`}>{p}</p>
+            <p key={i} className={`text-[18px] text-[#6B5C52] leading-relaxed ${i < about.paragraphs.length - 1 ? "mb-4" : ""}`}>{p}</p>
           ))}
         </div>
         {about.photo && (
@@ -433,7 +433,7 @@ function BloggersSection() {
                   </a>
                 )}
                 {v.description && (
-                  <p className="px-4 py-3 text-sm text-[#6B5C52]">{v.description}</p>
+                  <p className="px-4 py-3 text-[16px] text-[#6B5C52]">{v.description}</p>
                 )}
               </div>
             );
@@ -1067,7 +1067,7 @@ export default function Home() {
                     <Truck size={28} className="text-[#A0755A]" />
                   </div>
                   <h3 className="font-serif text-[#2B2521] text-lg mb-3">Доставка с примеркой</h3>
-                  <p className="text-sm text-[#6B5C52] font-light">
+                  <p className="text-[16px] text-[#6B5C52] font-light">
                     Оцените вещь перед покупкой. Пожалуйста, примеряйте аккуратно: без следов макияжа и парфюма.
                   </p>
                 </div>
@@ -1076,7 +1076,7 @@ export default function Home() {
                     <RotateCcw size={28} className="text-[#A0755A]" />
                   </div>
                   <h3 className="font-serif text-[#2B2521] text-lg mb-3">Возврат 14 дней</h3>
-                  <p className="text-sm text-[#6B5C52] font-light">
+                  <p className="text-[16px] text-[#6B5C52] font-light">
                     Возврат оформляется, если бирки не срезаны и остаются на одежде, а на вещи нет следов носки и посторонних запахов.
                   </p>
                 </div>
@@ -1085,7 +1085,7 @@ export default function Home() {
                     <Leaf size={28} className="text-[#A0755A]" />
                   </div>
                   <h3 className="font-serif text-[#2B2521] text-lg mb-3">Премиальные материалы</h3>
-                  <p className="text-sm text-[#6B5C52] font-light">
+                  <p className="text-[16px] text-[#6B5C52] font-light">
                     Только износостойкие ткани высшего качества с заботой о вашем комфорте.
                   </p>
                 </div>
@@ -1120,7 +1120,7 @@ export default function Home() {
                 {(deliveryS.cards ?? []).map((dc: any, ci: number) => (
                   <div key={ci} className="bg-[#FFFFFF] rounded-2xl p-8">
                     <h3 className="font-serif text-[#2B2521] text-lg mb-6">{dc.title}</h3>
-                    <ul className="space-y-3 text-sm text-[#6B5C52]">
+                    <ul className="space-y-3 text-[16px] text-[#6B5C52]">
                       {(dc.items ?? []).map((item: string, ii: number) => (
                         <li key={ii} className="flex items-start gap-3">
                           <span className="text-[#A0755A] font-semibold mt-0.5">•</span>
