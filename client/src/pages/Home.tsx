@@ -376,7 +376,7 @@ function AboutSection() {
   const { data } = trpc.settings.getAbout.useQuery();
   const about = data ?? DEFAULT_ABOUT;
   return (
-    <section id="about" className="min-h-screen flex items-center bg-[#F5F7D0] overflow-hidden">
+    <section id="about" className="min-h-screen flex items-center md:items-stretch bg-[#F5F7D0] overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 w-full">
         <div className="py-20 px-8 md:px-16 flex flex-col justify-center">
           <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-6">{about.title}</h2>
@@ -385,7 +385,7 @@ function AboutSection() {
           ))}
         </div>
         {about.photo && (
-          <div className="aspect-[3/4] md:h-auto md:aspect-auto overflow-hidden">
+          <div className="aspect-[3/4] md:h-full md:aspect-auto overflow-hidden">
             <img src={about.photo} alt={about.title} className="w-full h-full object-cover object-top" />
           </div>
         )}
