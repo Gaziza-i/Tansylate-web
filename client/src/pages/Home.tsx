@@ -378,7 +378,7 @@ function AboutSection() {
   return (
     <section id="about" className="min-h-screen flex items-start md:items-stretch bg-[#F5F7D0] overflow-hidden scroll-mt-24 lg:scroll-mt-28">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 w-full">
-        <div className="py-20 px-8 md:px-16 flex flex-col">
+        <div className="py-20 px-8 md:px-16 flex flex-col text-center">
           <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-6">{about.title}</h2>
           <div className="flex-1 flex flex-col justify-center">
             {about.paragraphs.map((p: string, i: number) => (
