@@ -143,7 +143,7 @@ function ProductModal({
   const careInstructions = parseJSON<CareItem[]>(product.careInstructions, []);
 
   const availableSizes = sizeTables.length > 0
-    ? sizeTables[0].rows.map(r => r.size)
+    ? sizeTables[0].rows.map(r => (Array.isArray(r) ? r[0] : r.size)).filter(Boolean)
     : [];
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     availableSizes.length > 0 ? availableSizes[0] : undefined
