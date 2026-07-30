@@ -1046,7 +1046,7 @@ export default function Home() {
                     placeholder="Поиск товаров..."
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 border border-[#DDD5C0] rounded-xl focus:outline-none focus:border-[#1A1A1A] bg-[#EEE8D2]"
+                    className="w-full pl-12 pr-4 py-3 border border-[#DDD5C0] rounded-xl focus:outline-none focus:border-[#1A1A1A] bg-white"
                   />
                 </div>
 
