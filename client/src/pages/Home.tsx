@@ -27,7 +27,7 @@ const NAV_RIGHT = [
 ];
 const ALL_NAV = [...NAV_LEFT, ...NAV_RIGHT];
 
-const navLink = "text-[17px] text-[#6B5C52] hover:text-[#2B2521] transition-colors whitespace-nowrap";
+const navLink = "text-[17px] text-[#6B5C52] hover:text-[#2C2A29] transition-colors whitespace-nowrap";
 
 type SizeTable = { title: string; cols?: string[]; rows: any[] };
 
@@ -113,10 +113,10 @@ function AccordionSection({ title, children, accent = false }: {
         className="w-full flex items-center justify-between py-[14px] text-left"
         onClick={() => setOpen(o => !o)}
       >
-        <span className="text-[15px] font-medium text-[#2B2521]">{title}</span>
+        <span className="text-[15px] font-medium text-[#2C2A29]">{title}</span>
         {open
-          ? <X size={16} className="text-[#2B2521] flex-shrink-0" />
-          : <Plus size={16} className="text-[#2B2521] flex-shrink-0" />
+          ? <X size={16} className="text-[#2C2A29] flex-shrink-0" />
+          : <Plus size={16} className="text-[#2C2A29] flex-shrink-0" />
         }
       </button>
       {open && (
@@ -160,7 +160,7 @@ function ProductModal({
           className="absolute top-3 right-3 z-10 w-9 h-9 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow transition-all"
           aria-label="Закрыть"
         >
-          <X size={18} className="text-[#2B2521]" />
+          <X size={18} className="text-[#2C2A29]" />
         </button>
         <div className="relative bg-[#DDD5C0] md:w-[55%] flex-shrink-0 flex flex-col">
           <div className="relative w-full aspect-[3/4] md:aspect-auto md:flex-1 overflow-hidden">
@@ -172,10 +172,10 @@ function ProductModal({
             {images.length > 1 && (
               <>
                 <button onClick={onPrev} className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full w-9 h-9 flex items-center justify-center shadow transition-all">
-                  <ChevronLeft size={18} className="text-[#2B2521]" />
+                  <ChevronLeft size={18} className="text-[#2C2A29]" />
                 </button>
                 <button onClick={onNext} className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full w-9 h-9 flex items-center justify-center shadow transition-all">
-                  <ChevronRight size={18} className="text-[#2B2521]" />
+                  <ChevronRight size={18} className="text-[#2C2A29]" />
                 </button>
               </>
             )}
@@ -199,7 +199,7 @@ function ProductModal({
 
         <div className="flex-1 md:overflow-y-auto flex flex-col">
           <div className="px-6 md:px-8 pt-6 pb-8 flex flex-col flex-1">
-            <h2 className="text-xl md:text-2xl font-bold text-[#2B2521] leading-tight mb-1">
+            <h2 className="text-xl md:text-2xl font-bold text-[#2C2A29] leading-tight mb-1">
               {product.name}
             </h2>
             {(product.sku || product.id) && (
@@ -208,12 +208,12 @@ function ProductModal({
               </p>
             )}
 
-            <p className="text-2xl font-medium text-[#2B2521] mb-2">
+            <p className="text-2xl font-medium text-[#2C2A29] mb-2">
               {(product.price ?? 0).toLocaleString("ru-RU")} ₽
             </p>
 
             {product.description && (
-              <p className="text-[17px] text-[#2B2521] leading-relaxed mb-5">{product.description}</p>
+              <p className="text-[17px] text-[#2C2A29] leading-relaxed mb-5">{product.description}</p>
             )}
 
             {availableSizes.length > 0 && (
@@ -226,8 +226,8 @@ function ProductModal({
                       onClick={() => setSelectedSize(size)}
                       className={`min-w-[52px] h-11 px-3 text-sm font-medium rounded transition-all ${
                         selectedSize === size
-                          ? "border-2 border-[#1A1A1A] bg-white text-[#1A1A1A]"
-                          : "border border-[#DDD5C0] bg-white text-[#6B5C52] hover:border-[#1A1A1A] hover:text-[#2B2521]"
+                          ? "border-2 border-[#1A1A1A] bg-white text-[#2C2A29]"
+                          : "border border-[#DDD5C0] bg-white text-[#6B5C52] hover:border-[#1A1A1A] hover:text-[#2C2A29]"
                       }`}
                     >
                       {size}
@@ -278,7 +278,7 @@ function ProductModal({
                             {table.rows.map((row, ri) => (
                               <tr key={ri} className={`${ri < table.rows.length - 1 ? "border-b border-[#DDD5C0]" : ""} bg-white`}>
                                 {row.map((cell: string, ci: number) => (
-                                  <td key={ci} className={`py-3 px-3 ${ci === 0 ? "font-semibold text-[#2B2521] text-left px-4 whitespace-nowrap" : "text-center text-[#6B5C52]"}`}>{cell}</td>
+                                  <td key={ci} className={`py-3 px-3 ${ci === 0 ? "font-semibold text-[#2C2A29] text-left px-4 whitespace-nowrap" : "text-center text-[#6B5C52]"}`}>{cell}</td>
                                 ))}
                               </tr>
                             ))}
@@ -379,7 +379,7 @@ function AboutSection() {
     <section id="about" className="min-h-screen flex items-start md:items-stretch bg-[#F5F7D0] overflow-hidden scroll-mt-24 lg:scroll-mt-28">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 w-full">
         <div className="py-20 px-8 md:px-16 flex flex-col">
-          <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-6">{about.title}</h2>
+          <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-6">{about.title}</h2>
           <div className="flex-1 flex flex-col justify-center">
             {about.paragraphs.map((p: string, i: number) => (
               <p key={i} className={`text-[18px] text-[#6B5C52] leading-relaxed ${i < about.paragraphs.length - 1 ? "mb-4" : ""}`}>{p}</p>
@@ -407,7 +407,7 @@ function BloggersSection() {
   return (
     <section className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0]">
       <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
-        <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-10 text-center">Нас носят блогеры</h2>
+        <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-10 text-center">Нас носят блогеры</h2>
         <div className="flex-1 flex flex-col justify-center">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {(videos as any[]).map((v: any) => {
@@ -425,7 +425,7 @@ function BloggersSection() {
                   </div>
                 ) : (
                   <a href={v.videoUrl} target="_blank" rel="noopener noreferrer"
-                    className="aspect-video flex items-center justify-center bg-[#DDD5C0] text-[#6B5C52] hover:text-[#2B2521] transition-colors block"
+                    className="aspect-video flex items-center justify-center bg-[#DDD5C0] text-[#6B5C52] hover:text-[#2C2A29] transition-colors block"
                   >
                     <div className="text-center p-6">
                       <div className="w-14 h-14 rounded-full border-2 border-[#A0755A] flex items-center justify-center mx-auto mb-3">
@@ -642,7 +642,7 @@ export default function Home() {
           <div className="lg:hidden bg-white border-t border-[#f0f0f0] py-4 px-6 rounded-b-2xl">
             {ALL_NAV.map((item, i) => (
               <a key={item.label} href={`#${item.id}`}
-                className={`block py-3 text-sm text-[#6B5C52] hover:text-[#2B2521] transition-colors${i < ALL_NAV.length - 1 ? " border-b border-[#f0f0f0]" : ""}`}
+                className={`block py-3 text-sm text-[#6B5C52] hover:text-[#2C2A29] transition-colors${i < ALL_NAV.length - 1 ? " border-b border-[#f0f0f0]" : ""}`}
                 onClick={navClick(item)}
               >{item.label}</a>
             ))}
@@ -658,10 +658,10 @@ export default function Home() {
       <div className="absolute inset-0 bg-black/30" onClick={() => setCartOpen(false)} />
       <div className="relative bg-[#EEE8D2] w-full max-w-sm h-full flex flex-col shadow-xl">
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#DDD5C0]">
-          <h2 className="text-[#2B2521] text-lg">
+          <h2 className="text-[#2C2A29] text-lg">
             Корзина{cartCount > 0 ? ` (${cartCount})` : ""}
           </h2>
-          <button onClick={() => setCartOpen(false)} className="text-[#6B5C52] hover:text-[#2B2521] transition-colors">
+          <button onClick={() => setCartOpen(false)} className="text-[#6B5C52] hover:text-[#2C2A29] transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -683,7 +683,7 @@ export default function Home() {
                     onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-[#2B2521] mb-0.5 line-clamp-2">{item.name}</p>
+                    <p className="text-sm font-medium text-[#2C2A29] mb-0.5 line-clamp-2">{item.name}</p>
                     {item.size && <p className="text-xs text-[#A0755A] mb-0.5">Размер: {item.size}</p>}
                     <p className="text-sm text-[#6B5C52] mb-2">{item.price.toLocaleString("ru-RU")} ₽</p>
                     <div className="flex items-center gap-2">
@@ -709,7 +709,7 @@ export default function Home() {
             <div className="p-5 border-t border-[#DDD5C0] bg-[#EEE8D2]">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-sm text-[#6B5C52]">Итого</span>
-                <span className="font-semibold text-[#2B2521] whitespace-nowrap">
+                <span className="font-semibold text-[#2C2A29] whitespace-nowrap">
                   {cart.reduce((s, i) => s + i.price * i.qty, 0).toLocaleString("ru-RU")} ₽
                 </span>
               </div>
@@ -721,7 +721,7 @@ export default function Home() {
               </button>
               <button
                 onClick={() => setCart([])}
-                className="w-full py-2 mt-2 text-xs text-[#6B5C52] hover:text-[#2B2521] transition-colors"
+                className="w-full py-2 mt-2 text-xs text-[#6B5C52] hover:text-[#2C2A29] transition-colors"
               >
                 Очистить корзину
               </button>
@@ -737,10 +737,10 @@ export default function Home() {
       <div className="absolute inset-0 bg-black/30" onClick={() => setWishlistOpen(false)} />
       <div className="relative bg-[#EEE8D2] w-full max-w-sm h-full flex flex-col shadow-xl">
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#DDD5C0]">
-          <h2 className="text-[#2B2521] text-lg">
+          <h2 className="text-[#2C2A29] text-lg">
             Избранное{wishlist.size > 0 ? ` (${wishlist.size})` : ""}
           </h2>
-          <button onClick={() => setWishlistOpen(false)} className="text-[#6B5C52] hover:text-[#2B2521] transition-colors">
+          <button onClick={() => setWishlistOpen(false)} className="text-[#6B5C52] hover:text-[#2C2A29] transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -765,7 +765,7 @@ export default function Home() {
                   />
                   <div className="flex-1 min-w-0">
                     <p
-                      className="text-sm font-medium text-[#2B2521] mb-0.5 line-clamp-2 cursor-pointer hover:opacity-70"
+                      className="text-sm font-medium text-[#2C2A29] mb-0.5 line-clamp-2 cursor-pointer hover:opacity-70"
                       onClick={() => { setWishlistOpen(false); setSelectedProductId(p.id); setCarouselIndex(0); }}
                     >{p.name}</p>
                     <p className="text-sm text-[#6B5C52] mb-2">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
@@ -794,7 +794,7 @@ export default function Home() {
   );
 
   const FooterEditorial = () => {
-    const lnk = "text-[18px] uppercase tracking-[0.18em] text-[#6B5C52] hover:text-[#2B2521] transition-colors";
+    const lnk = "text-[18px] uppercase tracking-[0.18em] text-[#6B5C52] hover:text-[#2C2A29] transition-colors";
     return (
       <footer id="contacts" className="bg-[#EEE8D2] border-t border-[#D5D0C8] pt-16 md:pt-0 scroll-mt-24 lg:scroll-mt-28">
         <div className="hidden md:flex justify-between py-20">
@@ -864,7 +864,7 @@ export default function Home() {
           >
             <Heart
               size={17}
-              className={wishlist.has(p.id) ? "text-red-500" : "text-[#2B2521]"}
+              className={wishlist.has(p.id) ? "text-red-500" : "text-[#2C2A29]"}
               fill={wishlist.has(p.id) ? "currentColor" : "none"}
             />
           </button>
@@ -879,7 +879,7 @@ export default function Home() {
         </div>
         <div className="pt-4 flex flex-col items-center text-center">
           <h3
-            className="text-[20px] font-bold text-[#1A1A1A] mb-2 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
+            className="text-[20px] font-bold text-[#2C2A29] mb-2 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
             onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
           >{p.name}</h3>
           {p.collection && <p className="text-xs text-[#A0755A] uppercase tracking-wide mb-4">{p.collection}</p>}
@@ -901,7 +901,7 @@ export default function Home() {
         <button
           onClick={() => setCheckoutOpen(false)}
           disabled={createOrder.isPending}
-          className="absolute top-4 right-4 text-[#6B5C52] hover:text-[#2B2521] transition-colors disabled:opacity-40"
+          className="absolute top-4 right-4 text-[#6B5C52] hover:text-[#2C2A29] transition-colors disabled:opacity-40"
         >
           <X size={20} />
         </button>
@@ -913,8 +913,8 @@ export default function Home() {
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
-            <h3 className="text-[#2B2521] text-xl mb-1">Заказ принят!</h3>
-            <p className="text-sm text-[#6B5C52] mb-6">Номер заказа: <span className="font-semibold text-[#2B2521]">#{orderConfirm.id}</span></p>
+            <h3 className="text-[#2C2A29] text-xl mb-1">Заказ принят!</h3>
+            <p className="text-sm text-[#6B5C52] mb-6">Номер заказа: <span className="font-semibold text-[#2C2A29]">#{orderConfirm.id}</span></p>
             <a
               href={orderConfirm.telegramUrl}
               target="_blank"
@@ -926,14 +926,14 @@ export default function Home() {
             </a>
             <button
               onClick={() => { setCheckoutOpen(false); setCart([]); }}
-              className="text-sm text-[#6B5C52] hover:text-[#2B2521] transition-colors"
+              className="text-sm text-[#6B5C52] hover:text-[#2C2A29] transition-colors"
             >
               Закрыть
             </button>
           </div>
         ) : (
           <>
-            <h3 className="text-[#2B2521] text-xl mb-5">Оформление заказа</h3>
+            <h3 className="text-[#2C2A29] text-xl mb-5">Оформление заказа</h3>
             <div className="space-y-4 mb-6">
               <div>
                 <label className="block text-xs uppercase tracking-widest text-[#6B5C52] mb-1.5">Имя *</label>
@@ -942,7 +942,7 @@ export default function Home() {
                   value={checkoutForm.name}
                   onChange={e => setCheckoutForm(f => ({ ...f, name: e.target.value }))}
                   placeholder="Ваше имя"
-                  className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl bg-white focus:outline-none focus:border-[#1A1A1A] text-sm text-[#2B2521]"
+                  className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl bg-white focus:outline-none focus:border-[#1A1A1A] text-sm text-[#2C2A29]"
                   disabled={createOrder.isPending}
                 />
               </div>
@@ -953,7 +953,7 @@ export default function Home() {
                   value={checkoutForm.phone}
                   onChange={e => setCheckoutForm(f => ({ ...f, phone: e.target.value }))}
                   placeholder="+7 (___) ___-__-__"
-                  className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl bg-white focus:outline-none focus:border-[#1A1A1A] text-sm text-[#2B2521]"
+                  className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl bg-white focus:outline-none focus:border-[#1A1A1A] text-sm text-[#2C2A29]"
                   disabled={createOrder.isPending}
                 />
               </div>
@@ -964,14 +964,14 @@ export default function Home() {
                   onChange={e => setCheckoutForm(f => ({ ...f, address: e.target.value }))}
                   placeholder="Город, улица, дом, квартира"
                   rows={2}
-                  className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl bg-white focus:outline-none focus:border-[#1A1A1A] text-sm text-[#2B2521] resize-none"
+                  className="w-full px-4 py-3 border border-[#DDD5C0] rounded-xl bg-white focus:outline-none focus:border-[#1A1A1A] text-sm text-[#2C2A29] resize-none"
                   disabled={createOrder.isPending}
                 />
               </div>
             </div>
             <div className="flex justify-between items-center mb-4">
               <span className="text-sm text-[#6B5C52]">Итого</span>
-              <span className="font-semibold text-[#2B2521]">
+              <span className="font-semibold text-[#2C2A29]">
                 {cart.reduce((s, i) => s + i.price * i.qty, 0).toLocaleString("ru-RU")} ₽
               </span>
             </div>
@@ -1020,7 +1020,7 @@ export default function Home() {
         <main className="pt-24 lg:pt-28">
           <section className="min-h-[calc(100vh-88px)] flex flex-col items-center justify-center text-center px-4">
             <p className="text-xs uppercase tracking-widest text-[#A0755A] mb-4">{heroS.badge}</p>
-            <h1 className="text-5xl md:text-6xl font-normal uppercase tracking-wide text-[#2B2521] mb-6">{heroS.title}</h1>
+            <h1 className="text-5xl md:text-6xl font-normal uppercase tracking-wide text-[#2C2A29] mb-6">{heroS.title}</h1>
             <p className="text-lg text-[#6B5C52] mb-12 max-w-2xl mx-auto leading-relaxed">
               {heroS.subtitle}
             </p>
@@ -1034,7 +1034,7 @@ export default function Home() {
 
           <section id="catalog" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#EEE8D2] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
-              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-8 text-center">Каталог</h2>
+              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-8 text-center">Каталог</h2>
 
               <div className="flex-1 flex flex-col justify-center">
                 <div className="mb-12 relative max-w-xl mx-auto w-full">
@@ -1066,14 +1066,14 @@ export default function Home() {
 
           <section id="trust" className="min-h-screen flex flex-col justify-start py-20 px-4 md:px-6 bg-[#EEE8D2] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
-              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-12 text-center">Почему нам верят</h2>
+              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-12 text-center">Почему нам верят</h2>
               <div className="flex-1 flex flex-col justify-center">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="text-center">
                     <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                       <Truck size={28} className="text-[#A0755A]" />
                     </div>
-                    <h3 className="text-[#2B2521] text-[20px] mb-3">Доставка с примеркой</h3>
+                    <h3 className="text-[#2C2A29] text-[20px] mb-3">Доставка с примеркой</h3>
                     <p className="text-[18px] text-[#6B5C52] font-light">
                       Оцените вещь перед покупкой. Пожалуйста, примеряйте аккуратно: без следов макияжа и парфюма.
                     </p>
@@ -1082,7 +1082,7 @@ export default function Home() {
                     <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                       <RotateCcw size={28} className="text-[#A0755A]" />
                     </div>
-                    <h3 className="text-[#2B2521] text-[20px] mb-3">Возврат 14 дней</h3>
+                    <h3 className="text-[#2C2A29] text-[20px] mb-3">Возврат 14 дней</h3>
                     <p className="text-[18px] text-[#6B5C52] font-light">
                       Возврат оформляется, если бирки не срезаны и остаются на одежде, а на вещи нет следов носки и посторонних запахов.
                     </p>
@@ -1091,7 +1091,7 @@ export default function Home() {
                     <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                       <Leaf size={28} className="text-[#A0755A]" />
                     </div>
-                    <h3 className="text-[#2B2521] text-[20px] mb-3">Премиальные материалы</h3>
+                    <h3 className="text-[#2C2A29] text-[20px] mb-3">Премиальные материалы</h3>
                     <p className="text-[18px] text-[#6B5C52] font-light">
                       Только износостойкие ткани высшего качества с заботой о вашем комфорте.
                     </p>
@@ -1105,7 +1105,7 @@ export default function Home() {
 
           <section id="looks" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#EEE8D2] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
-              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-4 text-center">{looksS.title}</h2>
+              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-4 text-center">{looksS.title}</h2>
               <div className="flex-1 flex flex-col justify-center">
                 {(looksS.photos ?? []).length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mt-8">
@@ -1125,12 +1125,12 @@ export default function Home() {
 
           <section id="delivery" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-5xl mx-auto w-full flex flex-col flex-1">
-              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-12 text-center">{deliveryS.title}</h2>
+              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-12 text-center">{deliveryS.title}</h2>
               <div className="flex-1 flex flex-col justify-center">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {(deliveryS.cards ?? []).map((dc: any, ci: number) => (
                     <div key={ci} className="bg-[#FFFFFF] rounded-2xl p-8">
-                      <h3 className="text-[#2B2521] text-[20px] mb-6">{dc.title}</h3>
+                      <h3 className="text-[#2C2A29] text-[20px] mb-6">{dc.title}</h3>
                       <ul className="space-y-3 text-[18px] text-[#6B5C52]">
                         {(dc.items ?? []).map((item: string, ii: number) => (
                           <li key={ii} className="flex items-start gap-3">
@@ -1159,7 +1159,7 @@ export default function Home() {
         <Header />
         <main className="flex-1 max-w-4xl mx-auto w-full px-4 md:px-6 pt-28 lg:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Политика конфиденциальности" }]} />
-          <h1 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-8">Политика конфиденциальности</h1>
+          <h1 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-8">Политика конфиденциальности</h1>
           <div className="prose prose-sm max-w-none">
             <p className="text-[#6B5C52] leading-relaxed mb-4">
               Мы уважаем вашу конфиденциальность и обязуемся защищать ваши персональные данные.

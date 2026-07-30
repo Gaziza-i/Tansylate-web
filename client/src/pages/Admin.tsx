@@ -99,7 +99,7 @@ function InputField({ label, value, onChange, type = "text", placeholder = "" }:
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#1F1F1D] focus:outline-none focus:border-[#5A6262]"
+        className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#2C2A29] focus:outline-none focus:border-[#5A6262]"
       />
     </div>
   );
@@ -119,7 +119,7 @@ function Section({ id, label, openSection, onToggle, children }: {
         onClick={() => onToggle(id)}
         className="w-full flex justify-between items-center px-3 md:px-5 py-3 md:py-4 bg-[#F9F9F7] hover:bg-[#F0EFEA] transition-colors text-left"
       >
-        <span className="font-medium text-[#1F1F1D] text-xs md:text-sm">{label}</span>
+        <span className="font-medium text-[#2C2A29] text-xs md:text-sm">{label}</span>
         {openSection === id ? <ChevronUp size={16} className="text-[#5A6262]" /> : <ChevronDown size={16} className="text-[#5A6262]" />}
       </button>
       {openSection === id && <div className="p-3 md:p-5 space-y-3 md:space-y-4 bg-white">{children}</div>}
@@ -195,7 +195,7 @@ function ProductForm({
             value={form.description}
             onChange={e => set("description", e.target.value)}
             rows={4}
-            className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#1F1F1D] focus:outline-none focus:border-[#5A6262] resize-none"
+            className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#2C2A29] focus:outline-none focus:border-[#5A6262] resize-none"
             placeholder="Описание товара..."
           />
         </div>
@@ -268,7 +268,7 @@ function ProductForm({
                       {selected && (
                         <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                           <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
-                            <Check size={12} className="text-[#1F1F1D]" />
+                            <Check size={12} className="text-[#2C2A29]" />
                           </div>
                         </div>
                       )}
@@ -413,7 +413,7 @@ function ProductForm({
                         arr[ti] = { ...arr[ti], cols };
                         set("sizeTables", arr);
                       }}
-                      className="text-xs font-medium text-[#1F1F1D] bg-transparent focus:outline-none w-28"
+                      className="text-xs font-medium text-[#2C2A29] bg-transparent focus:outline-none w-28"
                       placeholder="Название"
                     />
                     {table.cols.length > 1 && (
@@ -616,7 +616,7 @@ function MediaLibrary({
   return (
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
-        <h1 className="text-2xl text-[#1F1F1D]">Медиатека</h1>
+        <h1 className="text-2xl text-[#2C2A29]">Медиатека</h1>
         <div className="flex items-center gap-3">
           <span className="text-sm text-[#5A6262]">{serverList.length} фото</span>
           <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileInput} />
@@ -640,8 +640,8 @@ function MediaLibrary({
         onClick={() => fileInputRef.current?.click()}
         className={`mb-5 border-2 border-dashed rounded-xl py-8 text-center cursor-pointer transition-all select-none ${
           dragOver
-            ? "border-[#5A6262] bg-[#5A6262]/5 text-[#1F1F1D]"
-            : "border-[#E8E7E2] text-[#5A6262] hover:border-[#5A6262] hover:text-[#1F1F1D]"
+            ? "border-[#5A6262] bg-[#5A6262]/5 text-[#2C2A29]"
+            : "border-[#E8E7E2] text-[#5A6262] hover:border-[#5A6262] hover:text-[#2C2A29]"
         }`}
       >
         <Upload size={22} className="mx-auto mb-2 opacity-50" />
@@ -678,7 +678,7 @@ function MediaLibrary({
                   <div className="absolute inset-0 bg-transparent group-hover:bg-black/30 transition-all flex items-end justify-center pb-2 opacity-0 group-hover:opacity-100">
                     <button
                       onClick={() => copyUrl(url)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 bg-white text-[#1F1F1D] text-xs rounded-full shadow hover:bg-[#F0EFEA] transition-colors"
+                      className="flex items-center gap-1 px-2.5 py-1.5 bg-white text-[#2C2A29] text-xs rounded-full shadow hover:bg-[#F0EFEA] transition-colors"
                     >
                       {copied === url ? <Check size={12} className="text-green-600" /> : <Copy size={12} />}
                       {copied === url ? "Скопировано" : "URL"}
@@ -796,7 +796,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
   const card = "bg-white border border-[#E8E7E2] rounded-2xl p-5 md:p-6 mb-6";
   const lbl = "block text-xs text-[#5A6262] mb-1 uppercase tracking-wide";
-  const inp = "w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#1F1F1D] focus:outline-none focus:border-[#5A6262]";
+  const inp = "w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#2C2A29] focus:outline-none focus:border-[#5A6262]";
   const saveBtn = (onClick: () => void, pending: boolean, label = "Сохранить") => (
     <button onClick={onClick} disabled={pending}
       className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
@@ -806,12 +806,12 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
   return (
     <div>
-      <h1 className="text-2xl text-[#1F1F1D] mb-6">Контент сайта</h1>
+      <h1 className="text-2xl text-[#2C2A29] mb-6">Контент сайта</h1>
       {msg && <div className="mb-5 px-4 py-2 bg-[#1F1F1D] text-white text-sm rounded-full inline-block">{msg}</div>}
 
       {/* Главный экран */}
       <div className={card}>
-        <h2 className="text-[#1F1F1D] text-lg mb-4">Главный экран</h2>
+        <h2 className="text-[#2C2A29] text-lg mb-4">Главный экран</h2>
         <div className="space-y-3">
           <div><label className={lbl}>Плашка сверху</label>
             <input type="text" value={hero.badge} onChange={e => setHero(h => ({ ...h, badge: e.target.value }))} className={inp} /></div>
@@ -827,7 +827,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
       {/* О бренде */}
       <div className={card}>
-        <h2 className="text-[#1F1F1D] text-lg mb-4">О бренде</h2>
+        <h2 className="text-[#2C2A29] text-lg mb-4">О бренде</h2>
         <div className="space-y-4">
           <div><label className={lbl}>Заголовок</label>
             <input type="text" value={about.title} onChange={e => setAbout(a => ({ ...a, title: e.target.value }))} className={inp} /></div>
@@ -869,7 +869,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
       {/* Нас носят блогеры */}
       <div className={card}>
-        <h2 className="text-[#1F1F1D] text-lg mb-4">Нас носят блогеры</h2>
+        <h2 className="text-[#2C2A29] text-lg mb-4">Нас носят блогеры</h2>
         <div className="space-y-2 mb-4">
           <input type="text" value={videoUrl} onChange={e => setVideoUrl(e.target.value)}
             placeholder="Ссылка на видео (YouTube, TikTok, Instagram...)" className={inp} />
@@ -893,7 +893,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
             {(videos as any[]).map((v: any) => (
               <div key={v.id} className="flex items-start gap-3 border border-[#E8E7E2] rounded-xl p-3">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-[#1F1F1D] break-all">{v.videoUrl}</p>
+                  <p className="text-sm text-[#2C2A29] break-all">{v.videoUrl}</p>
                   {v.description && <p className="text-xs text-[#5A6262] mt-0.5">{v.description}</p>}
                 </div>
                 <button onClick={async () => { if (!confirm("Удалить?")) return; await deleteVideoMut.mutateAsync({ id: v.id }); await refetchVideos(); }}
@@ -906,7 +906,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
       {/* Образы */}
       <div className={card}>
-        <h2 className="text-[#1F1F1D] text-lg mb-4">Образы</h2>
+        <h2 className="text-[#2C2A29] text-lg mb-4">Образы</h2>
         <div className="space-y-3 mb-4">
           <div><label className={lbl}>Заголовок секции</label>
             <input type="text" value={looks.title} onChange={e => setLooks(l => ({ ...l, title: e.target.value }))} className={inp} /></div>
@@ -938,7 +938,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
       {/* Доставка */}
       <div className={card}>
-        <h2 className="text-[#1F1F1D] text-lg mb-4">Доставка и возврат</h2>
+        <h2 className="text-[#2C2A29] text-lg mb-4">Доставка и возврат</h2>
         <div className="mb-4"><label className={lbl}>Заголовок секции</label>
           <input type="text" value={delivery.title} onChange={e => setDelivery(d => ({ ...d, title: e.target.value }))} className={inp} /></div>
         <div className="space-y-4">
@@ -975,7 +975,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
       {/* Контакты */}
       <div className={card}>
-        <h2 className="text-[#1F1F1D] text-lg mb-4">Контакты (ссылки в футере)</h2>
+        <h2 className="text-[#2C2A29] text-lg mb-4">Контакты (ссылки в футере)</h2>
         <div className="space-y-3">
           <div><label className={lbl}>Telegram</label>
             <input type="text" value={contacts.telegram} onChange={e => setContacts(c => ({ ...c, telegram: e.target.value }))} className={inp} placeholder="https://t.me/..." /></div>
@@ -1139,7 +1139,7 @@ export default function Admin() {
         {view === "list" && (
           <div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-6">
-              <h1 className="text-2xl text-[#1F1F1D]">Товары</h1>
+              <h1 className="text-2xl text-[#2C2A29]">Товары</h1>
               <button
                 onClick={() => setView("create")}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors"
@@ -1169,7 +1169,7 @@ export default function Admin() {
                       </div>
                       <div className="flex-1 min-w-0 w-full sm:w-auto">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <span className="text-[#1F1F1D] truncate">{p.name}</span>
+                          <span className="text-[#2C2A29] truncate">{p.name}</span>
                           {!p.isVisible && <span className="text-xs bg-[#F9F9D7] text-[#5A6262] px-2 py-0.5 rounded-full flex-shrink-0">скрыт</span>}
                         </div>
                         <div className="text-sm text-[#5A6262]">{(p.price ?? 0).toLocaleString("ru-RU")} ₽ · {imgs.length} фото</div>
@@ -1192,7 +1192,7 @@ export default function Admin() {
 
         {view === "create" && (
           <div>
-            <h1 className="text-2xl text-[#1F1F1D] mb-6">Новый товар</h1>
+            <h1 className="text-2xl text-[#2C2A29] mb-6">Новый товар</h1>
             <ProductForm
               initial={emptyForm()}
               onSave={handleSave}
@@ -1206,7 +1206,7 @@ export default function Admin() {
 
         {view === "edit" && editingProduct && (
           <div>
-            <h1 className="text-2xl text-[#1F1F1D] mb-6">Редактирование: {editingProduct.name}</h1>
+            <h1 className="text-2xl text-[#2C2A29] mb-6">Редактирование: {editingProduct.name}</h1>
             <ProductForm
               initial={formFromProduct(editingProduct)}
               onSave={handleSave}
