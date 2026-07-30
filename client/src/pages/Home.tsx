@@ -592,7 +592,7 @@ export default function Home() {
               <a key={item.label} href={`#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
             ))}
           </div>
-          <a href="/" onClick={e => { e.preventDefault(); setLocation("/"); }} className="hover:opacity-60 transition-opacity cursor-pointer">
+          <a href="/" onClick={e => { e.preventDefault(); setLocation("/"); }} className="hover:opacity-60 transition-opacity cursor-pointer px-10">
             <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-16" />
           </a>
           <div className="flex items-center justify-between pl-10">
