@@ -882,7 +882,7 @@ export default function Home() {
           <p className="text-[20px] text-[#6B5C52] mb-10">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
           <button
             onClick={e => { e.stopPropagation(); addToCart(p); setCartOpen(true); }}
-            className="w-full py-3 bg-[#1A1A1A] text-white text-[14px] font-medium rounded-[100px] hover:bg-[#333] transition-colors active:scale-95"
+            className="w-full py-3 bg-[#1A1A1A] text-white text-[14px] font-medium rounded-xl hover:bg-[#333] transition-colors active:scale-95"
           >
             Добавить в корзину
           </button>
