@@ -1030,7 +1030,7 @@ export default function Home() {
 
           <section id="catalog" className="min-h-screen flex flex-col justify-center py-20 px-4 md:px-6 bg-[#EEE8D2]">
             <div className="max-w-7xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-8 text-center">Каталог товаров</h2>
+              <h2 className="text-3xl md:text-4xl font-serif text-[#2B2521] mb-8 text-center">Каталог</h2>
 
               <div className="mb-12 relative max-w-xl mx-auto">
                 <Search className="absolute left-4 top-3 text-[#6B5C52]" size={20} />
