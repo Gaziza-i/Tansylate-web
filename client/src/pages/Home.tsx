@@ -483,7 +483,9 @@ export default function Home() {
       const lines = (variables.items as CartItem[]).map(i => `${i.name}${i.size ? ` (${i.size})` : ""} × ${i.qty}`).join(", ");
       const total = (variables.total as number).toLocaleString("ru-RU");
       const msg = encodeURIComponent(`Заказ #${data.id}\n${lines}\nИтого: ${total} ₽\nИмя: ${variables.name}\nТел: ${variables.phone}${variables.address ? `\nАдрес: ${variables.address}` : ""}`);
-      setOrderConfirm({ id: data.id, telegramUrl: `https://t.me/tansylate_bot?text=${msg}` });
+      const telegramUrl = `https://t.me/tansylate_bot?text=${msg}`;
+      setOrderConfirm({ id: data.id, telegramUrl });
+      window.open(telegramUrl, "_blank", "noopener,noreferrer");
     },
   });
 
@@ -1032,7 +1034,7 @@ export default function Home() {
             </button>
           </section>
 
-          <section id="catalog" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#EEE8D2] scroll-mt-24 lg:scroll-mt-28">
+          <section id="catalog" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
               <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-8 text-center">Каталог</h2>
 
@@ -1044,7 +1046,7 @@ export default function Home() {
                     placeholder="Поиск товаров..."
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 border border-[#DDD5C0] rounded-xl focus:outline-none focus:border-[#1A1A1A] bg-[#F5F7D0]"
+                    className="w-full pl-12 pr-4 py-3 border border-[#DDD5C0] rounded-xl focus:outline-none focus:border-[#1A1A1A] bg-[#EEE8D2]"
                   />
                 </div>
 
@@ -1064,7 +1066,7 @@ export default function Home() {
 
           <AboutSection />
 
-          <section id="trust" className="min-h-screen flex flex-col justify-start py-20 px-4 md:px-6 bg-[#EEE8D2] scroll-mt-24 lg:scroll-mt-28">
+          <section id="trust" className="min-h-screen flex flex-col justify-start py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
               <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-12 text-center">Почему нам верят</h2>
               <div className="flex-1 flex flex-col justify-center">
@@ -1103,7 +1105,7 @@ export default function Home() {
 
           <BloggersSection />
 
-          <section id="looks" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#EEE8D2] scroll-mt-24 lg:scroll-mt-28">
+          <section id="looks" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
               <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-4 text-center">{looksS.title}</h2>
               <div className="flex-1 flex flex-col justify-center">
