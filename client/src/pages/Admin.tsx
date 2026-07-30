@@ -616,7 +616,7 @@ function MediaLibrary({
   return (
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
-        <h1 className="text-2xl font-serif text-[#1F1F1D]">Медиатека</h1>
+        <h1 className="text-2xl text-[#1F1F1D]">Медиатека</h1>
         <div className="flex items-center gap-3">
           <span className="text-sm text-[#5A6262]">{serverList.length} фото</span>
           <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileInput} />
@@ -806,12 +806,12 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
   return (
     <div>
-      <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">Контент сайта</h1>
+      <h1 className="text-2xl text-[#1F1F1D] mb-6">Контент сайта</h1>
       {msg && <div className="mb-5 px-4 py-2 bg-[#1F1F1D] text-white text-sm rounded-full inline-block">{msg}</div>}
 
       {/* Главный экран */}
       <div className={card}>
-        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Главный экран</h2>
+        <h2 className="text-[#1F1F1D] text-lg mb-4">Главный экран</h2>
         <div className="space-y-3">
           <div><label className={lbl}>Плашка сверху</label>
             <input type="text" value={hero.badge} onChange={e => setHero(h => ({ ...h, badge: e.target.value }))} className={inp} /></div>
@@ -827,7 +827,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
       {/* О бренде */}
       <div className={card}>
-        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">О бренде</h2>
+        <h2 className="text-[#1F1F1D] text-lg mb-4">О бренде</h2>
         <div className="space-y-4">
           <div><label className={lbl}>Заголовок</label>
             <input type="text" value={about.title} onChange={e => setAbout(a => ({ ...a, title: e.target.value }))} className={inp} /></div>
@@ -869,7 +869,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
       {/* Нас носят блогеры */}
       <div className={card}>
-        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Нас носят блогеры</h2>
+        <h2 className="text-[#1F1F1D] text-lg mb-4">Нас носят блогеры</h2>
         <div className="space-y-2 mb-4">
           <input type="text" value={videoUrl} onChange={e => setVideoUrl(e.target.value)}
             placeholder="Ссылка на видео (YouTube, TikTok, Instagram...)" className={inp} />
@@ -906,7 +906,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
       {/* Образы */}
       <div className={card}>
-        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Образы</h2>
+        <h2 className="text-[#1F1F1D] text-lg mb-4">Образы</h2>
         <div className="space-y-3 mb-4">
           <div><label className={lbl}>Заголовок секции</label>
             <input type="text" value={looks.title} onChange={e => setLooks(l => ({ ...l, title: e.target.value }))} className={inp} /></div>
@@ -938,7 +938,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
       {/* Доставка */}
       <div className={card}>
-        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Доставка и возврат</h2>
+        <h2 className="text-[#1F1F1D] text-lg mb-4">Доставка и возврат</h2>
         <div className="mb-4"><label className={lbl}>Заголовок секции</label>
           <input type="text" value={delivery.title} onChange={e => setDelivery(d => ({ ...d, title: e.target.value }))} className={inp} /></div>
         <div className="space-y-4">
@@ -975,7 +975,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
 
       {/* Контакты */}
       <div className={card}>
-        <h2 className="font-serif text-[#1F1F1D] text-lg mb-4">Контакты (ссылки в футере)</h2>
+        <h2 className="text-[#1F1F1D] text-lg mb-4">Контакты (ссылки в футере)</h2>
         <div className="space-y-3">
           <div><label className={lbl}>Telegram</label>
             <input type="text" value={contacts.telegram} onChange={e => setContacts(c => ({ ...c, telegram: e.target.value }))} className={inp} placeholder="https://t.me/..." /></div>
@@ -1139,7 +1139,7 @@ export default function Admin() {
         {view === "list" && (
           <div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-6">
-              <h1 className="text-2xl font-serif text-[#1F1F1D]">Товары</h1>
+              <h1 className="text-2xl text-[#1F1F1D]">Товары</h1>
               <button
                 onClick={() => setView("create")}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors"
@@ -1169,7 +1169,7 @@ export default function Admin() {
                       </div>
                       <div className="flex-1 min-w-0 w-full sm:w-auto">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <span className="font-serif text-[#1F1F1D] truncate">{p.name}</span>
+                          <span className="text-[#1F1F1D] truncate">{p.name}</span>
                           {!p.isVisible && <span className="text-xs bg-[#F9F9D7] text-[#5A6262] px-2 py-0.5 rounded-full flex-shrink-0">скрыт</span>}
                         </div>
                         <div className="text-sm text-[#5A6262]">{(p.price ?? 0).toLocaleString("ru-RU")} ₽ · {imgs.length} фото</div>
@@ -1192,7 +1192,7 @@ export default function Admin() {
 
         {view === "create" && (
           <div>
-            <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">Новый товар</h1>
+            <h1 className="text-2xl text-[#1F1F1D] mb-6">Новый товар</h1>
             <ProductForm
               initial={emptyForm()}
               onSave={handleSave}
@@ -1206,7 +1206,7 @@ export default function Admin() {
 
         {view === "edit" && editingProduct && (
           <div>
-            <h1 className="text-2xl font-serif text-[#1F1F1D] mb-6">Редактирование: {editingProduct.name}</h1>
+            <h1 className="text-2xl text-[#1F1F1D] mb-6">Редактирование: {editingProduct.name}</h1>
             <ProductForm
               initial={formFromProduct(editingProduct)}
               onSave={handleSave}
