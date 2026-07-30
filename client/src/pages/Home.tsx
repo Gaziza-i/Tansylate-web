@@ -1074,7 +1074,7 @@ export default function Home() {
                       <Truck size={28} className="text-[#A0755A]" />
                     </div>
                     <h3 className="text-[#2B2521] text-lg mb-3">Доставка с примеркой</h3>
-                    <p className="text-[16px] text-[#6B5C52] font-light">
+                    <p className="text-[18px] text-[#6B5C52] font-light">
                       Оцените вещь перед покупкой. Пожалуйста, примеряйте аккуратно: без следов макияжа и парфюма.
                     </p>
                   </div>
@@ -1083,7 +1083,7 @@ export default function Home() {
                       <RotateCcw size={28} className="text-[#A0755A]" />
                     </div>
                     <h3 className="text-[#2B2521] text-lg mb-3">Возврат 14 дней</h3>
-                    <p className="text-[16px] text-[#6B5C52] font-light">
+                    <p className="text-[18px] text-[#6B5C52] font-light">
                       Возврат оформляется, если бирки не срезаны и остаются на одежде, а на вещи нет следов носки и посторонних запахов.
                     </p>
                   </div>
@@ -1092,7 +1092,7 @@ export default function Home() {
                       <Leaf size={28} className="text-[#A0755A]" />
                     </div>
                     <h3 className="text-[#2B2521] text-lg mb-3">Премиальные материалы</h3>
-                    <p className="text-[16px] text-[#6B5C52] font-light">
+                    <p className="text-[18px] text-[#6B5C52] font-light">
                       Только износостойкие ткани высшего качества с заботой о вашем комфорте.
                     </p>
                   </div>
@@ -1131,7 +1131,7 @@ export default function Home() {
                   {(deliveryS.cards ?? []).map((dc: any, ci: number) => (
                     <div key={ci} className="bg-[#FFFFFF] rounded-2xl p-8">
                       <h3 className="text-[#2B2521] text-lg mb-6">{dc.title}</h3>
-                      <ul className="space-y-3 text-[16px] text-[#6B5C52]">
+                      <ul className="space-y-3 text-[18px] text-[#6B5C52]">
                         {(dc.items ?? []).map((item: string, ii: number) => (
                           <li key={ii} className="flex items-start gap-3">
                             <span className="text-[#A0755A] font-semibold mt-0.5">•</span>
