@@ -436,7 +436,7 @@ function BloggersSection() {
                   </a>
                 )}
                 {v.description && (
-                  <p className="px-4 py-3 text-[16px] text-[#6B5C52]">{v.description}</p>
+                  <p className="px-4 py-3 text-[18px] text-[#6B5C52]">{v.description}</p>
                 )}
               </div>
             );
@@ -1073,7 +1073,7 @@ export default function Home() {
                     <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                       <Truck size={28} className="text-[#A0755A]" />
                     </div>
-                    <h3 className="text-[#2B2521] text-lg mb-3">Доставка с примеркой</h3>
+                    <h3 className="text-[#2B2521] text-[20px] mb-3">Доставка с примеркой</h3>
                     <p className="text-[18px] text-[#6B5C52] font-light">
                       Оцените вещь перед покупкой. Пожалуйста, примеряйте аккуратно: без следов макияжа и парфюма.
                     </p>
@@ -1082,7 +1082,7 @@ export default function Home() {
                     <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                       <RotateCcw size={28} className="text-[#A0755A]" />
                     </div>
-                    <h3 className="text-[#2B2521] text-lg mb-3">Возврат 14 дней</h3>
+                    <h3 className="text-[#2B2521] text-[20px] mb-3">Возврат 14 дней</h3>
                     <p className="text-[18px] text-[#6B5C52] font-light">
                       Возврат оформляется, если бирки не срезаны и остаются на одежде, а на вещи нет следов носки и посторонних запахов.
                     </p>
@@ -1091,7 +1091,7 @@ export default function Home() {
                     <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                       <Leaf size={28} className="text-[#A0755A]" />
                     </div>
-                    <h3 className="text-[#2B2521] text-lg mb-3">Премиальные материалы</h3>
+                    <h3 className="text-[#2B2521] text-[20px] mb-3">Премиальные материалы</h3>
                     <p className="text-[18px] text-[#6B5C52] font-light">
                       Только износостойкие ткани высшего качества с заботой о вашем комфорте.
                     </p>
@@ -1130,7 +1130,7 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {(deliveryS.cards ?? []).map((dc: any, ci: number) => (
                     <div key={ci} className="bg-[#FFFFFF] rounded-2xl p-8">
-                      <h3 className="text-[#2B2521] text-lg mb-6">{dc.title}</h3>
+                      <h3 className="text-[#2B2521] text-[20px] mb-6">{dc.title}</h3>
                       <ul className="space-y-3 text-[18px] text-[#6B5C52]">
                         {(dc.items ?? []).map((item: string, ii: number) => (
                           <li key={ii} className="flex items-start gap-3">
