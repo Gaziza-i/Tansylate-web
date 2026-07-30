@@ -845,7 +845,7 @@ export default function Home() {
           <img
             src={img}
             alt={p.name}
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 ease-in"
             onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
           {isNew && (
@@ -882,7 +882,7 @@ export default function Home() {
           <p className="text-[20px] text-[#6B5C52] mb-10">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
           <button
             onClick={e => { e.stopPropagation(); addToCart(p); setCartOpen(true); }}
-            className="w-full py-3 bg-[#1A1A1A] text-white text-[14px] font-medium rounded-xl hover:bg-[#333] transition-colors active:scale-95"
+            className="w-full py-3 bg-[#1A1A1A] text-white text-[14px] font-medium rounded-[100px] hover:bg-[#333] transition-colors active:scale-95"
           >
             Добавить в корзину
           </button>
@@ -1049,7 +1049,7 @@ export default function Home() {
                   {searchQuery && <p className="text-sm">Попробуйте изменить запрос</p>}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-x-[10px] gap-y-[40px]">
                   {filteredProducts.map((p: any) => <ProductCard key={p.id} p={p} />)}
                 </div>
               )}
