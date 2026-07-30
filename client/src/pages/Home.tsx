@@ -658,7 +658,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-black/30" onClick={() => setCartOpen(false)} />
       <div className="relative bg-[#EEE8D2] w-full max-w-sm h-full flex flex-col shadow-xl">
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#DDD5C0]">
-          <h2 className="font-serif text-[#2B2521] text-lg">
+          <h2 className="text-[#2B2521] text-lg">
             Корзина{cartCount > 0 ? ` (${cartCount})` : ""}
           </h2>
           <button onClick={() => setCartOpen(false)} className="text-[#6B5C52] hover:text-[#2B2521] transition-colors">
@@ -737,7 +737,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-black/30" onClick={() => setWishlistOpen(false)} />
       <div className="relative bg-[#EEE8D2] w-full max-w-sm h-full flex flex-col shadow-xl">
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#DDD5C0]">
-          <h2 className="font-serif text-[#2B2521] text-lg">
+          <h2 className="text-[#2B2521] text-lg">
             Избранное{wishlist.size > 0 ? ` (${wishlist.size})` : ""}
           </h2>
           <button onClick={() => setWishlistOpen(false)} className="text-[#6B5C52] hover:text-[#2B2521] transition-colors">
@@ -913,7 +913,7 @@ export default function Home() {
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
-            <h3 className="font-serif text-[#2B2521] text-xl mb-1">Заказ принят!</h3>
+            <h3 className="text-[#2B2521] text-xl mb-1">Заказ принят!</h3>
             <p className="text-sm text-[#6B5C52] mb-6">Номер заказа: <span className="font-semibold text-[#2B2521]">#{orderConfirm.id}</span></p>
             <a
               href={orderConfirm.telegramUrl}
@@ -933,7 +933,7 @@ export default function Home() {
           </div>
         ) : (
           <>
-            <h3 className="font-serif text-[#2B2521] text-xl mb-5">Оформление заказа</h3>
+            <h3 className="text-[#2B2521] text-xl mb-5">Оформление заказа</h3>
             <div className="space-y-4 mb-6">
               <div>
                 <label className="block text-xs uppercase tracking-widest text-[#6B5C52] mb-1.5">Имя *</label>
@@ -1073,7 +1073,7 @@ export default function Home() {
                     <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                       <Truck size={28} className="text-[#A0755A]" />
                     </div>
-                    <h3 className="font-serif text-[#2B2521] text-lg mb-3">Доставка с примеркой</h3>
+                    <h3 className="text-[#2B2521] text-lg mb-3">Доставка с примеркой</h3>
                     <p className="text-[16px] text-[#6B5C52] font-light">
                       Оцените вещь перед покупкой. Пожалуйста, примеряйте аккуратно: без следов макияжа и парфюма.
                     </p>
@@ -1082,7 +1082,7 @@ export default function Home() {
                     <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                       <RotateCcw size={28} className="text-[#A0755A]" />
                     </div>
-                    <h3 className="font-serif text-[#2B2521] text-lg mb-3">Возврат 14 дней</h3>
+                    <h3 className="text-[#2B2521] text-lg mb-3">Возврат 14 дней</h3>
                     <p className="text-[16px] text-[#6B5C52] font-light">
                       Возврат оформляется, если бирки не срезаны и остаются на одежде, а на вещи нет следов носки и посторонних запахов.
                     </p>
@@ -1091,7 +1091,7 @@ export default function Home() {
                     <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                       <Leaf size={28} className="text-[#A0755A]" />
                     </div>
-                    <h3 className="font-serif text-[#2B2521] text-lg mb-3">Премиальные материалы</h3>
+                    <h3 className="text-[#2B2521] text-lg mb-3">Премиальные материалы</h3>
                     <p className="text-[16px] text-[#6B5C52] font-light">
                       Только износостойкие ткани высшего качества с заботой о вашем комфорте.
                     </p>
@@ -1130,7 +1130,7 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {(deliveryS.cards ?? []).map((dc: any, ci: number) => (
                     <div key={ci} className="bg-[#FFFFFF] rounded-2xl p-8">
-                      <h3 className="font-serif text-[#2B2521] text-lg mb-6">{dc.title}</h3>
+                      <h3 className="text-[#2B2521] text-lg mb-6">{dc.title}</h3>
                       <ul className="space-y-3 text-[16px] text-[#6B5C52]">
                         {(dc.items ?? []).map((item: string, ii: number) => (
                           <li key={ii} className="flex items-start gap-3">
