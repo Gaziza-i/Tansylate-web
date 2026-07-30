@@ -376,7 +376,7 @@ function AboutSection() {
   const { data } = trpc.settings.getAbout.useQuery();
   const about = data ?? DEFAULT_ABOUT;
   return (
-    <section id="about" className="min-h-screen flex items-start md:items-stretch bg-[#F5F7D0] overflow-hidden">
+    <section id="about" className="min-h-screen flex items-start md:items-stretch bg-[#F5F7D0] overflow-hidden scroll-mt-24 lg:scroll-mt-28">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 w-full">
         <div className="py-20 px-8 md:px-16 flex flex-col">
           <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-6">{about.title}</h2>
@@ -796,7 +796,7 @@ export default function Home() {
   const FooterEditorial = () => {
     const lnk = "text-[18px] uppercase tracking-[0.18em] text-[#6B5C52] hover:text-[#2B2521] transition-colors";
     return (
-      <footer id="contacts" className="bg-[#EEE8D2] border-t border-[#D5D0C8] pt-16 md:pt-0">
+      <footer id="contacts" className="bg-[#EEE8D2] border-t border-[#D5D0C8] pt-16 md:pt-0 scroll-mt-24 lg:scroll-mt-28">
         <div className="hidden md:flex justify-between py-20">
           <div className="flex flex-col justify-center px-16 gap-7">
             <a href="#catalog" onClick={e => { e.preventDefault(); scrollToSection("catalog"); }} className={lnk}>Каталог</a>
@@ -1032,7 +1032,7 @@ export default function Home() {
             </button>
           </section>
 
-          <section id="catalog" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#EEE8D2]">
+          <section id="catalog" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#EEE8D2] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
               <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-8 text-center">Каталог</h2>
 
@@ -1064,7 +1064,7 @@ export default function Home() {
 
           <AboutSection />
 
-          <section id="trust" className="min-h-screen flex flex-col justify-start py-20 px-4 md:px-6 bg-[#EEE8D2]">
+          <section id="trust" className="min-h-screen flex flex-col justify-start py-20 px-4 md:px-6 bg-[#EEE8D2] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
               <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-12 text-center">Почему нам верят</h2>
               <div className="flex-1 flex flex-col justify-center">
@@ -1103,7 +1103,7 @@ export default function Home() {
 
           <BloggersSection />
 
-          <section id="looks" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#EEE8D2]">
+          <section id="looks" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#EEE8D2] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
               <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-4 text-center">{looksS.title}</h2>
               <div className="flex-1 flex flex-col justify-center">
@@ -1123,7 +1123,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="delivery" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0]">
+          <section id="delivery" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-5xl mx-auto w-full flex flex-col flex-1">
               <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2B2521] mb-12 text-center">{deliveryS.title}</h2>
               <div className="flex-1 flex flex-col justify-center">
