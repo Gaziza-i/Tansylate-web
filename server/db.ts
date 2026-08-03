@@ -136,10 +136,10 @@ export async function getAllBloggerVideos() {
   } catch { return []; }
 }
 
-export async function createBloggerVideo(videoUrl: string, description?: string) {
+export async function createBloggerVideo(videoUrl: string | null, description: string | null, photoUrl: string | null) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.insert(bloggerVideos as any).values({ videoUrl, description: description ?? null });
+  return db.insert(bloggerVideos as any).values({ videoUrl, description, photoUrl });
 }
 
 export async function deleteBloggerVideo(id: number) {

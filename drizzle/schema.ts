@@ -33,6 +33,7 @@ export const products = mysqlTable("products", {
   composition: text("composition"),
   care: text("care"),
   sku: varchar("sku", { length: 100 }),
+  badgeText: varchar("badgeText", { length: 50 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -59,7 +60,8 @@ export type SiteSetting = typeof siteSettings.$inferSelect;
 
 export const bloggerVideos = mysqlTable("blogger_videos", {
   id: int("id").autoincrement().primaryKey(),
-  videoUrl: varchar("videoUrl", { length: 1000 }).notNull(),
+  videoUrl: varchar("videoUrl", { length: 1000 }),
+  photoUrl: varchar("photoUrl", { length: 500 }),
   description: text("description"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });

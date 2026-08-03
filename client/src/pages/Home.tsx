@@ -408,10 +408,22 @@ function BloggersSection() {
         <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-6 text-center">Нас носят блогеры</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {(videos as any[]).map((v: any) => {
-            const ytId = getYoutubeId(v.videoUrl);
+            const ytId = v.videoUrl ? getYoutubeId(v.videoUrl) : null;
             return (
               <div key={v.id} className="bg-[#F5F7D0] rounded-2xl overflow-hidden">
-                {ytId ? (
+                {v.photoUrl ? (
+                  v.videoUrl ? (
+                    <a href={v.videoUrl} target="_blank" rel="noopener noreferrer" className="aspect-[3/4] overflow-hidden block">
+                      <img src={v.photoUrl} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                    </a>
+                  ) : (
+                    <div className="aspect-[3/4] overflow-hidden">
+                      <img src={v.photoUrl} alt="" className="w-full h-full object-cover"
+                        onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                    </div>
+                  )
+                ) : ytId ? (
                   <div className="aspect-video">
                     <iframe
                       src={`https://www.youtube.com/embed/${ytId}`}
@@ -837,7 +849,6 @@ export default function Home() {
     const img = imgs[0] ?? FALLBACK_IMAGES[0];
     const care = parseJSON<CareItem[]>(p.careInstructions, []);
     const hasWash = care.some(c => c.icon === "wash");
-    const isNew = !!p.createdAt && Date.now() - new Date(p.createdAt).getTime() < 14 * 24 * 60 * 60 * 1000;
     return (
       <div className="flex flex-col">
         <div
@@ -850,9 +861,9 @@ export default function Home() {
             className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 ease-in"
             onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
-          {isNew && (
-            <span className="absolute top-3 left-3 px-3 py-1.5 bg-[#E0937A] text-white text-[11px] font-semibold uppercase tracking-wide rounded-full">
-              Новинка
+          {p.badgeText && (
+            <span className="absolute top-3 left-3 px-3 py-1.5 bg-[#EA937A] text-white text-[11px] font-semibold uppercase tracking-wide rounded-full whitespace-nowrap">
+              {p.badgeText}
             </span>
           )}
           <button

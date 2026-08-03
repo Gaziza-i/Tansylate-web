@@ -97,6 +97,7 @@ export const appRouter = router({
           sizes: input.sizes ? JSON.stringify(input.sizes) : "[]",
           imageUrl: input.imageUrl ?? null,
           sku: input.sku ?? null,
+          badgeText: input.badgeText?.trim() || null,
         });
       }),
 
@@ -194,7 +195,14 @@ export const appRouter = router({
     getAll: siteProcedure.query(async () => getAllBloggerVideos()),
     add: adminProcedure
       .input((input: any) => input)
-      .mutation(async ({ input }) => createBloggerVideo(input.url, input.description)),
+      .mutation(async ({ input }) => {
+        const videoUrl = input.url?.trim() || null;
+        const photoUrl = input.photoUrl?.trim() || null;
+        if (!videoUrl && !photoUrl) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Нужна ссылка на видео или фото" });
+        }
+        return createBloggerVideo(videoUrl, input.description?.trim() || null, photoUrl);
+      }),
     delete: adminProcedure
       .input((input: any) => input)
       .mutation(async ({ input }) => deleteBloggerVideo(input.id)),

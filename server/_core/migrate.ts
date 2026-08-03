@@ -18,6 +18,15 @@ export async function runStartupMigrations() {
       console.log("[migrate] Added column: products.sku");
     }
 
+    // Add badgeText column if missing
+    const [badgeRows] = await conn.query<mysql2.RowDataPacket[]>(
+      "SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'products' AND COLUMN_NAME = 'badgeText'"
+    );
+    if (badgeRows.length === 0) {
+      await conn.query("ALTER TABLE `products` ADD `badgeText` varchar(50)");
+      console.log("[migrate] Added column: products.badgeText");
+    }
+
     // Create site_settings table if missing
     await conn.query(`
       CREATE TABLE IF NOT EXISTS \`site_settings\` (
@@ -41,6 +50,16 @@ export async function runStartupMigrations() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
     console.log("[migrate] Ensured table: blogger_videos");
+
+    // Add photoUrl column if missing, and make videoUrl nullable
+    const [photoUrlRows] = await conn.query<mysql2.RowDataPacket[]>(
+      "SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'blogger_videos' AND COLUMN_NAME = 'photoUrl'"
+    );
+    if (photoUrlRows.length === 0) {
+      await conn.query("ALTER TABLE `blogger_videos` ADD `photoUrl` varchar(500)");
+      await conn.query("ALTER TABLE `blogger_videos` MODIFY `videoUrl` varchar(1000) NULL");
+      console.log("[migrate] Added column: blogger_videos.photoUrl, made videoUrl nullable");
+    }
 
     // Create orders table if missing
     await conn.query(`

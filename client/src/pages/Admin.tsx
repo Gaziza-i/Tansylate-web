@@ -52,6 +52,7 @@ function parseJSON<T>(val: string | null | undefined, fallback: T): T {
 const emptyForm = () => ({
   name: "",
   sku: "",
+  badgeText: "",
   price: 12990,
   collection: "",
   description: "",
@@ -189,6 +190,7 @@ function ProductForm({
           <InputField label="Коллекция" value={form.collection} onChange={(v: string) => set("collection", v)} placeholder="Коллекция 2026" />
         </div>
         <InputField label="Артикул (необязательно)" value={form.sku} onChange={(v: string) => set("sku", v)} placeholder="TS-001" />
+        <InputField label="Значок на карточке (необязательно)" value={form.badgeText} onChange={(v: string) => set("badgeText", v)} placeholder="Новинка" />
         <div>
           <label className="block text-xs text-[#5A6262] mb-1 uppercase tracking-wide">Описание</label>
           <textarea
@@ -756,9 +758,11 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
   const [looks, setLooks] = useState(DEFAULT_LOOKS_CONTENT);
   const [videoUrl, setVideoUrl] = useState("");
   const [videoDesc, setVideoDesc] = useState("");
+  const [videoPhotoUrl, setVideoPhotoUrl] = useState("");
   const [msg, setMsg] = useState("");
   const [uploadingLooks, setUploadingLooks] = useState(false);
   const [uploadingAbout, setUploadingAbout] = useState(false);
+  const [uploadingBloggerPhoto, setUploadingBloggerPhoto] = useState(false);
 
   useEffect(() => { if (heroQ.data) setHero(heroQ.data); }, [heroQ.data]);
   useEffect(() => { if (aboutQ.data) setAbout(aboutQ.data); }, [aboutQ.data]);
@@ -767,6 +771,19 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
   useEffect(() => { if (looksQ.data) setLooks(looksQ.data); }, [looksQ.data]);
 
   const notify = (m: string) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
+
+  const handleBloggerPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingBloggerPhoto(true);
+    try {
+      const url = await onUploadImage(file);
+      setVideoPhotoUrl(url);
+    } finally {
+      setUploadingBloggerPhoto(false);
+      (e.target as HTMLInputElement).value = "";
+    }
+  };
 
   const handleLooksPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -872,28 +889,44 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
         <h2 className="text-[#2C2A29] text-lg mb-4">Нас носят блогеры</h2>
         <div className="space-y-2 mb-4">
           <input type="text" value={videoUrl} onChange={e => setVideoUrl(e.target.value)}
-            placeholder="Ссылка на видео (YouTube, TikTok, Instagram...)" className={inp} />
+            placeholder="Ссылка на видео (YouTube, TikTok, Instagram...) — необязательно" className={inp} />
           <input type="text" value={videoDesc} onChange={e => setVideoDesc(e.target.value)}
             placeholder="Подпись (необязательно)" className={inp} />
+          <div>
+            <label className={lbl}>Фото (необязательно)</label>
+            {videoPhotoUrl && (
+              <div className="mb-2 relative w-20 h-28 rounded-xl overflow-hidden border border-[#E8E7E2]">
+                <img src={videoPhotoUrl} alt="" className="w-full h-full object-cover" />
+                <button type="button" onClick={() => setVideoPhotoUrl("")} className="absolute top-1 right-1 bg-white/90 rounded-full p-0.5 text-red-400 hover:text-red-600"><X size={12} /></button>
+              </div>
+            )}
+            <label className={`flex items-center gap-2 px-4 py-2 bg-[#1F1F1D] text-white rounded-lg text-xs cursor-pointer hover:bg-[#3a4242] transition-colors inline-flex ${uploadingBloggerPhoto ? "opacity-50 pointer-events-none" : ""}`}>
+              <Upload size={13} /> {uploadingBloggerPhoto ? "Загрузка..." : "Загрузить фото"}
+              <input type="file" accept="image/*" className="hidden" onChange={handleBloggerPhotoUpload} />
+            </label>
+          </div>
           <button onClick={async () => {
-            if (!videoUrl.trim()) return;
-            await addVideoMut.mutateAsync({ url: videoUrl.trim(), description: videoDesc.trim() || undefined });
-            setVideoUrl(""); setVideoDesc("");
+            if (!videoUrl.trim() && !videoPhotoUrl.trim()) return;
+            await addVideoMut.mutateAsync({ url: videoUrl.trim() || undefined, description: videoDesc.trim() || undefined, photoUrl: videoPhotoUrl.trim() || undefined });
+            setVideoUrl(""); setVideoDesc(""); setVideoPhotoUrl("");
             await refetchVideos();
-            notify("✓ Видео добавлено");
-          }} disabled={!videoUrl.trim() || addVideoMut.isPending}
+            notify("✓ Добавлено");
+          }} disabled={(!videoUrl.trim() && !videoPhotoUrl.trim()) || addVideoMut.isPending}
             className="flex items-center gap-2 px-5 py-2.5 bg-[#1F1F1D] text-white text-xs uppercase tracking-widest rounded-full hover:bg-[#3a4242] transition-colors disabled:opacity-50">
             <Plus size={14} /> Добавить
           </button>
         </div>
         {(videos as any[]).length === 0 ? (
-          <div className="py-6 text-center text-sm text-[#5A6262] border-2 border-dashed border-[#E8E7E2] rounded-xl">Видео пока нет</div>
+          <div className="py-6 text-center text-sm text-[#5A6262] border-2 border-dashed border-[#E8E7E2] rounded-xl">Пока ничего нет</div>
         ) : (
           <div className="space-y-2">
             {(videos as any[]).map((v: any) => (
               <div key={v.id} className="flex items-start gap-3 border border-[#E8E7E2] rounded-xl p-3">
+                {v.photoUrl && (
+                  <img src={v.photoUrl} alt="" className="w-12 h-16 object-cover rounded-lg flex-shrink-0 border border-[#E8E7E2]" />
+                )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-[#2C2A29] break-all">{v.videoUrl}</p>
+                  {v.videoUrl && <p className="text-sm text-[#2C2A29] break-all">{v.videoUrl}</p>}
                   {v.description && <p className="text-xs text-[#5A6262] mt-0.5">{v.description}</p>}
                 </div>
                 <button onClick={async () => { if (!confirm("Удалить?")) return; await deleteVideoMut.mutateAsync({ id: v.id }); await refetchVideos(); }}
@@ -1070,6 +1103,7 @@ export default function Admin() {
   const formFromProduct = (p: any): Form => ({
     name: p.name ?? "",
     sku: p.sku ?? "",
+    badgeText: p.badgeText ?? "",
     price: p.price ?? 12990,
     collection: p.collection ?? "",
     description: p.description ?? "",
