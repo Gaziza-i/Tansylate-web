@@ -30,7 +30,8 @@ jobs:
                 set -e
                 trap "echo failed > /var/www/deploy.status; rm -f /var/www/deploy.lock" ERR
                 cd /var/www/tansylate
-                git pull origin main
+                git fetch origin main
+                git reset --hard origin/main
                 npm run build
                 test -f dist/public/index.html
                 set -a && source .env && set +a
@@ -38,7 +39,7 @@ jobs:
                 pm2 save
                 echo success > /var/www/deploy.status
                 rm -f /var/www/deploy.lock
-              ' > /var/www/deploy.log 2>&1 &
+              ' < /dev/null > /var/www/deploy.log 2>&1 &
               disown
               echo "Deploy started in background"
             fi
