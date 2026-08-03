@@ -199,7 +199,7 @@ function ProductModal({
 
         <div className="flex-1 md:overflow-y-auto flex flex-col">
           <div className="px-6 md:px-8 pt-6 pb-8 flex flex-col flex-1">
-            <h2 className="text-xl md:text-2xl font-bold text-[#2C2A29] leading-tight mb-1">
+            <h2 className="text-[22px] md:text-[26px] font-bold text-[#2C2A29] leading-tight mb-1">
               {product.name}
             </h2>
             {(product.sku || product.id) && (
@@ -379,7 +379,7 @@ function AboutSection() {
     <section id="about" className="flex items-center bg-[#F5F7D0] overflow-hidden scroll-mt-24 lg:scroll-mt-28">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 w-full">
         <div className="py-20 px-8 md:px-16 flex flex-col text-center justify-center">
-          <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-4">{about.title}</h2>
+          <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-4">{about.title}</h2>
           {about.paragraphs.map((p: string, i: number) => (
             <p key={i} className={`text-[18px] text-[#6B5C52] leading-relaxed ${i < about.paragraphs.length - 1 ? "mb-4" : ""}`}>{p}</p>
           ))}
@@ -405,7 +405,7 @@ function BloggersSection() {
   return (
     <section className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0]">
       <div className="max-w-7xl mx-auto w-full flex flex-col">
-        <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-6 text-center">Нас носят блогеры</h2>
+        <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-6 text-center">Нас носят блогеры</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {(videos as any[]).map((v: any) => {
             const ytId = getYoutubeId(v.videoUrl);
@@ -656,7 +656,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-black/30" onClick={() => setCartOpen(false)} />
       <div className="relative bg-[#EEE8D2] w-full max-w-sm h-full flex flex-col shadow-xl">
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#DDD5C0]">
-          <h2 className="text-[#2C2A29] text-lg">
+          <h2 className="text-[#2C2A29] text-[20px]">
             Корзина{cartCount > 0 ? ` (${cartCount})` : ""}
           </h2>
           <button onClick={() => setCartOpen(false)} className="text-[#6B5C52] hover:text-[#2C2A29] transition-colors">
@@ -735,7 +735,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-black/30" onClick={() => setWishlistOpen(false)} />
       <div className="relative bg-[#EEE8D2] w-full max-w-sm h-full flex flex-col shadow-xl">
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#DDD5C0]">
-          <h2 className="text-[#2C2A29] text-lg">
+          <h2 className="text-[#2C2A29] text-[20px]">
             Избранное{wishlist.size > 0 ? ` (${wishlist.size})` : ""}
           </h2>
           <button onClick={() => setWishlistOpen(false)} className="text-[#6B5C52] hover:text-[#2C2A29] transition-colors">
@@ -877,7 +877,7 @@ export default function Home() {
         </div>
         <div className="pt-4 flex flex-col items-center text-center">
           <h3
-            className="text-[20px] font-bold text-[#2C2A29] mb-2 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
+            className="text-[22px] font-bold text-[#2C2A29] mb-2 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
             onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
           >{p.name}</h3>
           {p.collection && <p className="text-xs text-[#A0755A] uppercase tracking-wide mb-4">{p.collection}</p>}
@@ -911,7 +911,7 @@ export default function Home() {
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
-            <h3 className="text-[#2C2A29] text-xl mb-1">Заказ принят!</h3>
+            <h3 className="text-[#2C2A29] text-[22px] mb-1">Заказ принят!</h3>
             <p className="text-sm text-[#6B5C52] mb-6">Номер заказа: <span className="font-semibold text-[#2C2A29]">#{orderConfirm.id}</span></p>
             <a
               href={orderConfirm.telegramUrl}
@@ -931,7 +931,7 @@ export default function Home() {
           </div>
         ) : (
           <>
-            <h3 className="text-[#2C2A29] text-xl mb-5">Оформление заказа</h3>
+            <h3 className="text-[#2C2A29] text-[22px] mb-5">Оформление заказа</h3>
             <div className="space-y-4 mb-6">
               <div>
                 <label className="block text-xs uppercase tracking-widest text-[#6B5C52] mb-1.5">Имя *</label>
@@ -1018,7 +1018,7 @@ export default function Home() {
         <main className="pt-24 lg:pt-28">
           <section className="min-h-[calc(100vh-88px)] flex flex-col items-center justify-center text-center px-4">
             <p className="text-xs uppercase tracking-widest text-[#A0755A] mb-4">{heroS.badge}</p>
-            <h1 className="text-5xl md:text-6xl font-normal uppercase tracking-wide text-[#2C2A29] mb-6">{heroS.title}</h1>
+            <h1 className="text-[52px] md:text-[66px] font-normal uppercase tracking-wide text-[#2C2A29] mb-6">{heroS.title}</h1>
             <p className="text-lg text-[#6B5C52] mb-12 max-w-2xl mx-auto leading-relaxed">
               {heroS.subtitle}
             </p>
@@ -1032,7 +1032,7 @@ export default function Home() {
 
           <section id="catalog" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
-              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-8 text-center">Каталог</h2>
+              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-8 text-center">Каталог</h2>
 
               <div className="flex-1 flex flex-col justify-center">
                 <div className="mb-12 relative max-w-xl mx-auto w-full">
@@ -1064,13 +1064,13 @@ export default function Home() {
 
           <section id="trust" className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col">
-              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-8 text-center">Почему нам верят</h2>
+              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-8 text-center">Почему нам верят</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="text-center">
                   <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                     <Truck size={28} className="text-[#A0755A]" />
                   </div>
-                  <h3 className="text-[#2C2A29] text-[20px] mb-3">Доставка с примеркой</h3>
+                  <h3 className="text-[#2C2A29] text-[22px] mb-3">Доставка с примеркой</h3>
                   <p className="text-[18px] text-[#6B5C52] font-light">
                     Оцените вещь перед покупкой. Пожалуйста, примеряйте аккуратно: без следов макияжа и парфюма.
                   </p>
@@ -1079,7 +1079,7 @@ export default function Home() {
                   <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                     <RotateCcw size={28} className="text-[#A0755A]" />
                   </div>
-                  <h3 className="text-[#2C2A29] text-[20px] mb-3">Возврат 14 дней</h3>
+                  <h3 className="text-[#2C2A29] text-[22px] mb-3">Возврат 14 дней</h3>
                   <p className="text-[18px] text-[#6B5C52] font-light">
                     Возврат оформляется, если бирки не срезаны и остаются на одежде, а на вещи нет следов носки и посторонних запахов.
                   </p>
@@ -1088,7 +1088,7 @@ export default function Home() {
                   <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
                     <Leaf size={28} className="text-[#A0755A]" />
                   </div>
-                  <h3 className="text-[#2C2A29] text-[20px] mb-3">Премиальные материалы</h3>
+                  <h3 className="text-[#2C2A29] text-[22px] mb-3">Премиальные материалы</h3>
                   <p className="text-[18px] text-[#6B5C52] font-light">
                     Только износостойкие ткани высшего качества с заботой о вашем комфорте.
                   </p>
@@ -1101,7 +1101,7 @@ export default function Home() {
 
           <section id="looks" className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col">
-              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-4 text-center">{looksS.title}</h2>
+              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-4 text-center">{looksS.title}</h2>
               {(looksS.photos ?? []).length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mt-8">
                   {(looksS.photos ?? []).map((src, i) => (
@@ -1119,11 +1119,11 @@ export default function Home() {
 
           <section id="delivery" className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-5xl mx-auto w-full flex flex-col">
-              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-8 text-center">{deliveryS.title}</h2>
+              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-8 text-center">{deliveryS.title}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {(deliveryS.cards ?? []).map((dc: any, ci: number) => (
                   <div key={ci} className="bg-[#FFFFFF] rounded-2xl p-8">
-                    <h3 className="text-[#2C2A29] text-[20px] mb-6">{dc.title}</h3>
+                    <h3 className="text-[#2C2A29] text-[22px] mb-6">{dc.title}</h3>
                     <ul className="space-y-3 text-[18px] text-[#6B5C52]">
                       {(dc.items ?? []).map((item: string, ii: number) => (
                         <li key={ii} className="flex items-start gap-3">
@@ -1151,7 +1151,7 @@ export default function Home() {
         <Header />
         <main className="flex-1 max-w-4xl mx-auto w-full px-4 md:px-6 pt-28 lg:pt-32 pb-12">
           <Breadcrumbs items={[{ label: "Главная", href: "/" }, { label: "Политика конфиденциальности" }]} />
-          <h1 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-8">Политика конфиденциальности</h1>
+          <h1 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-8">Политика конфиденциальности</h1>
           <div className="prose prose-sm max-w-none">
             <p className="text-[#6B5C52] leading-relaxed mb-4">
               Мы уважаем вашу конфиденциальность и обязуемся защищать ваши персональные данные.
