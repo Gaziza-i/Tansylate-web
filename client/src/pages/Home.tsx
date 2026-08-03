@@ -376,18 +376,16 @@ function AboutSection() {
   const { data } = trpc.settings.getAbout.useQuery();
   const about = data ?? DEFAULT_ABOUT;
   return (
-    <section id="about" className="min-h-screen flex items-start md:items-stretch bg-[#F5F7D0] overflow-hidden scroll-mt-24 lg:scroll-mt-28">
+    <section id="about" className="flex items-center bg-[#F5F7D0] overflow-hidden scroll-mt-24 lg:scroll-mt-28">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 w-full">
-        <div className="py-20 px-8 md:px-16 flex flex-col text-center">
-          <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-6">{about.title}</h2>
-          <div className="flex-1 flex flex-col justify-center">
-            {about.paragraphs.map((p: string, i: number) => (
-              <p key={i} className={`text-[18px] text-[#6B5C52] leading-relaxed ${i < about.paragraphs.length - 1 ? "mb-4" : ""}`}>{p}</p>
-            ))}
-          </div>
+        <div className="py-20 px-8 md:px-16 flex flex-col text-center justify-center">
+          <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-4">{about.title}</h2>
+          {about.paragraphs.map((p: string, i: number) => (
+            <p key={i} className={`text-[18px] text-[#6B5C52] leading-relaxed ${i < about.paragraphs.length - 1 ? "mb-4" : ""}`}>{p}</p>
+          ))}
         </div>
         {about.photo && (
-          <div className="aspect-[3/4] md:h-full md:aspect-auto overflow-hidden">
+          <div className="aspect-[3/4] overflow-hidden">
             <img src={about.photo} alt={about.title} className="w-full h-full object-cover object-top" />
           </div>
         )}
@@ -405,10 +403,9 @@ function BloggersSection() {
   const { data: videos = [] } = trpc.bloggers.getAll.useQuery();
   if ((videos as any[]).length === 0) return null;
   return (
-    <section className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0]">
-      <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
-        <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-10 text-center">Нас носят блогеры</h2>
-        <div className="flex-1 flex flex-col justify-center">
+    <section className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0]">
+      <div className="max-w-7xl mx-auto w-full flex flex-col">
+        <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-6 text-center">Нас носят блогеры</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {(videos as any[]).map((v: any) => {
             const ytId = getYoutubeId(v.videoUrl);
@@ -441,7 +438,6 @@ function BloggersSection() {
               </div>
             );
           })}
-        </div>
         </div>
       </div>
     </section>
@@ -1066,38 +1062,36 @@ export default function Home() {
 
           <AboutSection />
 
-          <section id="trust" className="min-h-screen flex flex-col justify-start py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
-            <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
-              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-12 text-center">Почему нам верят</h2>
-              <div className="flex-1 flex flex-col justify-center">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
-                      <Truck size={28} className="text-[#A0755A]" />
-                    </div>
-                    <h3 className="text-[#2C2A29] text-[20px] mb-3">Доставка с примеркой</h3>
-                    <p className="text-[18px] text-[#6B5C52] font-light">
-                      Оцените вещь перед покупкой. Пожалуйста, примеряйте аккуратно: без следов макияжа и парфюма.
-                    </p>
+          <section id="trust" className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
+            <div className="max-w-7xl mx-auto w-full flex flex-col">
+              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-8 text-center">Почему нам верят</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
+                    <Truck size={28} className="text-[#A0755A]" />
                   </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
-                      <RotateCcw size={28} className="text-[#A0755A]" />
-                    </div>
-                    <h3 className="text-[#2C2A29] text-[20px] mb-3">Возврат 14 дней</h3>
-                    <p className="text-[18px] text-[#6B5C52] font-light">
-                      Возврат оформляется, если бирки не срезаны и остаются на одежде, а на вещи нет следов носки и посторонних запахов.
-                    </p>
+                  <h3 className="text-[#2C2A29] text-[20px] mb-3">Доставка с примеркой</h3>
+                  <p className="text-[18px] text-[#6B5C52] font-light">
+                    Оцените вещь перед покупкой. Пожалуйста, примеряйте аккуратно: без следов макияжа и парфюма.
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
+                    <RotateCcw size={28} className="text-[#A0755A]" />
                   </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
-                      <Leaf size={28} className="text-[#A0755A]" />
-                    </div>
-                    <h3 className="text-[#2C2A29] text-[20px] mb-3">Премиальные материалы</h3>
-                    <p className="text-[18px] text-[#6B5C52] font-light">
-                      Только износостойкие ткани высшего качества с заботой о вашем комфорте.
-                    </p>
+                  <h3 className="text-[#2C2A29] text-[20px] mb-3">Возврат 14 дней</h3>
+                  <p className="text-[18px] text-[#6B5C52] font-light">
+                    Возврат оформляется, если бирки не срезаны и остаются на одежде, а на вещи нет следов носки и посторонних запахов.
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
+                    <Leaf size={28} className="text-[#A0755A]" />
                   </div>
+                  <h3 className="text-[#2C2A29] text-[20px] mb-3">Премиальные материалы</h3>
+                  <p className="text-[18px] text-[#6B5C52] font-light">
+                    Только износостойкие ткани высшего качества с заботой о вашем комфорте.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1105,45 +1099,41 @@ export default function Home() {
 
           <BloggersSection />
 
-          <section id="looks" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
-            <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
+          <section id="looks" className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
+            <div className="max-w-7xl mx-auto w-full flex flex-col">
               <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-4 text-center">{looksS.title}</h2>
-              <div className="flex-1 flex flex-col justify-center">
-                {(looksS.photos ?? []).length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mt-8">
-                    {(looksS.photos ?? []).map((src, i) => (
-                      <div key={i} className="aspect-[3/4] overflow-hidden rounded-xl">
-                        <img src={src} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                          onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-[#6B5C52] text-center">{looksS.description}</p>
-                )}
-              </div>
-            </div>
-          </section>
-
-          <section id="delivery" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
-            <div className="max-w-5xl mx-auto w-full flex flex-col flex-1">
-              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-12 text-center">{deliveryS.title}</h2>
-              <div className="flex-1 flex flex-col justify-center">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {(deliveryS.cards ?? []).map((dc: any, ci: number) => (
-                    <div key={ci} className="bg-[#FFFFFF] rounded-2xl p-8">
-                      <h3 className="text-[#2C2A29] text-[20px] mb-6">{dc.title}</h3>
-                      <ul className="space-y-3 text-[18px] text-[#6B5C52]">
-                        {(dc.items ?? []).map((item: string, ii: number) => (
-                          <li key={ii} className="flex items-start gap-3">
-                            <span className="text-[#A0755A] font-semibold mt-0.5">•</span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
+              {(looksS.photos ?? []).length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mt-8">
+                  {(looksS.photos ?? []).map((src, i) => (
+                    <div key={i} className="aspect-[3/4] overflow-hidden rounded-xl">
+                      <img src={src} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
                     </div>
                   ))}
                 </div>
+              ) : (
+                <p className="text-[#6B5C52] text-center">{looksS.description}</p>
+              )}
+            </div>
+          </section>
+
+          <section id="delivery" className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
+            <div className="max-w-5xl mx-auto w-full flex flex-col">
+              <h2 className="text-3xl md:text-4xl font-normal uppercase tracking-wide text-[#2C2A29] mb-8 text-center">{deliveryS.title}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {(deliveryS.cards ?? []).map((dc: any, ci: number) => (
+                  <div key={ci} className="bg-[#FFFFFF] rounded-2xl p-8">
+                    <h3 className="text-[#2C2A29] text-[20px] mb-6">{dc.title}</h3>
+                    <ul className="space-y-3 text-[18px] text-[#6B5C52]">
+                      {(dc.items ?? []).map((item: string, ii: number) => (
+                        <li key={ii} className="flex items-start gap-3">
+                          <span className="text-[#A0755A] font-semibold mt-0.5">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
