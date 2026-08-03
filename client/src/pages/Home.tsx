@@ -152,7 +152,7 @@ function ProductModal({
   return (
     <div className="fixed inset-0 bg-[#F5F7D0] z-50 flex items-center justify-center p-3 md:p-6" onClick={onClose}>
       <div
-        className="bg-[#EEE8D2] rounded-2xl max-w-4xl w-full max-h-[94vh] overflow-y-auto md:overflow-hidden flex flex-col md:flex-row relative"
+        className="bg-[#EEE8D2] rounded-2xl max-w-6xl w-full max-h-[95vh] overflow-y-auto md:overflow-hidden flex flex-col md:flex-row relative"
         onClick={e => e.stopPropagation()}
       >
         <button
