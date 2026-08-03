@@ -5,11 +5,15 @@ on:
     branches: [main]
   workflow_dispatch: {}
 
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Start deploy in background
+      - name: Start deploy in background (skips if one is already running)
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEPLOY_HOST }}
@@ -17,21 +21,27 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ secrets.DEPLOY_PORT || 22 }}
           script: |
-            echo "running" > /var/www/deploy.status
-            nohup bash -c '
-              set -e
-              trap "echo failed > /var/www/deploy.status" ERR
-              cd /var/www/tansylate
-              git pull origin main
-              npm run build
-              test -f dist/public/index.html
-              set -a && source .env && set +a
-              pm2 restart 0 --update-env
-              pm2 save
-              echo success > /var/www/deploy.status
-            ' > /var/www/deploy.log 2>&1 &
-            disown
-            echo "Deploy started in background"
+            if [ -f /var/www/deploy.lock ]; then
+              echo "Deploy already in progress, this run will just watch it finish"
+            else
+              touch /var/www/deploy.lock
+              echo "running" > /var/www/deploy.status
+              nohup bash -c '
+                set -e
+                trap "echo failed > /var/www/deploy.status; rm -f /var/www/deploy.lock" ERR
+                cd /var/www/tansylate
+                git pull origin main
+                npm run build
+                test -f dist/public/index.html
+                set -a && source .env && set +a
+                pm2 restart 0 --update-env
+                pm2 save
+                echo success > /var/www/deploy.status
+                rm -f /var/www/deploy.lock
+              ' > /var/www/deploy.log 2>&1 &
+              disown
+              echo "Deploy started in background"
+            fi
 
       # The build takes several minutes on this VPS, and holding a single SSH
       # connection open that long has been unreliable (connection reset mid-build).
