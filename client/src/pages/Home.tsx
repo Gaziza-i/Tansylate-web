@@ -290,15 +290,21 @@ function ProductModal({
                 );
               })}
 
-              {specs.length > 0 && (
-                <AccordionSection title="Состав" accent>
-                  <div className="space-y-1">
-                    {specs.map((spec, i) => (
-                      <p key={i}>{spec.label}: {spec.value}</p>
-                    ))}
-                  </div>
-                </AccordionSection>
-              )}
+              {(() => {
+                const filledSpecs = specs.filter(s => s.label?.trim() || s.value?.trim());
+                return (product.composition || filledSpecs.length > 0) && (
+                  <AccordionSection title="Состав" accent>
+                    {product.composition && <p className="mb-2">{product.composition}</p>}
+                    {filledSpecs.length > 0 && (
+                      <div className="space-y-1">
+                        {filledSpecs.map((spec, i) => (
+                          <p key={i}>{spec.label}: {spec.value}</p>
+                        ))}
+                      </div>
+                    )}
+                  </AccordionSection>
+                );
+              })()}
 
               {(careInstructions.length > 0 || product.careNote) && (
                 <AccordionSection title="Уход за изделием">

@@ -85,6 +85,7 @@ export const appRouter = router({
           name: input.name,
           price: input.price,
           description: input.description ?? null,
+          composition: input.composition ?? null,
           collection: input.collection ?? null,
           images: input.images ? JSON.stringify(input.images) : null,
           features: input.features ? JSON.stringify(input.features) : null,

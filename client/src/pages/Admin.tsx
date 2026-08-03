@@ -56,6 +56,7 @@ const emptyForm = () => ({
   price: 12990,
   collection: "",
   description: "",
+  composition: "",
   telegramLink: "https://t.me/tansylate_bot",
   images: [] as string[],
   features: [] as string[],
@@ -199,6 +200,16 @@ function ProductForm({
             rows={4}
             className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#2C2A29] focus:outline-none focus:border-[#5A6262] resize-none"
             placeholder="Описание товара..."
+          />
+        </div>
+        <div>
+          <label className="block text-xs text-[#5A6262] mb-1 uppercase tracking-wide">Состав</label>
+          <textarea
+            value={form.composition}
+            onChange={e => set("composition", e.target.value)}
+            rows={2}
+            className="w-full px-3 py-2 border border-[#E8E7E2] rounded-lg text-sm text-[#2C2A29] focus:outline-none focus:border-[#5A6262] resize-none"
+            placeholder="Например: 95% хлопок, 5% эластан"
           />
         </div>
         <InputField label="Ссылка на Telegram-бот" value={form.telegramLink} onChange={(v: string) => set("telegramLink", v)} placeholder="https://t.me/tansylate_bot" />
@@ -1107,6 +1118,7 @@ export default function Admin() {
     price: p.price ?? 12990,
     collection: p.collection ?? "",
     description: p.description ?? "",
+    composition: p.composition ?? "",
     telegramLink: p.telegramLink ?? "https://t.me/tansylate_bot",
     images: parseJSON<string[]>(p.images, []),
     features: parseJSON<string[]>(p.features, []),
