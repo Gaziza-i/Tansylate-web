@@ -833,8 +833,6 @@ export default function Home() {
   const ProductCard = ({ p }: { p: any }) => {
     const imgs = parseJSON<string[]>(p.images, FALLBACK_IMAGES);
     const img = imgs[0] ?? FALLBACK_IMAGES[0];
-    const care = parseJSON<CareItem[]>(p.careInstructions, []);
-    const hasWash = care.some(c => c.icon === "wash");
     return (
       <div className="flex flex-col">
         <div
@@ -863,14 +861,6 @@ export default function Home() {
               fill={wishlist.has(p.id) ? "currentColor" : "none"}
             />
           </button>
-          {hasWash && (
-            <div className="absolute bottom-3 left-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow-sm" title="Машинная стирка">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B5C52" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3.5 8h17l-2 12H5.5L3.5 8z"/>
-                <path d="M7.5 17c.5-.6 1-.6 1.5 0 .5.6 1 .6 1.5 0 .5-.6 1-.6 1.5 0"/>
-              </svg>
-            </div>
-          )}
         </div>
         <div className="pt-4 flex flex-col items-center text-center">
           <h3
