@@ -623,7 +623,7 @@ export default function Home() {
                 <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
               </button>
               <button onClick={() => setCartOpen(true)} className="w-[42px] h-[42px] rounded-full bg-[#EEE8D2] flex items-center justify-center gap-1 hover:opacity-80 transition-opacity text-[#2C2A29]" aria-label="Корзина">
-                <ShoppingBag size={18} strokeWidth={1.5} fill="currentColor" />
+                <ShoppingBag size={18} strokeWidth={1.8} />
                 <span className="text-[11px] font-medium leading-none">{cartCount}</span>
               </button>
             </div>
@@ -646,7 +646,7 @@ export default function Home() {
               <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
             </button>
             <button onClick={() => setCartOpen(true)} className="w-[42px] h-[42px] rounded-full bg-[#EEE8D2] flex items-center justify-center gap-1 hover:opacity-80 transition-opacity text-[#2C2A29]" aria-label="Корзина">
-              <ShoppingBag size={18} strokeWidth={1.5} fill="currentColor" />
+              <ShoppingBag size={18} strokeWidth={1.8} />
               <span className="text-[11px] font-medium leading-none">{cartCount}</span>
             </button>
           </div>
