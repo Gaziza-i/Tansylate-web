@@ -955,7 +955,7 @@ export default function Home() {
             </p>
             <button
               onClick={() => scrollToSection("catalog")}
-              className="px-10 py-4 bg-[#1A1A1A] text-white text-base uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors font-medium"
+              className="w-[200px] h-[62px] flex items-center justify-center bg-[#1A1A1A] text-white text-[22px] uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors font-medium"
             >
               {heroS.buttonText}
             </button>
