@@ -491,6 +491,11 @@ export default function Home() {
   }, [cart]);
 
   useEffect(() => {
+    document.body.style.overflow = selectedProductId !== null ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [selectedProductId]);
+
+  useEffect(() => {
     if (location === "/catalog") {
       setTimeout(() => document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" }), 100);
     }
