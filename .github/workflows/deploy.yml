@@ -65,21 +65,28 @@ jobs:
             ssh -i ~/.ssh/deploy_key -p "$PORT" -o ConnectTimeout=15 -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "$1"
           }
 
-          for i in $(seq 1 90); do
-            status=$(ssh_cmd 'cat /var/www/deploy.status 2>/dev/null || echo running')
-            echo "[$i/90] status=$status"
+          for i in $(seq 1 120); do
+            # The VPS can become briefly unresponsive to SSH while the build is
+            # eating all its CPU/RAM (banner-exchange timeouts observed). Treat
+            # that as "still running" and retry instead of failing the deploy.
+            status=$(ssh_cmd 'cat /var/www/deploy.status 2>/dev/null || echo running' 2>/dev/null || echo unreachable)
+            echo "[$i/120] status=$status"
             if [ "$status" = "success" ]; then
               echo "✅ Deploy succeeded"
               exit 0
             fi
+            if [ "$status" = "unreachable" ]; then
+              sleep 10
+              continue
+            fi
             if [ "$status" != "running" ]; then
               echo "❌ Deploy failed. Last 150 lines of log:"
-              ssh_cmd 'tail -150 /var/www/deploy.log'
+              ssh_cmd 'tail -150 /var/www/deploy.log' || echo "(could not fetch log, server unreachable)"
               exit 1
             fi
             sleep 10
           done
 
           echo "❌ Timed out waiting for deploy. Last 150 lines of log:"
-          ssh_cmd 'tail -150 /var/www/deploy.log'
+          ssh_cmd 'tail -150 /var/www/deploy.log' || echo "(could not fetch log, server unreachable)"
           exit 1
