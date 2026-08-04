@@ -370,6 +370,9 @@ const DEFAULT_LOOKS = {
   description: "Скоро здесь появятся образы с нашими изделиями",
   photos: [] as string[],
 };
+const DEFAULT_CHECKOUT_LINKS = [
+  { label: "Telegram", url: "https://t.me/tansylate_bot" },
+];
 
 const DEFAULT_ABOUT = {
   title: "О бренде",
@@ -481,6 +484,7 @@ export default function Home() {
   });
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
+  const [checkoutPickerOpen, setCheckoutPickerOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("tansylate_cart", JSON.stringify(cart));
@@ -496,11 +500,13 @@ export default function Home() {
   const { data: deliveryData } = trpc.settings.getDelivery.useQuery();
   const { data: contactsData } = trpc.settings.getContacts.useQuery();
   const { data: looksData } = trpc.settings.getLooks.useQuery();
+  const { data: checkoutLinksData } = trpc.settings.getCheckoutLinks.useQuery();
 
   const heroS = (heroData ?? DEFAULT_HERO) as typeof DEFAULT_HERO;
   const deliveryS = (deliveryData ?? DEFAULT_DELIVERY) as typeof DEFAULT_DELIVERY;
   const contactsS = (contactsData ?? DEFAULT_CONTACTS) as typeof DEFAULT_CONTACTS;
   const looksS = (looksData ?? DEFAULT_LOOKS) as typeof DEFAULT_LOOKS;
+  const checkoutLinksS = (checkoutLinksData && checkoutLinksData.length > 0 ? checkoutLinksData : DEFAULT_CHECKOUT_LINKS) as typeof DEFAULT_CHECKOUT_LINKS;
 
   const { data: products = [] } = trpc.catalog.products.useQuery();
 
@@ -545,12 +551,19 @@ export default function Home() {
     });
   };
 
-  const checkoutToTelegram = () => {
+  const openCheckoutPicker = () => {
     if (cart.length === 0) return;
+    setCheckoutPickerOpen(true);
+  };
+
+  const goToCheckoutLink = (url: string) => {
+    if (!url?.trim()) return;
     const lines = cart.map(i => `${i.name}${i.size ? ` (${i.size})` : ""} × ${i.qty}`).join(", ");
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0).toLocaleString("ru-RU");
     const msg = encodeURIComponent(`Хочу оформить заказ:\n${lines}\nИтого: ${total} ₽`);
-    window.open(`https://t.me/tansylate_bot?text=${msg}`, "_blank", "noopener,noreferrer");
+    const sep = url.includes("?") ? "&" : "?";
+    window.open(`${url}${sep}text=${msg}`, "_blank", "noopener,noreferrer");
+    setCheckoutPickerOpen(false);
     setCartOpen(false);
     setCart([]);
   };
@@ -710,7 +723,7 @@ export default function Home() {
                 </span>
               </div>
               <button
-                onClick={checkoutToTelegram}
+                onClick={openCheckoutPicker}
                 className="w-full py-3 bg-[#A0755A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#8B6444] transition-colors font-medium"
               >
                 Оформить заказ
@@ -785,6 +798,33 @@ export default function Home() {
             })}
           </div>
         )}
+      </div>
+    </div>
+  );
+
+  const CheckoutPickerModal = () => (
+    <div className="fixed inset-0 bg-black/30 z-[60] flex items-center justify-center p-4" onClick={() => setCheckoutPickerOpen(false)}>
+      <div className="relative bg-[#EEE8D2] rounded-2xl w-full max-w-sm p-6 shadow-xl" onClick={e => e.stopPropagation()}>
+        <button
+          onClick={() => setCheckoutPickerOpen(false)}
+          className="absolute top-4 right-4 text-[#6B5C52] hover:text-[#2C2A29] transition-colors"
+          aria-label="Закрыть"
+        >
+          <X size={18} />
+        </button>
+        <h2 className="text-[18px] font-medium text-[#2C2A29] mb-1">Куда отправить заказ?</h2>
+        <p className="text-sm text-[#6B5C52] mb-5">Выберите мессенджер для оформления</p>
+        <div className="flex flex-col gap-2">
+          {checkoutLinksS.filter(l => l.label?.trim() && l.url?.trim()).map((l, i) => (
+            <button
+              key={i}
+              onClick={() => goToCheckoutLink(l.url)}
+              className="w-full py-3 bg-[#A0755A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#8B6444] transition-colors font-medium"
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -884,6 +924,7 @@ export default function Home() {
     <>
       {cartOpen && <CartDrawer />}
       {wishlistOpen && <WishlistDrawer />}
+      {checkoutPickerOpen && <CheckoutPickerModal />}
       {selectedProduct && (
         <ProductModal
           product={selectedProduct}

@@ -190,6 +190,16 @@ export const appRouter = router({
         await setSetting("looks_section", JSON.stringify(input));
         return { success: true };
       }),
+    getCheckoutLinks: siteProcedure.query(async () => {
+      const raw = await getSetting("checkout_links");
+      return raw ? JSON.parse(raw) : null;
+    }),
+    setCheckoutLinks: adminProcedure
+      .input((input: any) => input)
+      .mutation(async ({ input }) => {
+        await setSetting("checkout_links", JSON.stringify(input));
+        return { success: true };
+      }),
   }),
 
   bloggers: router({

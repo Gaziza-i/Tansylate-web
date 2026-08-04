@@ -744,6 +744,9 @@ const DEFAULT_LOOKS_CONTENT = {
   description: "Скоро здесь появятся образы с нашими изделиями",
   photos: [] as string[],
 };
+const DEFAULT_CHECKOUT_LINKS_CONTENT = [
+  { label: "Telegram", url: "https://t.me/tansylate_bot" },
+];
 
 function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<string> }) {
   const heroQ = trpc.settings.getHero.useQuery();
@@ -751,12 +754,14 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
   const deliveryQ = trpc.settings.getDelivery.useQuery();
   const contactsQ = trpc.settings.getContacts.useQuery();
   const looksQ = trpc.settings.getLooks.useQuery();
+  const checkoutLinksQ = trpc.settings.getCheckoutLinks.useQuery();
 
   const heroMut = trpc.settings.setHero.useMutation();
   const aboutMut = trpc.settings.setAbout.useMutation();
   const deliveryMut = trpc.settings.setDelivery.useMutation();
   const contactsMut = trpc.settings.setContacts.useMutation();
   const looksMut = trpc.settings.setLooks.useMutation();
+  const checkoutLinksMut = trpc.settings.setCheckoutLinks.useMutation();
 
   const { data: videos = [], refetch: refetchVideos } = trpc.bloggers.getAll.useQuery();
   const addVideoMut = trpc.bloggers.add.useMutation();
@@ -767,6 +772,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
   const [delivery, setDelivery] = useState(DEFAULT_DELIVERY_CONTENT);
   const [contacts, setContacts] = useState(DEFAULT_CONTACTS_CONTENT);
   const [looks, setLooks] = useState(DEFAULT_LOOKS_CONTENT);
+  const [checkoutLinks, setCheckoutLinks] = useState(DEFAULT_CHECKOUT_LINKS_CONTENT);
   const [videoUrl, setVideoUrl] = useState("");
   const [videoDesc, setVideoDesc] = useState("");
   const [videoPhotoUrl, setVideoPhotoUrl] = useState("");
@@ -780,6 +786,7 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
   useEffect(() => { if (deliveryQ.data) setDelivery(deliveryQ.data); }, [deliveryQ.data]);
   useEffect(() => { if (contactsQ.data) setContacts(contactsQ.data); }, [contactsQ.data]);
   useEffect(() => { if (looksQ.data) setLooks(looksQ.data); }, [looksQ.data]);
+  useEffect(() => { if (checkoutLinksQ.data && checkoutLinksQ.data.length > 0) setCheckoutLinks(checkoutLinksQ.data); }, [checkoutLinksQ.data]);
 
   const notify = (m: string) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
 
@@ -1029,6 +1036,28 @@ function ContentView({ onUploadImage }: { onUploadImage: (f: File) => Promise<st
             <input type="text" value={contacts.tiktok} onChange={e => setContacts(c => ({ ...c, tiktok: e.target.value }))} className={inp} placeholder="https://www.tiktok.com/@..." /></div>
         </div>
         <div className="mt-4">{saveBtn(async () => { await contactsMut.mutateAsync(contacts); await contactsQ.refetch(); notify("✓ Контакты сохранены"); }, contactsMut.isPending)}</div>
+      </div>
+
+      {/* Кнопки оформления заказа */}
+      <div className={card}>
+        <h2 className="text-[#2C2A29] text-lg mb-1">Кнопки оформления заказа</h2>
+        <p className="text-xs text-[#5A6262] mb-4">Эти кнопки показываются покупателю при нажатии «Оформить заказ» в корзине — он выбирает, куда написать (Telegram, WhatsApp, Max и т.д.)</p>
+        <div className="space-y-2">
+          {checkoutLinks.map((l, i) => (
+            <div key={i} className="flex gap-2">
+              <input type="text" value={l.label}
+                onChange={e => setCheckoutLinks(links => links.map((x, j) => j === i ? { ...x, label: e.target.value } : x))}
+                className="w-32 px-3 py-1.5 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]" placeholder="Название" />
+              <input type="text" value={l.url}
+                onChange={e => setCheckoutLinks(links => links.map((x, j) => j === i ? { ...x, url: e.target.value } : x))}
+                className="flex-1 px-3 py-1.5 border border-[#E8E7E2] rounded-lg text-sm focus:outline-none focus:border-[#5A6262]" placeholder="https://t.me/..." />
+              <button type="button" onClick={() => setCheckoutLinks(links => links.filter((_, j) => j !== i))} className="text-red-400 hover:text-red-600 flex-shrink-0"><Trash2 size={14} /></button>
+            </div>
+          ))}
+        </div>
+        <button type="button" onClick={() => setCheckoutLinks(links => [...links, { label: "", url: "" }])}
+          className="flex items-center gap-2 text-sm text-[#5A6262] hover:text-black mt-3 mb-4"><Plus size={14} /> Добавить кнопку</button>
+        {saveBtn(async () => { await checkoutLinksMut.mutateAsync(checkoutLinks.filter(l => l.label.trim() && l.url.trim())); await checkoutLinksQ.refetch(); notify("✓ Кнопки сохранены"); }, checkoutLinksMut.isPending)}
       </div>
     </div>
   );
