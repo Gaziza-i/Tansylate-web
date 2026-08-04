@@ -613,11 +613,11 @@ export default function Home() {
               <a key={item.label} href={`#${item.id}`} onClick={navClick(item)} className={navLink}>{item.label}</a>
             ))}
             <div className="flex items-center gap-2">
-              <button onClick={() => setWishlistOpen(true)} className="w-9 h-9 rounded-full border border-[#DDD5C0] flex items-center justify-center gap-1 hover:border-[#A0755A] transition-colors text-[#EEE8D2]" aria-label="Избранное">
+              <button onClick={() => setWishlistOpen(true)} className="w-9 h-9 rounded-full bg-[#EEE8D2] flex items-center justify-center gap-1 hover:opacity-80 transition-opacity text-white" aria-label="Избранное">
                 <Heart size={18} strokeWidth={1.5} fill="currentColor" />
                 <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
               </button>
-              <button onClick={() => setCartOpen(true)} className="w-9 h-9 rounded-full border border-[#DDD5C0] flex items-center justify-center gap-1 hover:border-[#A0755A] transition-colors text-[#EEE8D2]" aria-label="Корзина">
+              <button onClick={() => setCartOpen(true)} className="w-9 h-9 rounded-full bg-[#EEE8D2] flex items-center justify-center gap-1 hover:opacity-80 transition-opacity text-white" aria-label="Корзина">
                 <ShoppingBag size={18} strokeWidth={1.5} fill="currentColor" />
                 <span className="text-[11px] font-medium leading-none">{cartCount}</span>
               </button>
@@ -636,11 +636,11 @@ export default function Home() {
             <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-7" />
           </a>
           <div className="flex items-center gap-2">
-            <button onClick={() => setWishlistOpen(true)} className="w-9 h-9 rounded-full border border-[#DDD5C0] flex items-center justify-center gap-1 hover:border-[#A0755A] transition-colors text-[#EEE8D2]" aria-label="Избранное">
+            <button onClick={() => setWishlistOpen(true)} className="w-9 h-9 rounded-full bg-[#EEE8D2] flex items-center justify-center gap-1 hover:opacity-80 transition-opacity text-white" aria-label="Избранное">
               <Heart size={18} strokeWidth={1.5} fill="currentColor" />
               <span className="text-[11px] font-medium leading-none">{wishlist.size}</span>
             </button>
-            <button onClick={() => setCartOpen(true)} className="w-9 h-9 rounded-full border border-[#DDD5C0] flex items-center justify-center gap-1 hover:border-[#A0755A] transition-colors text-[#EEE8D2]" aria-label="Корзина">
+            <button onClick={() => setCartOpen(true)} className="w-9 h-9 rounded-full bg-[#EEE8D2] flex items-center justify-center gap-1 hover:opacity-80 transition-opacity text-white" aria-label="Корзина">
               <ShoppingBag size={18} strokeWidth={1.5} fill="currentColor" />
               <span className="text-[11px] font-medium leading-none">{cartCount}</span>
             </button>
