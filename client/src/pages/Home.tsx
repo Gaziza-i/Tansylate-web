@@ -291,7 +291,7 @@ function ProductModal({
               })}
 
               {product.composition && (
-                <AccordionSection title="Состав" accent>
+                <AccordionSection title="Состав">
                   <p>{product.composition}</p>
                 </AccordionSection>
               )}
@@ -914,7 +914,7 @@ export default function Home() {
             </p>
             <button
               onClick={() => scrollToSection("catalog")}
-              className="px-8 py-3 bg-[#1A1A1A] text-white text-sm uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors font-medium"
+              className="px-10 py-4 bg-[#1A1A1A] text-white text-base uppercase tracking-widest rounded-xl hover:bg-[#333] transition-colors font-medium"
             >
               {heroS.buttonText}
             </button>
