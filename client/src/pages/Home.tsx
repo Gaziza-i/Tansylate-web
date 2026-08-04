@@ -391,7 +391,7 @@ function AboutSection() {
     <section id="about" className="flex items-center bg-[#F5F7D0] overflow-hidden scroll-mt-24 lg:scroll-mt-28">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 w-full">
         <div className="py-20 px-8 md:px-16 flex flex-col justify-center">
-          <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-20 text-center">{about.title}</h2>
+          <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-30 text-center">{about.title}</h2>
           {about.paragraphs.map((p: string, i: number) => (
             <p key={i} className={`text-[18px] text-[#6B5C52] leading-relaxed text-justify ${i < about.paragraphs.length - 1 ? "mb-4" : ""}`}>{p}</p>
           ))}
@@ -417,7 +417,7 @@ function BloggersSection() {
   return (
     <section className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0]">
       <div className="max-w-7xl mx-auto w-full flex flex-col">
-        <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-20 text-center">Нас носят блогеры</h2>
+        <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-30 text-center">Нас носят блогеры</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {(videos as any[]).map((v: any) => {
             const ytId = v.videoUrl ? getYoutubeId(v.videoUrl) : null;
@@ -963,7 +963,7 @@ export default function Home() {
 
           <section id="catalog" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
-              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-20 text-center">Каталог</h2>
+              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-30 text-center">Каталог</h2>
 
               <div className="flex-1 flex flex-col justify-center">
                 <div className="mb-12 relative max-w-xl mx-auto w-full">
@@ -995,7 +995,7 @@ export default function Home() {
 
           <section id="trust" className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col">
-              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-20 text-center">Почему нам верят</h2>
+              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-30 text-center">Почему нам верят</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="text-center">
                   <div className="w-16 h-16 mx-auto mb-6 border-2 border-[#A0755A] rounded-full flex items-center justify-center">
@@ -1032,7 +1032,7 @@ export default function Home() {
 
           <section id="looks" className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col">
-              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-20 text-center">{looksS.title}</h2>
+              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-30 text-center">{looksS.title}</h2>
               {(looksS.photos ?? []).length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mt-8">
                   {(looksS.photos ?? []).map((src, i) => (
@@ -1050,7 +1050,7 @@ export default function Home() {
 
           <section id="delivery" className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-5xl mx-auto w-full flex flex-col">
-              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-20 text-center">{deliveryS.title}</h2>
+              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-30 text-center">{deliveryS.title}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {(deliveryS.cards ?? []).map((dc: any, ci: number) => (
                   <div key={ci} className="bg-[#FFFFFF] rounded-2xl p-8">
