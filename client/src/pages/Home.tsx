@@ -891,7 +891,7 @@ export default function Home() {
             onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
           {p.badgeText && (
-            <span className="absolute top-3 left-3 px-3 py-1.5 bg-[#EA937A] text-white text-[11px] font-semibold uppercase tracking-wide rounded-full whitespace-nowrap">
+            <span className="absolute top-3 left-3 h-[45px] px-4 flex items-center justify-center bg-[#EA937A] text-white text-[11px] font-semibold uppercase rounded-full whitespace-nowrap tracking-[0.2em]">
               {p.badgeText}
             </span>
           )}
