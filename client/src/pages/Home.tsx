@@ -290,18 +290,21 @@ function ProductModal({
                 );
               })}
 
+              {product.composition && (
+                <AccordionSection title="Состав" accent>
+                  <p>{product.composition}</p>
+                </AccordionSection>
+              )}
+
               {(() => {
                 const filledSpecs = specs.filter(s => s.label?.trim() || s.value?.trim());
-                return (product.composition || filledSpecs.length > 0) && (
-                  <AccordionSection title="Состав" accent>
-                    {product.composition && <p className="mb-2">{product.composition}</p>}
-                    {filledSpecs.length > 0 && (
-                      <div className="space-y-1">
-                        {filledSpecs.map((spec, i) => (
-                          <p key={i}>{spec.label}: {spec.value}</p>
-                        ))}
-                      </div>
-                    )}
+                return filledSpecs.length > 0 && (
+                  <AccordionSection title="Характеристики">
+                    <div className="space-y-1">
+                      {filledSpecs.map((spec, i) => (
+                        <p key={i}>{spec.label}: {spec.value}</p>
+                      ))}
+                    </div>
                   </AccordionSection>
                 );
               })()}
