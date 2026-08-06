@@ -955,7 +955,7 @@ export default function Home() {
           <section className="min-h-[calc(100vh-88px)] flex flex-col items-center justify-center text-center px-4">
             <p className="text-xs uppercase tracking-widest text-[#A0755A] mb-4">{heroS.badge}</p>
             <h1 className="text-[36px] sm:text-[48px] md:text-[60px] lg:text-[72px] font-normal uppercase tracking-wide text-[#2C2A29] mb-6">{heroS.title}</h1>
-            <p className="text-lg text-[#6B5C52] mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-[20px] md:text-[26px] text-[#6B5C52] mb-12 max-w-2xl mx-auto leading-relaxed">
               {heroS.subtitle}
             </p>
             <button
