@@ -391,7 +391,7 @@ function AboutSection() {
     <section id="about" className="flex items-center bg-[#F5F7D0] overflow-hidden scroll-mt-24 lg:scroll-mt-28">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 w-full">
         <div className="py-20 px-8 md:px-16 flex flex-col justify-center">
-          <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-15 min-[1000px]:mb-20 text-center">{about.title}</h2>
+          <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-8 min-[1000px]:mb-12 text-center">{about.title}</h2>
           {about.paragraphs.map((p: string, i: number) => (
             <p key={i} className={`text-[18px] text-[#6B5C52] leading-relaxed text-justify ${i < about.paragraphs.length - 1 ? "mb-4" : ""}`}>{p}</p>
           ))}
@@ -638,7 +638,7 @@ export default function Home() {
             {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
           <a href="/" onClick={e => { e.preventDefault(); setLocation("/"); }} className="hover:opacity-60 transition-opacity cursor-pointer flex justify-center">
-            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-7" />
+            <img src="/tansylate-logo.svg" alt="TANSYLATE" className="h-10" />
           </a>
           <div className="flex items-center gap-2">
             <button onClick={() => setWishlistOpen(true)} className="w-[42px] h-[42px] rounded-full bg-[#EEE8D2] flex items-center justify-center gap-1 hover:opacity-80 transition-opacity text-[#2C2A29]" aria-label="Избранное">
@@ -968,7 +968,7 @@ export default function Home() {
 
           <section id="catalog" className="min-h-screen flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
-              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-15 min-[1000px]:mb-20 text-center">Каталог</h2>
+              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-8 min-[1000px]:mb-12 text-center">Каталог</h2>
 
               <div className="flex-1 flex flex-col justify-center">
                 <div className="mb-12 relative max-w-xl mx-auto w-full">
@@ -988,7 +988,7 @@ export default function Home() {
                     {searchQuery && <p className="text-sm">Попробуйте изменить запрос</p>}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[10px] md:gap-x-4 gap-y-6 md:gap-y-[40px]">
+                  <div className="grid grid-cols-2 min-[1200px]:grid-cols-3 min-[1650px]:grid-cols-4 gap-x-[10px] md:gap-x-4 gap-y-6 md:gap-y-[40px]">
                     {filteredProducts.map((p: any) => <ProductCard key={p.id} p={p} />)}
                   </div>
                 )}
@@ -1037,9 +1037,9 @@ export default function Home() {
 
           <section id="looks" className="flex flex-col py-20 px-4 md:px-6 bg-[#F5F7D0] scroll-mt-24 lg:scroll-mt-28">
             <div className="max-w-7xl mx-auto w-full flex flex-col">
-              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-15 min-[1000px]:mb-20 text-center">{looksS.title}</h2>
+              <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-8 min-[1000px]:mb-12 text-center">{looksS.title}</h2>
               {(looksS.photos ?? []).length > 0 ? (
-                <div className="grid grid-cols-3 gap-2 md:gap-4 mt-8">
+                <div className="grid grid-cols-2 min-[1200px]:grid-cols-3 min-[1650px]:grid-cols-4 gap-2 md:gap-4 mt-8">
                   {(looksS.photos ?? []).map((src, i) => (
                     <div key={i} className="aspect-[3/4] overflow-hidden">
                       <img src={src} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
