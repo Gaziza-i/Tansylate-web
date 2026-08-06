@@ -1039,9 +1039,9 @@ export default function Home() {
             <div className="max-w-7xl mx-auto w-full flex flex-col">
               <h2 className="text-[34px] md:text-[40px] font-normal uppercase tracking-wide text-[#2C2A29] mb-15 min-[1000px]:mb-20 text-center">{looksS.title}</h2>
               {(looksS.photos ?? []).length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mt-8">
+                <div className="grid grid-cols-3 gap-2 md:gap-4 mt-8">
                   {(looksS.photos ?? []).map((src, i) => (
-                    <div key={i} className="aspect-[3/4] overflow-hidden rounded-xl">
+                    <div key={i} className="aspect-[3/4] overflow-hidden">
                       <img src={src} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                         onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
                     </div>
