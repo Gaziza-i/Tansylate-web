@@ -397,7 +397,7 @@ function AboutSection() {
           ))}
         </div>
         {about.photo && (
-          <div className="aspect-[3/4] overflow-hidden">
+          <div className="px-8 md:px-0 aspect-[3/4] overflow-hidden">
             <img src={about.photo} alt={about.title} className="w-full h-full object-cover object-top" />
           </div>
         )}
