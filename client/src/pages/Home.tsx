@@ -891,32 +891,32 @@ export default function Home() {
             onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
           {p.badgeText && (
-            <span className="absolute top-3 left-3 h-[45px] px-4 flex items-center justify-center bg-[#EA937A] text-white text-[11px] font-semibold uppercase rounded-full whitespace-nowrap tracking-[0.2em]">
+            <span className="absolute top-2 left-2 md:top-3 md:left-3 h-7 md:h-[45px] px-2.5 md:px-4 flex items-center justify-center bg-[#EA937A] text-white text-[9px] md:text-[11px] font-semibold uppercase rounded-full whitespace-nowrap tracking-wide md:tracking-[0.2em]">
               {p.badgeText}
             </span>
           )}
           <button
             onClick={e => { e.stopPropagation(); toggleWishlist(p.id); }}
-            className="absolute top-3 right-3 w-10 h-10 bg-white/95 rounded-full flex items-center justify-center hover:bg-white transition-all shadow-sm"
+            className="absolute top-2 right-2 md:top-3 md:right-3 w-8 h-8 md:w-10 md:h-10 bg-white/95 rounded-full flex items-center justify-center hover:bg-white transition-all shadow-sm"
             aria-label="Добавить в избранное"
           >
             <Heart
-              size={17}
+              size={15}
               className={wishlist.has(p.id) ? "text-red-500" : "text-[#2C2A29]"}
               fill={wishlist.has(p.id) ? "currentColor" : "none"}
             />
           </button>
         </div>
-        <div className="pt-4 flex flex-col items-center text-center">
+        <div className="pt-2 md:pt-4 flex flex-col items-center text-center">
           <h3
-            className="text-[22px] font-bold text-[#2C2A29] mb-2 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
+            className="text-[13px] md:text-[22px] font-bold text-[#2C2A29] mb-1 md:mb-2 cursor-pointer hover:opacity-70 transition-opacity leading-snug"
             onClick={() => { setSelectedProductId(p.id); setCarouselIndex(0); }}
           >{p.name}</h3>
-          {p.collection && <p className="text-xs text-[#A0755A] uppercase tracking-wide mb-4">{p.collection}</p>}
-          <p className="text-[20px] text-[#6B5C52] mb-10">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
+          {p.collection && <p className="text-[9px] md:text-xs text-[#A0755A] uppercase tracking-wide mb-1.5 md:mb-4">{p.collection}</p>}
+          <p className="text-[13px] md:text-[20px] text-[#6B5C52] mb-3 md:mb-10">{(p.price ?? 0).toLocaleString("ru-RU")} ₽</p>
           <button
             onClick={e => { e.stopPropagation(); addToCart(p); setCartOpen(true); }}
-            className="w-full py-3 bg-[#1A1A1A] text-white text-[14px] font-medium rounded-xl hover:bg-[#333] transition-colors active:scale-95"
+            className="w-full py-2 md:py-3 bg-[#1A1A1A] text-white text-[10px] md:text-[14px] font-medium rounded-lg md:rounded-xl hover:bg-[#333] transition-colors active:scale-95"
           >
             Добавить в корзину
           </button>
@@ -988,7 +988,7 @@ export default function Home() {
                     {searchQuery && <p className="text-sm">Попробуйте изменить запрос</p>}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-x-[10px] gap-y-[40px]">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-[10px] md:gap-x-4 gap-y-6 md:gap-y-[40px]">
                     {filteredProducts.map((p: any) => <ProductCard key={p.id} p={p} />)}
                   </div>
                 )}
